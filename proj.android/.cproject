@@ -20,7 +20,7 @@
 					<folderInfo id="0.1776320356." name="/" resourcePath="">
 						<toolChain id="org.eclipse.cdt.build.core.prefbase.toolchain.818282918" name="No ToolChain" resourceTypeBasedDiscovery="false" superClass="org.eclipse.cdt.build.core.prefbase.toolchain">
 							<targetPlatform id="org.eclipse.cdt.build.core.prefbase.toolchain.818282918.277377233" name=""/>
-							<builder buildPath="bash ${workspace_loc:/rostlab_tbg}/build_native.sh NDK_DEBUG=1 V=1" id="org.eclipse.cdt.build.core.settings.default.builder.1793889421" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
+							<builder arguments="${workspace_loc:/rostlab_tbg}/build_native.sh NDK_DEBUG=1 V=1" buildPath="${workspace_loc:/rostlab_tbg}" command="bash" id="org.eclipse.cdt.build.core.settings.default.builder.1793889421" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
 							<tool id="org.eclipse.cdt.build.core.settings.holder.libs.469403666" name="holder for library settings" superClass="org.eclipse.cdt.build.core.settings.holder.libs"/>
 							<tool id="org.eclipse.cdt.build.core.settings.holder.762614820" name="Assembly" superClass="org.eclipse.cdt.build.core.settings.holder">
 								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1387220196" languageId="org.eclipse.cdt.core.assembly" languageName="Assembly" sourceContentType="org.eclipse.cdt.core.asmSource" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
