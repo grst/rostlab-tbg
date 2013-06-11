@@ -53,6 +53,11 @@
 			<location>/home/xsebi/programs/frameworks/cocod2x-x-2.1/rostlab_tbg/Classes</location>
 		</link>
 		<link>
+			<name>Resources</name>
+			<type>2</type>
+			<location>/home/xsebi/programs/frameworks/cocod2x-x-2.1/rostlab_tbg/Resources</location>
+		</link>
+		<link>
 			<name>cocos2dx-src</name>
 			<type>2</type>
 			<location>/home/xsebi/programs/frameworks/cocod2x-x-2.1/cocos2dx/platform/android/java/src</location>
