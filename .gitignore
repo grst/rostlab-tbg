@@ -20,47 +20,36 @@
 *.rar
 *.tar
 *.zip
-
 # Logs and databases #
 ######################
 *.log
 *.sql
 *.sqlite
-
 # OS generated files #
-######################
 .DS_Store?
 ehthumbs.db
 Icon?
 Thumbs.db
-
-
 .DS_Store
 *.swp
 *~.nib
-
-build/
-
+# Compiled Folder
+proj.android/build/*
+proj.android/bin/*
+proj.android/gen/*
 *.mode1v3
 *.mode2v3
-
 xcuserdata
-
 *.mode*
 *.pbxuser
 *.perspective*
-
 !project.pbxproj
-
 #.LSOverride#
-
 proj.android/libs
 proj.android/obj
-
 # Probably it is better to have classpath static
 #proj.android/.classpath
 #proj.android/project.properties
 #proj.android/.project
 #proj.android/.settings
-proj.android/gen
-proj.android/bin
+/devnull
