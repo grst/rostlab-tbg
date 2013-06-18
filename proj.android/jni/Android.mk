@@ -8,10 +8,12 @@ LOCAL_MODULE_FILENAME := libgame
 
 LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/AppDelegate.cpp \
-                   ../../Classes/HelloWorldScene.cpp
+                   ../../Classes/HelloWorldScene.cpp \
+		   			../../Classes/GameOverScene.cpp
                    
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes
-LOCAL_C_INCLUDES += $(COCOS2DX_ROOT)/external/Box2D
+
+LOCAL_C_INCLUDES := $(COCOS2DX_ROOT)/external/Box2D
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/../../Classes 
 
 LOCAL_WHOLE_STATIC_LIBRARIES := cocos2dx_static cocosdenshion_static cocos_extension_static box2d_static
             
