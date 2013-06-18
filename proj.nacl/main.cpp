@@ -8,10 +8,8 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string>
+#include "AL/alc.h"
 
-#ifdef OLD_NACL_MOUNTS
-#include "nacl-mounts/base/UrlLoaderJob.h"
-#endif
 #include "fcntl.h"
 #include "sys/stat.h"
 
@@ -20,6 +18,7 @@ USING_NS_CC;
 AppDelegate g_app;
 
 #ifdef OLD_NACL_MOUNTS
+#include "nacl-mounts/base/UrlLoaderJob.h"
 void downloadFiles(MainThreadRunner* runner, const char** filenames, int num_files)
 {
     CCLOG("Downloading %d files...", num_files);
@@ -52,26 +51,33 @@ void downloadFiles(MainThreadRunner* runner, const char** filenames, int num_fil
 
 void* cocos_main(void* arg)
 {
+    CocosPepperInstance* instance = (CocosPepperInstance*)arg;
     fprintf(stderr, "in cocos_main\n");
+
+    alSetPpapiInfo(instance->pp_instance(), pp::Module::Get()->get_browser_interface());
 
 #ifdef OLD_NACL_MOUNTS
     // TODO(sbc): remove this hack an replace with some kind of URL mount
-    CocosPepperInstance* instance = (CocosPepperInstance*)arg;
-
-    mkdir("ipad", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-    mkdir("iphone", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    mkdir("hd", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    mkdir("sd", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
     mkdir("fonts", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-    const char* filenames[] = { "ipad/HelloWorld.png",
-                                "ipad/CloseSelected.png",
-                                "ipad/CloseNormal.png",
-                                "iphone/HelloWorld.png",
-                                "iphone/CloseSelected.png",
-                                "iphone/CloseNormal.png",
+    const char* filenames[] = { "hd/CloseNormal.png",
+                                "sd/CloseNormal.png",
+                                "hd/CloseSelected.png",
+                                "sd/CloseSelected.png",
+                                "hd/Target.png",
+                                "sd/Target.png",
+                                "hd/Player.png",
+                                "sd/Player.png",
+                                "hd/Projectile.png",
+                                "sd/Projectile.png",
+                                "pew-pew-lei.wav",
                                 "fonts/Marker Felt.ttf" };
 
     downloadFiles(instance->m_runner, filenames, sizeof(filenames)/sizeof(char*));
 #endif
 
+    CCEGLView* eglView = CCEGLView::sharedOpenGLView();
     fprintf(stderr, "calling application->run\n");
     int rtn = CCApplication::sharedApplication()->run();
     fprintf(stderr, "app run returned: %d\n", rtn);

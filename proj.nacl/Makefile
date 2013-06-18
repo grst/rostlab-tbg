@@ -1,28 +1,34 @@
 COCOS_ROOT = ../../../..
 COCOS2DX_PATH = $(COCOS_ROOT)/cocos2dx
-INCLUDES =  -I../ -I../Classes
+
+INCLUDES = -I.. \
+	-I../Classes \
+	-I$(COCOS_ROOT)/CocosDenshion/include \
 
 SOURCES = main.cpp \
         ../Classes/AppDelegate.cpp \
-        ../Classes/HelloWorldScene.cpp
+        ../Classes/HelloWorldScene.cpp \
+        ../Classes/GameOverScene.cpp
 
 include $(COCOS_ROOT)/cocos2dx/proj.nacl/cocos2dx.mk
 
-APP_NAME = HelloCpp
+SHAREDLIBS += -lbox2d
+
+APP_NAME = SimpleGame
 TARGET = $(BIN_DIR)/$(APP_NAME)_$(NACL_ARCH).nexe
 NMF = $(BIN_DIR)/$(APP_NAME).nmf
 
 all: $(NMF)
 
-$(TARGET): $(OBJECTS) $(LIB_DIR)/libcocos2d.a $(CORE_MAKEFILE_LIST)
+$(TARGET): $(OBJECTS) $(LIB_DIR)/libcocos2d.a
 	@mkdir -p $(@D)
 	$(LOG_LINK)$(NACL_CXX) $(CXXFLAGS) $(LDFLAGS) $(OBJECTS) -o $@ $(SHAREDLIBS) $(STATICLIBS)
 
-$(OBJ_DIR)/%.o: ../%.cpp $(CORE_MAKEFILE_LIST)
+$(OBJ_DIR)/%.o: ../%.cpp
 	@mkdir -p $(@D)
 	$(LOG_CXX)$(NACL_CXX) -MMD $(CXXFLAGS) $(INCLUDES) $(DEFINES) -c $< -o $@
 
-$(OBJ_DIR)/%.o: %.cpp $(CORE_MAKEFILE_LIST)
+$(OBJ_DIR)/%.o: %.cpp
 	@mkdir -p $(@D)
 	$(LOG_CXX)$(NACL_CXX) -MMD $(CXXFLAGS) $(INCLUDES) $(DEFINES) -c $< -o $@
 

@@ -1,7 +1,7 @@
 options
 {
-	module_path="../../../../cocos2dx/proj.marmalade/"
-	s3e-data-dir = "../Resources"
+	module_path="../../../../cocos2dx/proj.marmalade/;../../../../CocosDenshion/proj.marmalade/"
+	s3e-data-dir = "../Resources/"
 }
 
 includepaths
@@ -12,15 +12,13 @@ subprojects
 {
 	IwGL
 	cocos2dx
+	CocosDenshion
 }
 
 assets
 {
 	(../Resources)
-	fonts
-	ipad
-	ipadhd
-	iphone
+	.
 }
 
 
@@ -35,9 +33,11 @@ files
 	(../Classes)
 	AppDelegate.h
 	AppDelegate.cpp
-	AppMacros.h
-	HelloWorldScene.h
+	GameOverScene.cpp
+	GameOverScene.h
 	HelloWorldScene.cpp
+	HelloWorldScene.h
+
 }
 
 

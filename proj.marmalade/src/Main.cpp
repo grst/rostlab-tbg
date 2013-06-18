@@ -6,7 +6,7 @@
 // Cocos2dx headers
 #include "cocos2d.h"
 
-// Marmaladeheaders
+// Marmalade headers
 #include "IwGL.h"
 
 USING_NS_CC;
