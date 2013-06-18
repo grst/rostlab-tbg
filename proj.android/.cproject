@@ -29,6 +29,7 @@
 								<option id="org.eclipse.cdt.build.core.settings.holder.incpaths.2143097123" name="Include Paths" superClass="org.eclipse.cdt.build.core.settings.holder.incpaths" valueType="includePath">
 									<listOptionValue builtIn="false" value="/home/xsebi/programs/frameworks/android-ndk-r8e/platforms/android-14/arch-arm/usr/include"/>
 									<listOptionValue builtIn="false" value="/home/xsebi/programs/frameworks/cocod2x-x-2.1/cocos2dx/include"/>
+									<listOptionValue builtIn="false" value="/home/xsebi/programs/frameworks/cocod2x-x-2.1/external/Box2D"/>
 								</option>
 								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1845991875" languageId="org.eclipse.cdt.core.g++" languageName="GNU C++" sourceContentType="org.eclipse.cdt.core.cxxSource,org.eclipse.cdt.core.cxxHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
 							</tool>
@@ -38,7 +39,8 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="Resources|Classes" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Box2D|Resources|Classes" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Box2D"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Classes"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Resources"/>
 					</sourceEntries>
@@ -62,4 +64,5 @@
 			<resource resourceType="PROJECT" workspacePath="/rostlab_tbg"/>
 		</configuration>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 </cproject>

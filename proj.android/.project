@@ -48,6 +48,11 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>Box2D</name>
+			<type>2</type>
+			<location>/home/xsebi/programs/frameworks/cocod2x-x-2.1/external/Box2D</location>
+		</link>
+		<link>
 			<name>Classes</name>
 			<type>2</type>
 			<location>/home/xsebi/programs/frameworks/cocod2x-x-2.1/rostlab_tbg/Classes</location>
