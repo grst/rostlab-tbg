@@ -53,6 +53,9 @@ CCScene* HelloWorld::scene()
 // on "init" you need to initialize your instance
 bool HelloWorld::init()
 {
+
+	 if ( !CCLayer::init() ) return false;
+
 	bool bRet = false;
 	do 
 	{
@@ -93,7 +96,8 @@ bool HelloWorld::init()
 
 		/////////////////////////////
 		// 2. add your codes below...
-		CCSprite *player = CCSprite::create("Player.png", CCRectMake(0, 0, 27, 40) );
+
+		player = CCSprite::create("Player.png", CCRectMake(0, 0, 27, 40) );
         
 		player->setPosition( ccp(origin.x + player->getContentSize().width/2,
                                  origin.y + visibleSize.height/2) );
@@ -110,10 +114,14 @@ bool HelloWorld::init()
 		// see http://www.cocos2d-x.org/boards/6/topics/1478
 		this->schedule( schedule_selector(HelloWorld::updateGame) );
 
-		CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("background-music-aac.wav", true);
+		// disabled temporarly  (annoying!!)
+		//CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("background-music-aac.wav", true);
 
 		bRet = true;
 	} while (0);
+
+	// Register the layer to touch dispatcher
+	   CCDirector::sharedDirector() -> getTouchDispatcher() -> addStandardDelegate( this, 0 );
 
 	return bRet;
 }
@@ -172,9 +180,10 @@ void HelloWorld::spriteMoveFinished(CCNode* sender)
 	{
 		_targets->removeObject(sprite);
         
-		GameOverScene *gameOverScene = GameOverScene::create();
-		gameOverScene->getLayer()->getLabel()->setString("You Lose :[");
-		CCDirector::sharedDirector()->replaceScene(gameOverScene);
+		//diabled for testing
+		//GameOverScene *gameOverScene = GameOverScene::create();
+		//gameOverScene->getLayer()->getLabel()->setString("You Lose :[");
+		//CCDirector::sharedDirector()->replaceScene(gameOverScene);
 
 	}
 	else if (sprite->getTag() == 2) // projectile
@@ -189,12 +198,52 @@ void HelloWorld::gameLogic(float dt)
 }
 
 // cpp with cocos2d-x
-void HelloWorld::ccTouchesEnded(CCSet* touches, CCEvent* event)
+void HelloWorld::ccTouchesBegan(cocos2d::CCSet* touches, cocos2d::CCEvent* event)
+{
+	CCSetIterator it = touches->begin();
+	    CCTouch* touch;
+
+	    CCPoint pt;
+	    for( int iTouchCount = 0; iTouchCount < touches->count(); iTouchCount++ )
+	    {
+	        touch = (CCTouch*)(*it);
+	        pt = touch->getLocationInView();
+	        cocos2d::CCLog( "ccTouchesBegan id:%i %i,%in", touch->getID(), (int)pt.x, (int)pt.y );
+	        it++;
+	    }
+}
+
+// cpp with cocos2d-x
+void HelloWorld::ccTouchesMoved(cocos2d::CCSet* touches, cocos2d::CCEvent* event)
+{
+	CCSetIterator it = touches->begin();
+	    CCTouch* touch;
+
+	    CCPoint pt;
+	    for( int iTouchCount = 0; iTouchCount < touches->count(); iTouchCount++ )
+	    {
+	        touch = (CCTouch*)(*it);
+	        pt = touch->getLocationInView();
+	        cocos2d::CCLog( "ccTouchesBegan id:%i %i,%in", touch->getID(), (int)pt.x, (int)pt.y );
+	        it++;
+
+	        //world y
+	        CCSize size = CCDirector::sharedDirector()->getWinSize();
+	        float height =size.height;
+
+	        //set player
+	        player->setPosition( ccp(pt.x,
+	                                         height - pt.y) );
+	    }
+}
+
+// cpp with cocos2d-x
+void HelloWorld::ccTouchesEnded(cocos2d::CCSet* touches, cocos2d::CCEvent* event)
 {
 	// Choose one of the touches to work with
 	CCTouch* touch = (CCTouch*)( touches->anyObject() );
 	CCPoint location = touch->getLocation();
-    
+
 	CCLog("++++++++after  x:%f, y:%f", location.x, location.y);
 
 	// Set up initial location of projectile
@@ -229,15 +278,16 @@ void HelloWorld::ccTouchesEnded(CCSet* touches, CCEvent* event)
 	// Move projectile to actual endpoint
 	projectile->runAction( CCSequence::create(
 		CCMoveTo::create(realMoveDuration, realDest),
-		CCCallFuncN::create(this, 
-                            callfuncN_selector(HelloWorld::spriteMoveFinished)), 
+		CCCallFuncN::create(this,
+                            callfuncN_selector(HelloWorld::spriteMoveFinished)),
         NULL) );
 
 	// Add to projectiles array
 	projectile->setTag(2);
 	_projectiles->addObject(projectile);
 
-	CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("pew-pew-lei.wav");
+	//disabled temporarly - working!
+	//CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("pew-pew-lei.wav");
 }
 
 void HelloWorld::updateGame(float dt)
@@ -285,9 +335,10 @@ void HelloWorld::updateGame(float dt)
 			_projectilesDestroyed++;
 			if (_projectilesDestroyed >= 5)
 			{
-				GameOverScene *gameOverScene = GameOverScene::create();
-				gameOverScene->getLayer()->getLabel()->setString("You Win!");
-				CCDirector::sharedDirector()->replaceScene(gameOverScene);
+				// disabled for testing
+				//GameOverScene *gameOverScene = GameOverScene::create();
+				//gameOverScene->getLayer()->getLabel()->setString("You Win!");
+				//CCDirector::sharedDirector()->replaceScene(gameOverScene);
 			}
 		}
 
