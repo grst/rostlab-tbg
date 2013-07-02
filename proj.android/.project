@@ -68,11 +68,6 @@
 			<location>/home/xsebi/programs/frameworks/cocod2x-x-2.1/cocos2dx/actions</location>
 		</link>
 		<link>
-			<name>cocos2dx</name>
-			<type>2</type>
-			<location>/home/xsebi/programs/frameworks/cocod2x-x-2.1/cocos2dx</location>
-		</link>
-		<link>
 			<name>cocos2dx-src</name>
 			<type>2</type>
 			<location>/home/xsebi/programs/frameworks/cocod2x-x-2.1/cocos2dx/platform/android/java/src</location>
