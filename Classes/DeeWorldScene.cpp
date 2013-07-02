@@ -1,8 +1,10 @@
-#include "TestWorldScene.h"
+#include "DeeWorldScene.h"
 #include "GameOverScene.h"
 #include "SimpleAudioEngine.h"
 
-TestWorld::~TestWorld()
+using namespace cocos2d;
+
+DeeWorld::~DeeWorld()
 {
 	if (_targets)
 	{
@@ -20,14 +22,14 @@ TestWorld::~TestWorld()
 	// virtual destructor will do this
 }
 
-TestWorld::TestWorld()
+DeeWorld::DeeWorld()
 :_targets(NULL)
 ,_projectiles(NULL)
 ,_projectilesDestroyed(0)
 {
 }
 
-CCScene* TestWorld::scene()
+CCScene* DeeWorld::scene()
 {
 	CCScene * scene = NULL;
 	do 
@@ -37,7 +39,7 @@ CCScene* TestWorld::scene()
 		CC_BREAK_IF(! scene);
 
 		// 'layer' is an autorelease object
-		TestWorld *layer = TestWorld::create();
+		DeeWorld *layer = DeeWorld::create();
 		CC_BREAK_IF(! layer);
 
 		// add layer as a child to scene
@@ -49,7 +51,7 @@ CCScene* TestWorld::scene()
 }
 
 // on "init" you need to initialize your instance
-bool TestWorld::init()
+bool DeeWorld::init()
 {
 
 	 if ( !CCLayer::init() ) return false;
@@ -74,7 +76,7 @@ bool TestWorld::init()
 			"CloseNormal.png",
 			"CloseSelected.png",
 			this,
-			menu_selector(TestWorld::menuCloseCallback));
+			menu_selector(DeeWorld::menuCloseCallback));
 		CC_BREAK_IF(! pCloseItem);
         
 		// Place the menu item bottom-right conner.
@@ -89,7 +91,7 @@ bool TestWorld::init()
 		pMenu->setPosition(CCPointZero);
 		CC_BREAK_IF(! pMenu);
 
-		// Add the menu to TestWorld layer as a child layer.
+		// Add the menu to DeeWorld layer as a child layer.
 		this->addChild(pMenu, 1);
 
 		/////////////////////////////
@@ -101,7 +103,7 @@ bool TestWorld::init()
                                  origin.y + visibleSize.height/2) );
 		this->addChild(player);
 
-		this->schedule( schedule_selector(TestWorld::gameLogic), 1.0 );
+		this->schedule( schedule_selector(DeeWorld::gameLogic), 1.0 );
 
 		this->setTouchEnabled(true);
 
@@ -110,7 +112,7 @@ bool TestWorld::init()
 
 		// use updateGame instead of update, otherwise it will conflit with SelectorProtocol::update
 		// see http://www.cocos2d-x.org/boards/6/topics/1478
-		this->schedule( schedule_selector(TestWorld::updateGame) );
+		this->schedule( schedule_selector(DeeWorld::updateGame) );
 
 		// disabled temporarly  (annoying!!)
 		//CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("background-music-aac.wav", true);
@@ -124,14 +126,14 @@ bool TestWorld::init()
 	return bRet;
 }
 
-void TestWorld::menuCloseCallback(CCObject* pSender)
+void DeeWorld::menuCloseCallback(CCObject* pSender)
 {
 	// "close" menu item clicked
 	CCDirector::sharedDirector()->end();
 }
 
 // cpp with cocos2d-x
-void TestWorld::addTarget()
+void DeeWorld::addTarget()
 {
 	CCSprite *target = CCSprite::create("Target.png", CCRectMake(0,0,27,40) );
     
@@ -161,7 +163,7 @@ void TestWorld::addTarget()
 	CCFiniteTimeAction* actionMove = CCMoveTo::create( (float)actualDuration,
                                             ccp(0 - target->getContentSize().width/2, actualY) );
 	CCFiniteTimeAction* actionMoveDone = CCCallFuncN::create( this, 
-                                            callfuncN_selector(TestWorld::spriteMoveFinished));
+                                            callfuncN_selector(DeeWorld::spriteMoveFinished));
 	target->runAction( CCSequence::create(actionMove, actionMoveDone, NULL) );
 
 	// Add to targets array
@@ -169,7 +171,7 @@ void TestWorld::addTarget()
 	_targets->addObject(target);
 }
 
-void TestWorld::spriteMoveFinished(CCNode* sender)
+void DeeWorld::spriteMoveFinished(CCNode* sender)
 {
 	CCSprite *sprite = (CCSprite *)sender;
 	this->removeChild(sprite, true);
@@ -190,13 +192,13 @@ void TestWorld::spriteMoveFinished(CCNode* sender)
 	}
 }
 
-void TestWorld::gameLogic(float dt)
+void DeeWorld::gameLogic(float dt)
 {
 	this->addTarget();
 }
 
 // cpp with cocos2d-x
-void TestWorld::ccTouchesBegan(cocos2d::CCSet* touches, cocos2d::CCEvent* event)
+void DeeWorld::ccTouchesBegan(cocos2d::CCSet* touches, cocos2d::CCEvent* event)
 {
 	CCSetIterator it = touches->begin();
 	    CCTouch* touch;
@@ -212,7 +214,7 @@ void TestWorld::ccTouchesBegan(cocos2d::CCSet* touches, cocos2d::CCEvent* event)
 }
 
 // cpp with cocos2d-x
-void TestWorld::ccTouchesMoved(cocos2d::CCSet* touches, cocos2d::CCEvent* event)
+void DeeWorld::ccTouchesMoved(cocos2d::CCSet* touches, cocos2d::CCEvent* event)
 {
 	CCSetIterator it = touches->begin();
 	    CCTouch* touch;
@@ -236,7 +238,7 @@ void TestWorld::ccTouchesMoved(cocos2d::CCSet* touches, cocos2d::CCEvent* event)
 }
 
 // cpp with cocos2d-x
-void TestWorld::ccTouchesEnded(cocos2d::CCSet* touches, cocos2d::CCEvent* event)
+void DeeWorld::ccTouchesEnded(cocos2d::CCSet* touches, cocos2d::CCEvent* event)
 {
 	// Choose one of the touches to work with
 	CCTouch* touch = (CCTouch*)( touches->anyObject() );
@@ -277,7 +279,7 @@ void TestWorld::ccTouchesEnded(cocos2d::CCSet* touches, cocos2d::CCEvent* event)
 	projectile->runAction( CCSequence::create(
 		CCMoveTo::create(realMoveDuration, realDest),
 		CCCallFuncN::create(this,
-                            callfuncN_selector(TestWorld::spriteMoveFinished)),
+                            callfuncN_selector(DeeWorld::spriteMoveFinished)),
         NULL) );
 
 	// Add to projectiles array
@@ -288,7 +290,7 @@ void TestWorld::ccTouchesEnded(cocos2d::CCSet* touches, cocos2d::CCEvent* event)
 	//CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("pew-pew-lei.wav");
 }
 
-void TestWorld::updateGame(float dt)
+void DeeWorld::updateGame(float dt)
 {
 	CCArray *projectilesToDelete = new CCArray;
     CCObject* it = NULL;
@@ -357,7 +359,7 @@ void TestWorld::updateGame(float dt)
 	projectilesToDelete->release();
 }
 
-void TestWorld::registerWithTouchDispatcher()
+void DeeWorld::registerWithTouchDispatcher()
 {
 	// CCTouchDispatcher::sharedDispatcher()->addTargetedDelegate(this,0,true);
     CCDirector::sharedDirector()->getTouchDispatcher()->addStandardDelegate(this,0);

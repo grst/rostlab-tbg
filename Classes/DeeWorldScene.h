@@ -1,14 +1,14 @@
-#ifndef __TESTWORLD_SCENE_H__
-#define __TESTWORLD_SCENE_H__
+#ifndef __DEEWORLD_SCENE_H__
+#define __DEEWORLD_SCENE_H__
 
 #include "cocos2d.h"
 
 #include "SimpleAudioEngine.h"
 
-class TestWorld: public cocos2d::CCLayerColor {
+class DeeWorld: public cocos2d::CCLayerColor {
 public:
-	TestWorld();
-	~TestWorld();
+	DeeWorld();
+	~DeeWorld();
 
 	// Here's a difference. Method 'init' in cocos2d-x returns bool, 
 	// instead of returning 'id' in cocos2d-iphone
@@ -21,7 +21,7 @@ public:
 	virtual void menuCloseCallback(cocos2d::CCObject* pSender);
 
 	// implement the "static node()" method manually
-	CREATE_FUNC (TestWorld);
+	CREATE_FUNC (DeeWorld);
 
 	void spriteMoveFinished(cocos2d::CCNode* sender);
 
@@ -46,4 +46,4 @@ protected:
 
 };
 
-#endif  // __TESTWORLD_SCENE_H__
+#endif  // __DEEWORLD_SCENE_H__
