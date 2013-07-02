@@ -37,6 +37,7 @@ Thumbs.db
 proj.android/build/*
 proj.android/bin/*
 proj.android/gen/*
+proj.android/assets/*
 *.mode1v3
 *.mode2v3
 xcuserdata
