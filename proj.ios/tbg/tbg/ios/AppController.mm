@@ -42,6 +42,9 @@ static AppDelegate s_sharedApplication;
     viewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
     viewController.wantsFullScreenLayout = YES;
     viewController.view = __glView;
+    
+    // this line has been added by sebi and is untested, but you probably need it for multitouch on ios
+    [__glView setMultipleTouchEnabled:YES];             // Multitouch
 
     // Set RootViewController to window
     if ( [[UIDevice currentDevice].systemVersion floatValue] < 6.0)
