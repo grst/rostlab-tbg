@@ -52,6 +52,8 @@
 		2105C80F17B50E11002C5B53 /* b2WeldJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2105C7C017B50E11002C5B53 /* b2WeldJoint.cpp */; };
 		2105C81017B50E11002C5B53 /* b2WheelJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2105C7C217B50E11002C5B53 /* b2WheelJoint.cpp */; };
 		2105D28117BF70E9002C5B53 /* ContactListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2105D27D17BF70E9002C5B53 /* ContactListener.cpp */; };
+		2105D28517BF8CE4002C5B53 /* GLES-Render.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2105D28317BF8CE4002C5B53 /* GLES-Render.cpp */; };
+		2105D28817BFA0D9002C5B53 /* B2DebugDrawLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2105D28617BFA0D9002C5B53 /* B2DebugDrawLayer.cpp */; };
 		212D9D1817ABEE7D00FB9A49 /* AppDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 212D9D1017ABEE7D00FB9A49 /* AppDelegate.cpp */; };
 		212D9D1917ABEE7D00FB9A49 /* DeeWorldScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 212D9D1217ABEE7D00FB9A49 /* DeeWorldScene.cpp */; };
 		212D9D1A17ABEE7D00FB9A49 /* GameOverScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 212D9D1417ABEE7D00FB9A49 /* GameOverScene.cpp */; };
@@ -411,6 +413,10 @@
 		2105C7C317B50E11002C5B53 /* b2WheelJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b2WheelJoint.h; sourceTree = "<group>"; };
 		2105D27D17BF70E9002C5B53 /* ContactListener.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ContactListener.cpp; path = ../../Classes/ContactListener.cpp; sourceTree = "<group>"; };
 		2105D27E17BF70E9002C5B53 /* ContactListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContactListener.h; path = ../../Classes/ContactListener.h; sourceTree = "<group>"; };
+		2105D28317BF8CE4002C5B53 /* GLES-Render.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "GLES-Render.cpp"; path = "../../Classes/GLES-Render.cpp"; sourceTree = "<group>"; };
+		2105D28417BF8CE4002C5B53 /* GLES-Render.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "GLES-Render.h"; path = "../../Classes/GLES-Render.h"; sourceTree = "<group>"; };
+		2105D28617BFA0D9002C5B53 /* B2DebugDrawLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = B2DebugDrawLayer.cpp; path = ../../Classes/B2DebugDrawLayer.cpp; sourceTree = "<group>"; };
+		2105D28717BFA0D9002C5B53 /* B2DebugDrawLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = B2DebugDrawLayer.h; path = ../../Classes/B2DebugDrawLayer.h; sourceTree = "<group>"; };
 		212D9D1017ABEE7D00FB9A49 /* AppDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AppDelegate.cpp; path = ../../Classes/AppDelegate.cpp; sourceTree = "<group>"; };
 		212D9D1117ABEE7D00FB9A49 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ../../Classes/AppDelegate.h; sourceTree = "<group>"; };
 		212D9D1217ABEE7D00FB9A49 /* DeeWorldScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DeeWorldScene.cpp; path = ../../Classes/DeeWorldScene.cpp; sourceTree = "<group>"; };
@@ -1153,6 +1159,10 @@
 		212D9D0F17ABEE6E00FB9A49 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				2105D28617BFA0D9002C5B53 /* B2DebugDrawLayer.cpp */,
+				2105D28717BFA0D9002C5B53 /* B2DebugDrawLayer.h */,
+				2105D28317BF8CE4002C5B53 /* GLES-Render.cpp */,
+				2105D28417BF8CE4002C5B53 /* GLES-Render.h */,
 				2105D27D17BF70E9002C5B53 /* ContactListener.cpp */,
 				2105D27E17BF70E9002C5B53 /* ContactListener.h */,
 				212D9D1017ABEE7D00FB9A49 /* AppDelegate.cpp */,
@@ -2650,6 +2660,8 @@
 				2105C80F17B50E11002C5B53 /* b2WeldJoint.cpp in Sources */,
 				2105C81017B50E11002C5B53 /* b2WheelJoint.cpp in Sources */,
 				2105D28117BF70E9002C5B53 /* ContactListener.cpp in Sources */,
+				2105D28517BF8CE4002C5B53 /* GLES-Render.cpp in Sources */,
+				2105D28817BFA0D9002C5B53 /* B2DebugDrawLayer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

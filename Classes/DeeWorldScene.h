@@ -4,7 +4,9 @@
 #include "cocos2d.h"
 #include "Box2D.h"
 //for debug-draw
-//#include "GLES-Render.h"
+#include "B2DebugDrawLayer.h"
+#include "GLES-Render.h"
+
 #include "ContactListener.h"
 
 #include "SimpleAudioEngine.h"
@@ -46,7 +48,7 @@ public:
     void tick(float delta);
     void spriteDone(CCNode* sender);
     CContactListener *_contactListener;
-    //cocos2d::extension::GLESDebugDraw *_debugDraw;
+    GLESDebugDraw *_debugDraw;
     
 
 protected:

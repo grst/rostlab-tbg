@@ -1,6 +1,7 @@
 #include "DeeWorldScene.h"
 #include "GameOverScene.h"
 #include "SimpleAudioEngine.h"
+
 USING_NS_CC;
 
 
@@ -133,8 +134,28 @@ bool DeeWorld::init()
         // init Box2D
         b2Vec2 gravity = b2Vec2(0.0f, 0.0f); //no gravity
         _b2dWorld = new b2World(gravity);
-        
+    
         this->schedule(schedule_selector(DeeWorld::tick));
+        
+        this->addChild(B2DebugDrawLayer::create(_b2dWorld, PTM_RATIO), 9999);
+//        // Debug Draw
+//        _debugDraw = NULL;
+//        // Enable debug draw by un-commenting the next line. NOTE: **** this debug stuff currently isn't displaying correctly, should get fixed soon
+//        _debugDraw= new GLESDebugDraw( PTM_RATIO );
+//        if( _debugDraw )
+//        {
+//            _b2dWorld->SetDebugDraw(_debugDraw);
+//
+//            uint32 flags = 0;
+//            flags += b2Draw::e_shapeBit;               // Shows the collision shape
+//            // Only need above bit really, add the below flag bits for more detail
+//            //flags += b2Draw::e_jointBit;             // Shows joints - where two box2D objects are joined (not using any joints here).
+//            flags += b2Draw::e_aabbBit;
+//            flags += b2Draw::e_pairBit;                // draws a line when two sprites rect bounds are overlapping
+//            //flags += b2Draw::e_centerOfMassBit;
+//            _debugDraw->SetFlags(flags);
+//        }
+
         
         // Create contact listener
         _contactListener = new CContactListener();
