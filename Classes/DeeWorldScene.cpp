@@ -98,36 +98,7 @@ bool DeeWorld::init()
 		CC_BREAK_IF(! pMenu);
 
 		// Add the menu to DeeWorld layer as a child layer.
-		this->addChild(pMenu, 1);
-
-		/////////////////////////////
-		// 2. add your codes below...
-
-		player = CCSprite::create("Player.png", CCRectMake(0, 0, 27, 40) );
-        
-		player->setPosition( ccp(origin.x + player->getContentSize().width/2,
-                                 origin.y + visibleSize.height/2) );
-        
-        //create the box for the player (currently with rectangle)
-        CreateBox2DBodyForSprite(player, 0, NULL);
-        
-		this->addChild(player, 0, 0); // tag 0 for player, 1 target, 2 projectile
-
-		this->schedule( schedule_selector(DeeWorld::gameLogic), 1.0 );
-
-		this->setTouchEnabled(true);
-
-		_targets = new CCArray;
-		_projectiles = new CCArray;
-
-		// use updateGame instead of update, otherwise it will conflit with SelectorProtocol::update
-		// see http://www.cocos2d-x.org/boards/6/topics/1478
-		this->schedule( schedule_selector(DeeWorld::updateGame) );
-
-		// disabled temporarly  (annoying!!)
-		//CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("background-music-aac.wav", true);
-
-		bRet = true;
+		this->addChild(pMenu, 1);		
         
         
         /////////////////////////////
@@ -137,29 +108,43 @@ bool DeeWorld::init()
     
         this->schedule(schedule_selector(DeeWorld::tick));
         
+        //debug draw made easy with helper class
         this->addChild(B2DebugDrawLayer::create(_b2dWorld, PTM_RATIO), 9999);
-//        // Debug Draw
-//        _debugDraw = NULL;
-//        // Enable debug draw by un-commenting the next line. NOTE: **** this debug stuff currently isn't displaying correctly, should get fixed soon
-//        _debugDraw= new GLESDebugDraw( PTM_RATIO );
-//        if( _debugDraw )
-//        {
-//            _b2dWorld->SetDebugDraw(_debugDraw);
-//
-//            uint32 flags = 0;
-//            flags += b2Draw::e_shapeBit;               // Shows the collision shape
-//            // Only need above bit really, add the below flag bits for more detail
-//            //flags += b2Draw::e_jointBit;             // Shows joints - where two box2D objects are joined (not using any joints here).
-//            flags += b2Draw::e_aabbBit;
-//            flags += b2Draw::e_pairBit;                // draws a line when two sprites rect bounds are overlapping
-//            //flags += b2Draw::e_centerOfMassBit;
-//            _debugDraw->SetFlags(flags);
-//        }
-
         
         // Create contact listener
         _contactListener = new CContactListener();
         _b2dWorld->SetContactListener(_contactListener);
+        
+        
+        
+        /////////////////////////////
+		// 2. add your codes below...
+        
+		player = CCSprite::create("Player.png", CCRectMake(0, 0, 27, 40) );
+        
+		player->setPosition( ccp(origin.x + player->getContentSize().width/2,
+                                 origin.y + visibleSize.height/2) );
+        
+        //create the box for the player (currently with rectangle)
+        CreateBox2DBodyForSprite(player, 0, NULL);
+        
+		this->addChild(player, 0, 0); // tag 0 for player, 1 target, 2 projectile
+        
+		this->schedule( schedule_selector(DeeWorld::gameLogic), 1.0 );
+        
+		this->setTouchEnabled(true);
+        
+		_targets = new CCArray;
+		_projectiles = new CCArray;
+        
+		// use updateGame instead of update, otherwise it will conflit with SelectorProtocol::update
+		// see http://www.cocos2d-x.org/boards/6/topics/1478
+		this->schedule( schedule_selector(DeeWorld::updateGame) );
+        
+		// disabled temporarly  (annoying!!)
+		//CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("background-music-aac.wav", true);
+        
+		bRet = true;
         
 	} while (0);
 
@@ -566,7 +551,6 @@ void DeeWorld::tick(float delta) {
     for(pos = _contactListener->_contacts.begin(); pos != _contactListener->_contacts.end(); ++pos)
     {
         ContactData contact = *pos;
-        CCLog("tick");
         // Get the box2d bodies for each object
         b2Body *bodyA = contact.fixtureA->GetBody();
         b2Body *bodyB = contact.fixtureB->GetBody();
@@ -580,12 +564,12 @@ void DeeWorld::tick(float delta) {
             // Is sprite A a player and sprite B a target?  If so, push the target on a list to be destroyed...
             if (iTagA == 0 && iTagB == 1) {
                 toDestroy.push_back(bodyB);
-                CCLog("Collision with %", "bodyB");
+                CCLog("Collision");
             }
             // Is sprite A a target and sprite B a player?  If so, push the target on a list to be destroyed...
             else if (iTagA == 1 && iTagB == 0) {
                 toDestroy.push_back(bodyA);
-                CCLog("Collision with %", "bodyA");
+                CCLog("Collision");
             }
             
         }
