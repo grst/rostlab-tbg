@@ -110,7 +110,7 @@ bool DeeWorld::init()
         //create the box for the player (currently with rectangle)
         CreateBox2DBodyForSprite(player, 0, NULL);
         
-		this->addChild(player);
+		this->addChild(player, 0, 0); // tag 0 for player, 1 target, 2 projectile
 
 		this->schedule( schedule_selector(DeeWorld::gameLogic), 1.0 );
 
@@ -135,7 +135,10 @@ bool DeeWorld::init()
         _b2dWorld = new b2World(gravity);
         
         this->schedule(schedule_selector(DeeWorld::tick));
-                
+        
+        // Create contact listener
+        _contactListener = new CContactListener();
+        _b2dWorld->SetContactListener(_contactListener);
         
 	} while (0);
 
@@ -267,7 +270,7 @@ void DeeWorld::ccTouchesBegan(cocos2d::CCSet* touches, cocos2d::CCEvent* event)
 	    {
 	        touch = (CCTouch*)(*it);
 	        pt = touch->getLocationInView();
-	        cocos2d::CCLog( "ccTouchesBegan id:%i %i,%in", touch->getID(), (int)pt.x, (int)pt.y );
+	        //cocos2d::CCLog( "ccTouchesBegan id:%i %i,%in", touch->getID(), (int)pt.x, (int)pt.y );
 	        it++;
 	    }
 }
@@ -283,7 +286,7 @@ void DeeWorld::ccTouchesMoved(cocos2d::CCSet* touches, cocos2d::CCEvent* event)
 	    {
 	        touch = (CCTouch*)(*it);
 	        pt = touch->getLocationInView();
-	        cocos2d::CCLog( "ccTouchesBegan id:%i %i,%in", touch->getID(), (int)pt.x, (int)pt.y );
+	        //cocos2d::CCLog( "ccTouchesBegan id:%i %i,%in", touch->getID(), (int)pt.x, (int)pt.y );
 	        it++;
 
 	        //world y
@@ -533,6 +536,69 @@ void DeeWorld::tick(float delta) {
             b->SetTransform(b2Position, b2Angle);
         }
     }
+    
+    
+    // Loop through all of the box2d bodies that are currently colliding, that we have
+    // gathered with our custom contact listener...
+    std::vector<b2Body *>toDestroy; //list of targets that the player collided with
+    std::vector<ContactData>::iterator pos;
+    for(pos = _contactListener->_contacts.begin(); pos != _contactListener->_contacts.end(); ++pos)
+    {
+        ContactData contact = *pos;
+        CCLog("tick");
+        // Get the box2d bodies for each object
+        b2Body *bodyA = contact.fixtureA->GetBody();
+        b2Body *bodyB = contact.fixtureB->GetBody();
+        if (bodyA->GetUserData() != NULL && bodyB->GetUserData() != NULL)
+        {
+            CCSprite *spriteA = (CCSprite *) bodyA->GetUserData();
+            CCSprite *spriteB = (CCSprite *) bodyB->GetUserData();
+            int iTagA = spriteA->getTag();
+            int iTagB = spriteB->getTag();
+            
+            // Is sprite A a player and sprite B a target?  If so, push the target on a list to be destroyed...
+            if (iTagA == 0 && iTagB == 1) {
+                toDestroy.push_back(bodyB);
+                CCLog("Collision with %", "bodyB");
+            }
+            // Is sprite A a target and sprite B a player?  If so, push the target on a list to be destroyed...
+            else if (iTagA == 1 && iTagB == 0) {
+                toDestroy.push_back(bodyA);
+                CCLog("Collision with %", "bodyA");
+            }
+            
+        }
+    }
+    
+    // Loop through all of the box2d bodies we wnat to destroy...
+    std::vector<b2Body *>::iterator pos2;
+    for(pos2 = toDestroy.begin(); pos2 != toDestroy.end(); ++pos2)
+    {
+        b2Body *body = *pos2;
+        
+        // See if there's any user data attached to the Box2D body
+        // There should be, since we set it in addBoxBodyForSprite
+        if (body->GetUserData() != NULL)
+        {
+            
+            // We know that the user data is a sprite since we set
+            // it that way, so cast it...
+            CCSprite *sprite = (CCSprite *) body->GetUserData();
+            
+            // Remove the sprite from the scene
+            //[_spriteSheet removeChild:sprite cleanup:YES];
+            this->removeChild( sprite, true );
+        }
+        
+        // Destroy the Box2D body as well
+        _b2dWorld->DestroyBody(body);
+    }
+    
+//    // If we've destroyed anything, play an amusing and malicious sound effect!  ;]
+//    if (toDestroy.size() > 0)
+//    {
+//        CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect( "cat_ouch.wav", false );
+//    }
 }
 
 void DeeWorld::registerWithTouchDispatcher()

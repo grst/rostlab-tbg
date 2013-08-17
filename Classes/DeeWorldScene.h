@@ -45,6 +45,7 @@ public:
     void CreateBox2DBodyForSprite( cocos2d::CCSprite *sprite, int iNumVerts, b2Vec2 verts[] );
     void tick(float delta);
     void spriteDone(CCNode* sender);
+    CContactListener *_contactListener;
     //cocos2d::extension::GLESDebugDraw *_debugDraw;
     
 
