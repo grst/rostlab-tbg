@@ -1,6 +1,11 @@
 #include "DeeWorldScene.h"
 #include "GameOverScene.h"
 #include "SimpleAudioEngine.h"
+USING_NS_CC;
+
+
+#define PTM_RATIO 32.0
+		
 
 using namespace cocos2d;
 
@@ -54,7 +59,7 @@ CCScene* DeeWorld::scene()
 bool DeeWorld::init()
 {
 
-	 if ( !CCLayer::init() ) return false;
+    if ( !CCLayer::init() ) return false;
 
 	bool bRet = false;
 	do 
@@ -101,6 +106,10 @@ bool DeeWorld::init()
         
 		player->setPosition( ccp(origin.x + player->getContentSize().width/2,
                                  origin.y + visibleSize.height/2) );
+        
+        //create the box for the player (currently with rectangle)
+        CreateBox2DBodyForSprite(player, 0, NULL);
+        
 		this->addChild(player);
 
 		this->schedule( schedule_selector(DeeWorld::gameLogic), 1.0 );
@@ -118,6 +127,16 @@ bool DeeWorld::init()
 		//CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("background-music-aac.wav", true);
 
 		bRet = true;
+        
+        
+        /////////////////////////////
+        // init Box2D
+        b2Vec2 gravity = b2Vec2(0.0f, 0.0f); //no gravity
+        _b2dWorld = new b2World(gravity);
+        
+        this->schedule(schedule_selector(DeeWorld::tick));
+                
+        
 	} while (0);
 
 	// Register the layer to touch dispatcher
@@ -144,12 +163,17 @@ void DeeWorld::addTarget()
 	int rangeY = (int)(maxY - minY);
 	// srand( TimGetTicks() );
 	int actualY = ( rand() % rangeY ) + (int)minY;
-
+    
+   
 	// Create the target slightly off-screen along the right edge,
 	// and along a random position along the Y axis as calculated
 	target->setPosition( 
 		ccp(winSize.width + (target->getContentSize().width/2), 
             CCDirector::sharedDirector()->getVisibleOrigin().y + actualY) );
+    
+    //create the box for the player (currently with rectangle)
+    CreateBox2DBodyForSprite(target, 0, NULL);
+
 	this->addChild(target);
 
 	// Determine speed of the target
@@ -164,7 +188,8 @@ void DeeWorld::addTarget()
                                             ccp(0 - target->getContentSize().width/2, actualY) );
 	CCFiniteTimeAction* actionMoveDone = CCCallFuncN::create( this, 
                                             callfuncN_selector(DeeWorld::spriteMoveFinished));
-	target->runAction( CCSequence::create(actionMove, actionMoveDone, NULL) );
+    CCFiniteTimeAction* box2dDone = CCCallFuncN::create(this, callfuncN_selector(DeeWorld::spriteDone));
+	target->runAction( CCSequence::create(actionMove, actionMoveDone, box2dDone) );
 
 	// Add to targets array
 	target->setTag(1);
@@ -174,11 +199,41 @@ void DeeWorld::addTarget()
 void DeeWorld::spriteMoveFinished(CCNode* sender)
 {
 	CCSprite *sprite = (CCSprite *)sender;
-	this->removeChild(sprite, true);
+	
 
 	if (sprite->getTag() == 1)  // target
 	{
+        //remove from target list
 		_targets->removeObject(sprite);
+        
+        //////
+        // box2d stuff! (remove objects from list)
+        // Loop through all of the Box2D bodies in our Box2D world...
+        // We're looking for the Box2D body corresponding to the sprite.
+        b2Body *spriteBody = NULL;
+        for(b2Body *b = _b2dWorld->GetBodyList(); b; b=b->GetNext())
+        {
+            // See if there's any user data attached to the Box2D body
+            // There should be, since we set it in addBoxBodyForSprite
+            if (b->GetUserData() != NULL) {
+                
+                // We know that the user data is a sprite since we set
+                // it that way, so cast it...
+                CCSprite *curSprite = (CCSprite *)b->GetUserData();
+                
+                // If the sprite for this body is the same as our current
+                // sprite, we've found the Box2D body we're looking for!
+                if (sprite == curSprite) {
+                    spriteBody = b;
+                    break;
+                }
+            }
+        }
+        
+        // If we found the body, we want to destroy it since the cat is offscreen now.
+        if (spriteBody != NULL) {
+            _b2dWorld->DestroyBody(spriteBody);
+        }
         
 		//diabled for testing
 		//GameOverScene *gameOverScene = GameOverScene::create();
@@ -188,8 +243,12 @@ void DeeWorld::spriteMoveFinished(CCNode* sender)
 	}
 	else if (sprite->getTag() == 2) // projectile
 	{
+        //box2d not implemented for projectiles
 		_projectiles->removeObject(sprite);
 	}
+    
+    //remove cocos2dx object
+    this->removeChild(sprite, true);
 }
 
 void DeeWorld::gameLogic(float dt)
@@ -246,6 +305,9 @@ void DeeWorld::ccTouchesEnded(cocos2d::CCSet* touches, cocos2d::CCEvent* event)
 
 	CCLog("++++++++after  x:%f, y:%f", location.x, location.y);
 
+    //projectiles deactivated. 
+    return;
+    
 	// Set up initial location of projectile
 	CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
     CCPoint origin = CCDirector::sharedDirector()->getVisibleOrigin();
@@ -357,6 +419,120 @@ void DeeWorld::updateGame(float dt)
 		this->removeChild(projectile, true);
 	}
 	projectilesToDelete->release();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+// This function send the vertice data to Box2D. Also, if you pass iNumVerts==0 and verts==NULL it simply creates a
+// box round your sprite.
+void DeeWorld::CreateBox2DBodyForSprite( cocos2d::CCSprite *sprite, int iNumVerts, b2Vec2 verts[] )
+{
+    if( _b2dWorld==NULL )
+        return;
+    
+    CCPoint pos = sprite->getPosition();
+	CCSize size = sprite->getContentSize();
+    
+    b2BodyDef spriteBodyDef;
+    spriteBodyDef.type = b2_dynamicBody;
+    spriteBodyDef.position.Set(pos.x/PTM_RATIO, pos.y/PTM_RATIO);
+    spriteBodyDef.userData = sprite;
+    b2Body *spriteBody = _b2dWorld->CreateBody(&spriteBodyDef);
+    
+    b2PolygonShape spriteShape;
+    
+    if( iNumVerts!=0 )
+    {
+        spriteShape.Set(verts, iNumVerts);
+        b2FixtureDef spriteShapeDef;
+        spriteShapeDef.shape = &spriteShape;
+        spriteShapeDef.density = 10.0;
+        spriteShapeDef.isSensor = true;
+        
+        spriteBody->CreateFixture(&spriteShapeDef);
+    }
+    else
+    {
+        // No Vertice supplied so just make a box round the sprite
+        b2BodyDef spriteBodyDef;
+        spriteBodyDef.type = b2_dynamicBody;
+        spriteBodyDef.position.Set( pos.x/PTM_RATIO, pos.y/PTM_RATIO );
+        spriteBodyDef.userData = sprite;
+        b2Body *spriteBody = _b2dWorld->CreateBody( &spriteBodyDef );
+        
+        b2PolygonShape spriteShape;
+        spriteShape.SetAsBox( size.width/PTM_RATIO/2, size.height/PTM_RATIO/2 );
+        b2FixtureDef spriteShapeDef;
+        spriteShapeDef.shape = &spriteShape;
+        spriteShapeDef.density = 10.0;
+        spriteShapeDef.isSensor = true;                     // isSensor true when you want to know when objects will collide without triggering a box2d collision response
+        spriteBody->CreateFixture( &spriteShapeDef );
+    }
+}
+
+void DeeWorld::spriteDone(CCNode* sender)
+{
+    // This selector is called from CCCallFuncN, and it passes the object the action is
+    // run on as a parameter.  We know it's a sprite, so cast it as that!
+    CCSprite *sprite = (CCSprite *)sender;
+    
+    // Loop through all of the Box2D bodies in our Box2D world...
+    // We're looking for the Box2D body corresponding to the sprite.
+    b2Body *spriteBody = NULL;
+    for(b2Body *b = _b2dWorld->GetBodyList(); b; b=b->GetNext())
+    {
+        // See if there's any user data attached to the Box2D body
+        // There should be, since we set it in addBoxBodyForSprite
+        if (b->GetUserData() != NULL) {
+            
+            // We know that the user data is a sprite since we set
+            // it that way, so cast it...
+            CCSprite *curSprite = (CCSprite *)b->GetUserData();
+            
+            // If the sprite for this body is the same as our current
+            // sprite, we've found the Box2D body we're looking for!
+            if (sprite == curSprite) {
+                spriteBody = b;
+                break;
+            }
+        }
+    }
+    
+    // If we found the body, we want to destroy it since the cat is offscreen now.
+    if (spriteBody != NULL) {
+        _b2dWorld->DestroyBody(spriteBody);
+    }
+    
+//    // And of course we need to remove the Cocos2D sprite too.
+//    m_spriteSheet->removeChild(sprite, true);
+//    //m_spriteSheet->
+}
+
+void DeeWorld::tick(float delta) {
+    _b2dWorld->Step(delta, 10, 10);
+    // Loop through all of the Box2D bodies in our Box2D world..
+    for(b2Body *b = _b2dWorld->GetBodyList(); b; b=b->GetNext())
+    {
+        // See if there's any user data attached to the Box2D body
+        // There should be, since we set it in addBoxBodyForSprite
+        if (b->GetUserData() != NULL)
+        {
+            // We know that the user data is a sprite since we set
+            // it that way, so cast it...
+            CCSprite *sprite = (CCSprite *)b->GetUserData();
+            
+            //TODO: sprite might already have been removed -> null pointer exception
+            
+            
+            // Convert the Cocos2D position/rotation of the sprite to the Box2D position/rotation
+            CCPoint Pos = sprite->getPosition();
+            b2Vec2 b2Position = b2Vec2(Pos.x/PTM_RATIO,
+                                           Pos.y/PTM_RATIO);
+            float32 b2Angle = -1 * CC_DEGREES_TO_RADIANS(sprite->getRotation());
+                
+            // Update the Box2D position/rotation to match the Cocos2D position/rotation
+            b->SetTransform(b2Position, b2Angle);
+        }
+    }
 }
 
 void DeeWorld::registerWithTouchDispatcher()

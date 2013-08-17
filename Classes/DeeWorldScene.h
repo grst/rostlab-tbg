@@ -2,6 +2,10 @@
 #define __DEEWORLD_SCENE_H__
 
 #include "cocos2d.h"
+#include "Box2D.h"
+//for debug-draw
+//#include "GLES-Render.h"
+#include "ContactListener.h"
 
 #include "SimpleAudioEngine.h"
 
@@ -35,11 +39,19 @@ public:
 	virtual void ccTouchesBegan(cocos2d::CCSet * touches, cocos2d::CCEvent * event); // When touches are started.
 	virtual void ccTouchesMoved(cocos2d::CCSet * touches, cocos2d::CCEvent * event); // When touches are moved
 	virtual void ccTouchesEnded(cocos2d::CCSet * touches, cocos2d::CCEvent * event); // When touches are ended.
+    
+    //box2d
+    b2World *_b2dWorld;
+    void CreateBox2DBodyForSprite( cocos2d::CCSprite *sprite, int iNumVerts, b2Vec2 verts[] );
+    void tick(float delta);
+    void spriteDone(CCNode* sender);
+    //cocos2d::extension::GLESDebugDraw *_debugDraw;
+    
 
 protected:
 	cocos2d::CCArray *_targets;
 	cocos2d::CCArray *_projectiles;
-	cocos2d::CCSprite *player;
+	cocos2d::CCSprite *player;    
 	int _projectilesDestroyed;
 
 	void addTarget();
