@@ -4,6 +4,7 @@
 #include "TBGTarget.h"
 #include "helper/PositionHelper.h"
 #include "helper/MatrixHelper.h"
+#include "helper/AminoAcid.h"
 #include <iostream>
 #include <string>
 
@@ -246,9 +247,8 @@ void DeeWorld::addTarget() {
 
 	CCLog("ImagePath: %s", MatrixHelper::getImagePathForAcid(tbg->acidType));
 
-	CCSprite *target = CCSprite::create(
-			MatrixHelper::getImagePathForAcid(tbg->acidType),
-			CCRectMake(0, 0, 50, 50));
+	AminoAcid *target  = AminoAcid::create(tbg->acidType);
+			
 	tbg->setSprite(target);
 
 	// Determine where to spawn the target along the Y axis

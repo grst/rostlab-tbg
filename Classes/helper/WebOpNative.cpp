@@ -36,6 +36,8 @@ void WebOpNative::openURLOS(const char* url){
 // DO NOT FORGET to add "http://"
 void WebOpNative::openURLJNI(const char* url)
 {
+    #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+
 	CCLog("Involking openFansPage JNI...");
 	    JniMethodInfo t;
 
@@ -46,4 +48,5 @@ void WebOpNative::openURLJNI(const char* url)
 	        jstring str = t.env->NewStringUTF(url);
 	        t.env->CallStaticVoidMethod(t.classID,t.methodID,str);
 	    }
+    #endif
 }
