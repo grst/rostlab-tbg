@@ -11,7 +11,8 @@
 
 class AminoAcid: public cocos2d::CCSprite {
 private:
-	int direction;
+    //default value: negative
+	int direction = -1;
     char type;
 public:
     void setDirection(int d);

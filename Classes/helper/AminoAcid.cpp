@@ -18,7 +18,7 @@ int AminoAcid::getDirection() {
 char AminoAcid::getType() {
     return this->type;
 }
-//d is an ankle between 0 and 360 degree
+//d is an angle between 0 and 360 degree
 void AminoAcid::setDirection(int d){
     this->direction = d%360;
 }
@@ -33,6 +33,7 @@ AminoAcid* AminoAcid::create(char type){
                                         MatrixHelper::getImagePathForAcid(type),
                                         CCRectMake(0, 0, 50, 50)))
     {
+        pobSprite->setType(type);
         pobSprite->autorelease();
         return pobSprite;
     }
