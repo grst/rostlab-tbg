@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="C++" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../cocos2dx/actions">
+      <sourceFolder url="file://$MODULE_DIR$/../../cocos2dx/actions" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../cocos2dx/base_nodes">
+      <sourceFolder url="file://$MODULE_DIR$/../../cocos2dx/base_nodes" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../cocos2dx/cocoa">
+      <sourceFolder url="file://$MODULE_DIR$/../../cocos2dx/cocoa" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../cocos2dx/draw_nodes">
+      <sourceFolder url="file://$MODULE_DIR$/../../cocos2dx/draw_nodes" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../cocos2dx/effects">
+      <sourceFolder url="file://$MODULE_DIR$/../../cocos2dx/effects" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../cocos2dx/kazmath/include">
+      <sourceFolder url="file://$MODULE_DIR$/../../cocos2dx/kazmath/include" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../cocos2dx/keypad_dispatcher">
+      <sourceFolder url="file://$MODULE_DIR$/../../cocos2dx/keypad_dispatcher" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../cocos2dx/label_nodes">
+      <sourceFolder url="file://$MODULE_DIR$/../../cocos2dx/label_nodes" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../cocos2dx/layers_scenes_transitions_nodes">
+      <sourceFolder url="file://$MODULE_DIR$/../../cocos2dx/layers_scenes_transitions_nodes" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../cocos2dx/menu_nodes">
+      <sourceFolder url="file://$MODULE_DIR$/../../cocos2dx/menu_nodes" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../cocos2dx/misc_nodes">
+      <sourceFolder url="file://$MODULE_DIR$/../../cocos2dx/misc_nodes" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../cocos2dx/particle_nodes">
+      <sourceFolder url="file://$MODULE_DIR$/../../cocos2dx/particle_nodes" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../cocos2dx/script_support">
+      <sourceFolder url="file://$MODULE_DIR$/../../cocos2dx/script_support" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../cocos2dx/shaders">
+      <sourceFolder url="file://$MODULE_DIR$/../../cocos2dx/shaders" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../cocos2dx/sprite_nodes">
+      <sourceFolder url="file://$MODULE_DIR$/../../cocos2dx/sprite_nodes" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../cocos2dx/support">
+      <sourceFolder url="file://$MODULE_DIR$/../../cocos2dx/support" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../cocos2dx/text_input_node">
+      <sourceFolder url="file://$MODULE_DIR$/../../cocos2dx/text_input_node" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../cocos2dx/textures">
+      <sourceFolder url="file://$MODULE_DIR$/../../cocos2dx/textures" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../cocos2dx/tilemap_parallax_nodes">
+      <sourceFolder url="file://$MODULE_DIR$/../../cocos2dx/tilemap_parallax_nodes" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../cocos2dx/touch_dispatcher">
+      <sourceFolder url="file://$MODULE_DIR$/../../cocos2dx/touch_dispatcher" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$" isTestSource="false" />
+    </content>
+    <orderEntry type="jdk" jdkName="cocos2dx" jdkType="CppSdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
+

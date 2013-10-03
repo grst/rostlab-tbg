@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../Classes/Classes.iml" filepath="$PROJECT_DIR$/../Classes/Classes.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../cocos2dx/platform/android/java/java.iml" filepath="$PROJECT_DIR$/../../cocos2dx/platform/android/java/java.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rostlab_tbg.iml" filepath="$PROJECT_DIR$/rostlab_tbg.iml" />
+    </modules>
+  </component>
+</project>
+
