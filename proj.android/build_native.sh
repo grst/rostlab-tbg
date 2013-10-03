@@ -1,3 +1,4 @@
+#!/bin/sh
 APPNAME="rostlab_tbg"
 
 # paths
@@ -39,6 +40,9 @@ echo "please define NDK_ROOT"
 exit 1
 fi
 
+echo $( dirname "${BASH_SOURCE[0]}" );
+echo ""
+echo ""
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # ... use paths relative to current directory
 COCOS2DX_ROOT="$DIR/../.."
