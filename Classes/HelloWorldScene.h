@@ -2,6 +2,9 @@
 #define __HELLOWORLD_SCENE_H__
 
 #include "cocos2d.h"
+using namespace cocos2d;
+
+#include "Box2D.h"
 
 #include "SimpleAudioEngine.h"
 
