@@ -6,7 +6,6 @@ using namespace cocos2d;
 
 #include "Box2D.h"
 
-#include "SimpleAudioEngine.h"
 
 class HelloWorld: public cocos2d::CCLayerColor {
 public:
