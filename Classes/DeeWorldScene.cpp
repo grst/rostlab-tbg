@@ -1,6 +1,7 @@
 #include "DeeWorldScene.h"
 #include "GameOverScene.h"
 #include "SimpleAudioEngine.h"
+#include "Box2D.h"
 
 using namespace cocos2d;
 
@@ -114,7 +115,7 @@ bool DeeWorld::init()
 		// see http://www.cocos2d-x.org/boards/6/topics/1478
 		this->schedule( schedule_selector(DeeWorld::updateGame) );
 
-		// disabled temporarly  (annoying!!)
+		// disabled temporarily  (annoying!!)
 		//CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("background-music-aac.wav", true);
 
 		bRet = true;
@@ -180,7 +181,7 @@ void DeeWorld::spriteMoveFinished(CCNode* sender)
 	{
 		_targets->removeObject(sprite);
         
-		//diabled for testing
+		//disabled for testing
 		//GameOverScene *gameOverScene = GameOverScene::create();
 		//gameOverScene->getLayer()->getLabel()->setString("You Lose :[");
 		//CCDirector::sharedDirector()->replaceScene(gameOverScene);
@@ -206,10 +207,12 @@ void DeeWorld::ccTouchesBegan(cocos2d::CCSet* touches, cocos2d::CCEvent* event)
 	    CCPoint pt;
 	    for( int iTouchCount = 0; iTouchCount < touches->count(); iTouchCount++ )
 	    {
-	        touch = (CCTouch*)(*it);
-	        pt = touch->getLocationInView();
-	        cocos2d::CCLog( "ccTouchesBegan id:%i %i,%in", touch->getID(), (int)pt.x, (int)pt.y );
-	        it++;
+	        if(iTouchCount == touches ->count()  -1 ){
+                    touch = (CCTouch*)(*it);
+                    pt = touch->getLocationInView();
+                    cocos2d::CCLog( "ccTouchesBegan id:%i %i,%in", touch->getID(), (int)pt.x, (int)pt.y );
+                    it++;
+	        }
 	    }
 }
 
@@ -286,7 +289,7 @@ void DeeWorld::ccTouchesEnded(cocos2d::CCSet* touches, cocos2d::CCEvent* event)
 	projectile->setTag(2);
 	_projectiles->addObject(projectile);
 
-	//disabled temporarly - working!
+	//disabled temporarily - working!
 	//CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("pew-pew-lei.wav");
 }
 
