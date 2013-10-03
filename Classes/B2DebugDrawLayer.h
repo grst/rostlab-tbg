@@ -11,7 +11,6 @@
 
 #include "cocos2d.h"
 #include "Box2D.h"
-
 #include "GLES-Render.h"
 
 class B2DebugDrawLayer : public cocos2d::CCLayer

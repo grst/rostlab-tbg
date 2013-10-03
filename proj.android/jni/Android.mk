@@ -2,16 +2,21 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
+APP_CFLAGS += -Wno-error=format-security
+
 LOCAL_MODULE := game_shared
 
 LOCAL_MODULE_FILENAME := libgame
 
 LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/AppDelegate.cpp \
+                   ../../Classes/B2DebugDrawLayer.cpp \
                    ../../Classes/HelloWorldScene.cpp \
-                    ../../Classes/DeeWorldScene.cpp \
-		   			../../Classes/GameOverScene.cpp
-                   
+                   ../../Classes/DeeWorldScene.cpp \
+                   ../../Classes/GameOverScene.cpp \
+                   ../../Classes/SplashScreen.cpp \
+                   ../../Classes/ContactListener.cpp \
+                   ../../Classes/GLES-Render.cpp 
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../..//lib/Box2D
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/../../Classes 

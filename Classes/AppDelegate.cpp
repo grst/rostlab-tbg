@@ -1,5 +1,7 @@
 #include "AppDelegate.h"
 #include "DeeWorldScene.h"
+#include "HelloWorldScene.h"
+#include "SplashScreen.h"
 
 USING_NS_CC;
 
@@ -45,7 +47,11 @@ bool AppDelegate::applicationDidFinishLaunching() {
     pDirector->setAnimationInterval(1.0 / 60);
 
     // create a scene. it's an autorelease object
+   // CCScene *pScene = SplashScreen::scene();
+
+    // for dev reasons use normal screen
     CCScene *pScene = DeeWorld::scene();
+
 
     // run
     pDirector->runWithScene(pScene);
