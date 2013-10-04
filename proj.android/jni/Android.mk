@@ -16,7 +16,9 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/GameOverScene.cpp \
                    ../../Classes/SplashScreen.cpp \
                    ../../Classes/ContactListener.cpp \
-                   ../../Classes/GLES-Render.cpp 
+                   ../../Classes/GLES-Render.cpp  \
+                   ../../Classes/TBGTarget.cpp  \
+                   ../../Classes/WebOpNative.cpp
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../..//lib/Box2D
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/../../Classes 

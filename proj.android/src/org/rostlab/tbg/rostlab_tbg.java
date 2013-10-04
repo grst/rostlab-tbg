@@ -25,16 +25,28 @@ package org.rostlab.tbg;
 
 import org.cocos2dx.lib.Cocos2dxActivity;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 public class rostlab_tbg extends Cocos2dxActivity {
 
+    private static Activity me = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        me = this;
     }
 
     static {
         System.loadLibrary("game");
+    }
+
+    public static void openURL(String url) {
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        me.startActivity(i);
     }
 }

@@ -8,22 +8,27 @@
 #ifndef SPLASHSCREEN_H_
 #define SPLASHSCREEN_H_
 
-
 #include "cocos2d.h"
 
-class SplashScreen : public cocos2d::CCLayer
-{
+class SplashScreen: public cocos2d::CCLayer {
 public:
-    // Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
-    virtual bool init();
+	// Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
+	virtual bool init();
 
-    // there's no 'id' in cpp, so we recommand to return the exactly class pointer
-    static cocos2d::CCScene* scene();
+	// there's no 'id' in cpp, so we recommand to return the exactly class pointer
+	static cocos2d::CCScene* scene();
 
-    void endScreen();
+	static cocos2d::CCScene* scene(std::string str);
 
-    // implement the "static node()" method manually
-    CREATE_FUNC(SplashScreen);
+	static std::string slogan;
+	void endScreen();
+
+	// implement the "static node()" method manually
+	CREATE_FUNC(SplashScreen)
+	;
+protected:
+
 };
+
 
 #endif // __HELLOWORLD_SCENE_H__

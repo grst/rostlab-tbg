@@ -6,6 +6,7 @@
 //for debug-draw
 #include "B2DebugDrawLayer.h"
 #include "GLES-Render.h"
+#include "TBGTarget.h"
 
 #include "ContactListener.h"
 
@@ -29,7 +30,12 @@ public:
 	// implement the "static node()" method manually
 	CREATE_FUNC (DeeWorld);
 
-	void spriteMoveFinished(cocos2d::CCNode* sender);
+	void loadGame();
+
+	void moveTarget(TBGTarget* target);
+	void createTargets();
+
+	void spriteMoveFinished(cocos2d::CCNode* sender, void* tbg);
 
 	void gameLogic(float dt);
 
@@ -56,6 +62,7 @@ protected:
 	cocos2d::CCArray *_projectiles;
 	cocos2d::CCSprite *player;    
 	int _projectilesDestroyed;
+	int _targetsAlive;
 
 	void addTarget();
 
