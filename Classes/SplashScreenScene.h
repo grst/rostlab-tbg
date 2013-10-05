@@ -23,33 +23,33 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#ifndef _GAME_OVER_SCENE_H_
-#define _GAME_OVER_SCENE_H_
+#ifndef SPLASHSCREEN_H_
+#define SPLASHSCREEN_H_
 
 #include "cocos2d.h"
 
-class GameOverLayer : public cocos2d::CCLayerColor
+class SplashScreenLayer : public cocos2d::CCLayerColor
 {
 public:
-    GameOverLayer():_label(NULL) {};
-    virtual ~GameOverLayer();
+	SplashScreenLayer():_label(NULL) {};
+    virtual ~SplashScreenLayer();
     bool init();
-    CREATE_FUNC(GameOverLayer);
+    CREATE_FUNC(SplashScreenLayer);
 
-    void gameOverDone();
+    void endScreen();
 
     CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _label, Label);
 };
 
-class GameOverScene : public cocos2d::CCScene
+class SplashScreenScene : public cocos2d::CCScene
 {
 public:
-    GameOverScene():_layer(NULL) {};
-    ~GameOverScene();
+	SplashScreenScene():_layer(NULL) {};
+    ~SplashScreenScene();
     bool init();
-    CREATE_FUNC(GameOverScene);
+    CREATE_FUNC(SplashScreenScene);
   
-    CC_SYNTHESIZE_READONLY(GameOverLayer*, _layer, Layer);
+    CC_SYNTHESIZE_READONLY(SplashScreenLayer*, _layer, Layer);
 };
 
 #endif // _GAME_OVER_SCENE_H_

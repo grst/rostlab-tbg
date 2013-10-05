@@ -1,7 +1,6 @@
 #include "AppDelegate.h"
 #include "DeeWorldScene.h"
-#include "HelloWorldScene.h"
-#include "SplashScreen.h"
+#include "SplashScreenScene.h"
 
 USING_NS_CC;
 
