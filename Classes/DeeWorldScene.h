@@ -4,11 +4,12 @@
 #include "cocos2d.h"
 #include "Box2D.h"
 //for debug-draw
-#include "B2DebugDrawLayer.h"
-#include "GLES-Render.h"
+#include "box2d/B2DebugDrawLayer.h"
+#include "box2d/GLES-Render.h"
 #include "TBGTarget.h"
 
-#include "ContactListener.h"
+
+#include "box2d/ContactListener.h"
 
 #include "SimpleAudioEngine.h"
 
@@ -70,8 +71,10 @@ private:
 	void countdown();
 	int score;
 	int timer;
-	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _timerLabel, Label);
-
+	std::string code;
+	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _timerLabel, timerLabel);
+	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _codeLabel, codeLabel);
+	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _scoreLabel, scoreLabel);
 
 };
 

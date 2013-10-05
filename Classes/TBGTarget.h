@@ -22,6 +22,8 @@ public:
 	cocos2d::CCSprite * getSprite();
 	float velX;
 	float velY;
+	char acidType;
+	int getScore(TBGTarget* other);
 private:
 	cocos2d::CCSprite * m_Sprite;
 

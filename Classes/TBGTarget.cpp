@@ -6,9 +6,12 @@
  */
 
 #include "TBGTarget.h"
+#include "helper/MatrixHelper.h"
 
 TBGTarget::TBGTarget() {
-
+	velX = rand() % 4 + 1;
+	velY = rand() % 4 + 1;
+	acidType = MatrixHelper::getRandomAminoAcid();
 }
 
 TBGTarget::~TBGTarget() {
@@ -22,3 +25,16 @@ cocos2d::CCSprite * TBGTarget::getSprite() {
 	return this->m_Sprite;
 }
 
+/*
+ * calculates the BLOSUM score
+ */
+int TBGTarget::getScore(TBGTarget * other) {
+
+	// TODO compare
+	if (other->acidType == this->acidType) {
+		return 10;
+	}
+
+	return 1;
+
+}

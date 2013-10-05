@@ -2,13 +2,17 @@
 #include "SplashScreenScene.h"
 #include "SimpleAudioEngine.h"
 #include "TBGTarget.h"
-#include "PositionHelper.h"
+#include "helper/PositionHelper.h"
+#include "helper/MatrixHelper.h"
+#include <iostream>
+#include <string>
 
 USING_NS_CC;
 
 #define PTM_RATIO 32.0
 #define NUMBER_START_TARGETS 6
-#define INTRO_TIME_SECONDS 0
+#define INTRO_TIME_SECONDS 1
+#define PLAYER_IMAGE "Player.png"
 
 using namespace cocos2d;
 
@@ -75,11 +79,18 @@ bool DeeWorld::init() {
 		CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 		CCPoint origin = CCDirector::sharedDirector()->getVisibleOrigin();
 
-		pCloseItem->setPosition(
+	/*	pCloseItem->setPosition(
 				ccp(
 						origin.x + visibleSize.width
 								- pCloseItem->getContentSize().width / 2,
-						origin.y + pCloseItem->getContentSize().height / 2));
+						origin.y + pCloseItem->getContentSize().height / 2)); */
+
+		pCloseItem->setPosition(
+						ccp(
+
+										pCloseItem->getContentSize().width / 2,
+								origin.y + pCloseItem->getContentSize().height / 2));
+
 
 		// Create a menu with the "close" menu item, it's an auto release object.
 		CCMenu* pMenu = CCMenu::create(pCloseItem, NULL);
@@ -106,7 +117,7 @@ bool DeeWorld::init() {
 		/////////////////////////////
 		// 2. add your codes below...
 
-		player = CCSprite::create("Player.png", CCRectMake(0, 0, 27, 40));
+		player = CCSprite::create(PLAYER_IMAGE, CCRectMake(0, 0, 27, 40));
 
 		//create the box for the player (currently with rectangle)
 		CreateBox2DBodyForSprite(player, 0, NULL);
@@ -140,16 +151,49 @@ bool DeeWorld::init() {
 void DeeWorld::loadGame() {
 	this->score = 0;
 	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
-	player->setPosition(ccp(visibleSize.width / 2 , player->getContentSize().height));
+	player->setPosition(
+			ccp(visibleSize.width / 2, player->getContentSize().height));
+
+	//score
+	score =0;
+	// int -> str
+	string temp = static_cast<ostringstream*>(&(ostringstream()
+					<< this->timer))->str();
+	this->_scoreLabel = CCLabelTTF::create(temp.c_str(), "Helvetica",
+			visibleSize.height * 1 / 8,
+			CCSizeMake(60, visibleSize.height * 1 / 7), kCCTextAlignmentRight);
+	this->_scoreLabel->retain();
+	this->_scoreLabel->setPosition(
+			ccp(visibleSize.width - 30, visibleSize.height +10));
+	this->_scoreLabel->setColor(ccc3(20, 20, 255));
+	this->addChild(_scoreLabel);
+
+	//code
+	int i;
+	for(i=0; i< 3; i++){
+		code = MatrixHelper::getRandomAminoAcid() + code;
+	}
+
+	this->_codeLabel = CCLabelTTF::create(code.c_str(), "Helvetica",
+			visibleSize.height * 1 / 8,
+			CCSizeMake(100, visibleSize.height * 1 / 7), kCCTextAlignmentRight);
+	this->_codeLabel->retain();
+	this->_codeLabel->setPosition(
+			ccp(visibleSize.width - 50, visibleSize.height * 1 / 6 ));
+	this->_codeLabel->setColor(ccc3(20, 20, 255));
+	this->addChild(_codeLabel);
 
 	//timer
-	this->timer =INTRO_TIME_SECONDS;
+	this->timer = INTRO_TIME_SECONDS;
 
-	this->_timerLabel = CCLabelTTF::create("", "Helvetica", visibleSize.height * 2/3,
-            CCSizeMake(visibleSize.width , visibleSize.height), kCCTextAlignmentCenter);
+	this->_timerLabel = CCLabelTTF::create("", "Helvetica",
+			visibleSize.height * 2 / 3,
+			CCSizeMake(visibleSize.width, visibleSize.height),
+			kCCTextAlignmentCenter);
 	this->_timerLabel->retain();
-	this->_timerLabel->setPosition(ccp(visibleSize.width/ 2, visibleSize.height / 2));
-	this->_timerLabel->setColor(ccc3(0,0,0));
+	this->_timerLabel->setPosition(
+			ccp(visibleSize.width / 2, visibleSize.height / 2));
+	this->_timerLabel->setColor(ccc3(0, 0, 0));
 	this->addChild(_timerLabel);
 
 	this->countdown();
@@ -160,26 +204,25 @@ void DeeWorld::loadGame() {
 
 void DeeWorld::countdown() {
 
-
 	if (this->timer >= 1) {
 		//convert int to string
-		string timeStr = static_cast<ostringstream*>( &(ostringstream() << this->timer) )->str();
+		string timeStr = static_cast<ostringstream*>(&(ostringstream()
+				<< this->timer))->str();
 		this->_timerLabel->setString(timeStr.c_str());
-		this->timer = this->timer -1;
+		this->timer = this->timer - 1;
 		this->runAction(
-						CCSequence::create(CCDelayTime::create(1),
-								CCCallFunc::create(this,
-										callfunc_selector(
-												DeeWorld::countdown)),
+				CCSequence::create(CCDelayTime::create(1),
+						CCCallFunc::create(this,
+								callfunc_selector(DeeWorld::countdown)),
 
-												NULL));
+						NULL));
 	} else {
 		CCLog("create targets");
 		this->removeChild(this->_timerLabel);
 		if (this->_timerLabel) {
 			this->_timerLabel->release();
 			this->_timerLabel = NULL;
-			}
+		}
 		this->createTargets();
 	}
 }
@@ -199,8 +242,14 @@ void DeeWorld::menuCloseCallback(CCObject* pSender) {
 // cpp with cocos2d-x
 void DeeWorld::addTarget() {
 
-	CCSprite *target = CCSprite::create("Target.png", CCRectMake(0, 0, 27, 38));
-	//create the box for the player (currently with rectangle)
+	TBGTarget* tbg = new TBGTarget();
+
+	CCLog("ImagePath: %s", MatrixHelper::getImagePathForAcid(tbg->acidType));
+
+	CCSprite *target = CCSprite::create(
+			MatrixHelper::getImagePathForAcid(tbg->acidType),
+			CCRectMake(0, 0, 50, 50));
+	tbg->setSprite(target);
 
 	// Determine where to spawn the target along the Y axis
 	CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
@@ -217,8 +266,6 @@ void DeeWorld::addTarget() {
 	int ranEdge = rand() % 4;
 	int startX = 0;
 	int startY = 0;
-	int endX = target->getContentSize().width;
-	int endY = target->getContentSize().height;
 
 	switch (ranEdge) {
 
@@ -226,39 +273,26 @@ void DeeWorld::addTarget() {
 	case 0:
 		startX = winSize.width + (target->getContentSize().width / 2);
 		startY = CCDirector::sharedDirector()->getVisibleOrigin().y + actualY;
-		endX = 0 - target->getContentSize().width / 2;
-		endY = actualY;
 		break;
 // lower
 	case 1:
-		endY = winSize.width + (target->getContentSize().width / 2);
 		startX = CCDirector::sharedDirector()->getVisibleOrigin().y + actualY;
 		startY = 0 - target->getContentSize().width / 2;
-		endX = actualY;
 		break;
 
 // left
 	case 2:
-		endX = winSize.width + (target->getContentSize().width / 2);
 		startY = CCDirector::sharedDirector()->getVisibleOrigin().y + actualY;
 		startX = 0 - target->getContentSize().width / 2;
-		endY = actualY;
 		break;
 // upper
 	case 3:
 		startY = winSize.width + (target->getContentSize().width / 2);
 		startX = CCDirector::sharedDirector()->getVisibleOrigin().y + actualY;
-		endY = 0 - target->getContentSize().width / 2;
-		endX = actualY;
 		break;
 	}
 
 	target->setPosition(ccp(startX, startY));
-
-	TBGTarget* tbg = new TBGTarget();
-	tbg->setSprite(target);
-	tbg->velX = rand() % 4 + 1;
-	tbg->velY = rand() % 4 + 1;
 
 	this->addChild(target);
 
@@ -302,13 +336,11 @@ void DeeWorld::moveTarget(TBGTarget* tbg) {
 		point.y = winSize.height;
 	}
 
-//target->setPosition(ccp(startX, startY));
-
 // Determine speed of the target
 	int minDuration = (int) 2.0;
 	int maxDuration = (int) 4.0;
 	int rangeDuration = maxDuration - minDuration;
-// srand( TimGetTicks() );
+
 	int actualDuration = (rand() % rangeDuration) + minDuration;
 
 // Create the actions
@@ -624,7 +656,7 @@ void DeeWorld::tick(float delta) {
 
 			//ATTETION we don't delete the sprite out of the array, this might cause memory leaks
 
-			_targetsAlive = _targetsAlive - 1;
+			//_targetsAlive = _targetsAlive - 1;
 			CCLOG("remaining % d", _targetsAlive);
 			if (_targetsAlive <= 0) {
 

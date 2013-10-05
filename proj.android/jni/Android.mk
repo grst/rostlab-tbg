@@ -10,14 +10,15 @@ LOCAL_MODULE_FILENAME := libgame
 
 LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/AppDelegate.cpp \
-                   ../../Classes/B2DebugDrawLayer.cpp \
+                   ../../Classes/box2d/B2DebugDrawLayer.cpp \
                    ../../Classes/DeeWorldScene.cpp \
                    ../../Classes/SplashScreenScene.cpp \
-                   ../../Classes/ContactListener.cpp \
-                   ../../Classes/GLES-Render.cpp  \
+                   ../../Classes/box2d/ContactListener.cpp \
+                   ../../Classes/box2d/GLES-Render.cpp  \
                    ../../Classes/TBGTarget.cpp  \
-                   ../../Classes/PositionHelper.cpp  \
-                   ../../Classes/WebOpNative.cpp
+                   ../../Classes/helper/PositionHelper.cpp  \
+                   ../../Classes/helper/MatrixHelper.cpp  \
+                   ../../Classes/helper/WebOpNative.cpp
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../..//lib/Box2D
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/../../Classes 
