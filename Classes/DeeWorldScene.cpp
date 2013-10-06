@@ -266,7 +266,6 @@ void DeeWorld::addTarget() {
 
 	CCLog("ImagePath: %s", MatrixHelper::getImagePathForAcid(tbg->acidType));
 
-<<<<<<< HEAD
 	AminoAcid *target = AminoAcid::create(tbg->acidType);
 	//target->setZOrder(10);
 	tbg->setSprite(target);
@@ -359,7 +358,6 @@ void DeeWorld::addTarget() {
 void DeeWorld::moveTarget(TBGTarget* tbg) {
 
 	CCSprite *target = tbg->getSprite();
-<<<<<<< HEAD
     AminoAcid *aa = dynamic_cast<AminoAcid*>(target);
     if(aa != 0) {
         CCLog("this is an aa object");
