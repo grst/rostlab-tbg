@@ -16,9 +16,11 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/BoardAcid.cpp  \
                    ../../Classes/SplashScreenScene.cpp \
                    ../../Classes/box2d/ContactListener.cpp \
+                   ../../Classes/helper/AminoAcid.cpp \
                    ../../Classes/box2d/GLES-Render.cpp  \
                    ../../Classes/helper/PositionHelper.cpp  \
                    ../../Classes/helper/MatrixHelper.cpp  \
+                   ../../Classes/helper/HelperFunctions.cpp  \
                    ../../Classes/helper/WebOpNative.cpp
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../..//lib/Box2D
