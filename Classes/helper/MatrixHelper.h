@@ -11,6 +11,10 @@
 #include <string>
 #include <stdlib.h>
 #include <stdio.h>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <ctype.h>
 #include "cocos2d.h"
 
 
@@ -20,6 +24,12 @@ public:
 	virtual ~MatrixHelper();
 	static const char * getImagePathForAcid(char c);
 	static char getRandomAminoAcid();
+	static int getScoreForAminoAcid(char c, char d);
+	static int getAcidInt(char c);
+	static void loadMatrix(std::string name);
+private:
+	static int** scoringMatrix;
+	static bool firstTime;
 };
 
 #endif /* MATRIXHELPER_H_ */
