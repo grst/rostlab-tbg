@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <ctype.h>
+#include <cmath>
 
 #include "cocos2d.h"
 #include "Box2D.h"

@@ -12,7 +12,7 @@
 USING_NS_CC;
 
 #define PTM_RATIO 32.0
-#define NUMBER_START_TARGETS 1
+#define NUMBER_START_TARGETS 4
 #define INTRO_TIME_SECONDS 1
 #define PLAYER_IMAGE "Player.png"
 
@@ -308,63 +308,60 @@ void DeeWorld::addTarget() {
 void DeeWorld::moveTarget(TBGTarget* tbg) {
 
 	CCSprite *target = tbg->getSprite();
-    AminoAcid *aa = dynamic_cast<AminoAcid*>(target);
-    if(aa != 0) {
-        CCLog("this is an aa object");
-        // Determine where to spawn the target along the Y axis
-        CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
-        
-        //recognize the edge
-        int angle = aa->getDirection();
-        
-        
-        CCPoint point = PositionHelper::calculateNewPos(aa, winSize);
-        
-        CCLog("endX: %d, endY: %d", int(point.x), int(point.y));
-        
-        // be secure we have a valid end result
-        if (point.x < 0) {
-            point.x = 0;
-        }
-        
-        if (point.y < target->getContentSize().height) {
-            point.y = target->getContentSize().height;
-        }
-        
-        if (point.x > winSize.width) {
-            point.x = winSize.width;
-        }
-        if (point.y > winSize.height) {
-            point.y = winSize.height;
-        }
-        
-        // Determine speed of the target
-        int minDuration = (int) 2.0;
-        int maxDuration = (int) 4.0;
-        int rangeDuration = maxDuration - minDuration;
-        
-        int actualDuration = (rand() % rangeDuration) + minDuration;
-        
-        // Create the actions
-        CCFiniteTimeAction* actionMove = CCMoveTo::create((float) actualDuration,
-                                                          point);
-        
-        CCFiniteTimeAction* actionMoveDone = CCCallFuncND::create(this,
-                                                                  callfuncND_selector(DeeWorld::spriteMoveFinished), (void*) tbg);
-        CCFiniteTimeAction* box2dDone = CCCallFuncN::create(this,
-                                                            callfuncN_selector(DeeWorld::spriteDone));
-        
-        CCFadeIn *fadeInReadyText = CCFadeIn::create(1.0f);
-        CCDelayTime *readyDelay = CCDelayTime::create(0.5f);
-        CCFadeOut *fadeOutReadyText = CCFadeOut::create(1.0f);
-        
-        // Sebi: we have to add some dummy parameters otherwise it fails on Android
-        CCSequence *readySequence = CCSequence::create(actionMove, actionMoveDone,
-                                                       box2dDone, NULL, NULL);
-        aa->runAction(readySequence);
-    }
-    
-	
+	AminoAcid *aa = dynamic_cast<AminoAcid*>(target);
+	if (aa != 0) {
+		CCLog("this is an aa object");
+		// Determine where to spawn the target along the Y axis
+		CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
+
+		//recognize the edge
+		int angle = aa->getDirection();
+
+		CCPoint point = PositionHelper::calculateNewPos(aa, winSize);
+
+		CCLog("endX: %d, endY: %d", int(point.x), int(point.y));
+
+		// be secure we have a valid end result
+		if (point.x < 0) {
+			point.x = 0;
+		}
+
+		if (point.y < target->getContentSize().height) {
+			point.y = target->getContentSize().height;
+		}
+
+		if (point.x > winSize.width) {
+			point.x = winSize.width;
+		}
+		if (point.y > winSize.height) {
+			point.y = winSize.height;
+		}
+
+		// Determine speed of the target
+		int minDuration = (int) 2.0;
+		int maxDuration = (int) 4.0;
+		int rangeDuration = maxDuration - minDuration;
+
+		int actualDuration = (rand() % rangeDuration) + minDuration;
+
+		// Create the actions
+		CCFiniteTimeAction* actionMove = CCMoveTo::create(
+				(float) actualDuration, point);
+
+		CCFiniteTimeAction* actionMoveDone = CCCallFuncND::create(this,
+				callfuncND_selector(DeeWorld::spriteMoveFinished), (void*) tbg);
+		CCFiniteTimeAction* box2dDone = CCCallFuncN::create(this,
+				callfuncN_selector(DeeWorld::spriteDone));
+
+		CCFadeIn *fadeInReadyText = CCFadeIn::create(1.0f);
+		CCDelayTime *readyDelay = CCDelayTime::create(0.5f);
+		CCFadeOut *fadeOutReadyText = CCFadeOut::create(1.0f);
+
+		// Sebi: we have to add some dummy parameters otherwise it fails on Android
+		CCSequence *readySequence = CCSequence::create(actionMove,
+				actionMoveDone, box2dDone, NULL, NULL);
+		aa->runAction(readySequence);
+	}
 
 }
 
@@ -411,17 +408,18 @@ void DeeWorld::spriteMoveFinished(CCNode* sender, void* tbg_void) {
 // cpp with cocos2d-x
 void DeeWorld::ccTouchesBegan(cocos2d::CCSet* touches,
 		cocos2d::CCEvent* event) {
-	CCSetIterator it = touches->begin();
+	return;
+	/* CCSetIterator it = touches->begin();
 	CCTouch* touch;
 
 	CCPoint pt;
 	for (int iTouchCount = 0; iTouchCount < touches->count(); iTouchCount++) {
 		touch = (CCTouch*) (*it);
 		pt = touch->getLocationInView();
-		cocos2d::CCLog("ccTouchesBegan id:%i %i,%in", touch->getID(),
+	//	cocos2d::CCLog("ccTouchesBegan id:%i x:%i,y:%in", touch->getID(),
 				(int) pt.x, (int) pt.y);
 		it++;
-	}
+	} */
 }
 
 // cpp with cocos2d-x
@@ -430,25 +428,47 @@ void DeeWorld::ccTouchesMoved(cocos2d::CCSet* touches,
 	CCSetIterator it = touches->begin();
 	CCTouch* touch;
 
+	int tolerance =10;
+
 	CCPoint pt;
 	for (int iTouchCount = 0; iTouchCount < touches->count(); iTouchCount++) {
 		touch = (CCTouch*) (*it);
 		pt = touch->getLocationInView();
-//cocos2d::CCLog( "ccTouchesBegan id:%i %i,%in", touch->getID(), (int)pt.x, (int)pt.y );
+//		cocos2d::CCLog("ccTouchesMoved id:%i x:%i,y:%in", touch->getID(),
+//				(int) pt.x, (int) pt.y);
 		it++;
 
 //world y
 		CCSize size = CCDirector::sharedDirector()->getWinSize();
 		float height = size.height;
 
+		float y = height - pt.y;
+
+		//CCLog("x: %f, y: %f", pt.x, pt.y);
+
+		//look if the touch event is in the players rectangle
+		if (iTouchCount == 0) {
+			if (std::abs(pt.x - player->getPositionX()) - tolerance
+					> player->getContentSize().width) {
+				//non valid
+				break;
+			}
+			if (std::abs(y - player->getPositionY()) - tolerance
+					> player->getContentSize().height) {
+				//non valid
+				break;
+			}
+		}
+
 //set player
-		player->setPosition(ccp(pt.x, height - pt.y));
+		player->setPosition(ccp(pt.x, y));
 	}
 }
 
 // cpp with cocos2d-x
 void DeeWorld::ccTouchesEnded(cocos2d::CCSet* touches,
 		cocos2d::CCEvent* event) {
+	return;
 // Choose one of the touches to work with
 	CCTouch* touch = (CCTouch*) (touches->anyObject());
 	CCPoint location = touch->getLocation();
@@ -703,7 +723,7 @@ void DeeWorld::tick(float delta) {
 				//break;
 				_code.pop();
 
-				createNewAminoAcid (MatrixHelper::getRandomAminoAcid());
+				createNewAminoAcid(MatrixHelper::getRandomAminoAcid());
 			}
 
 			//this->code.pMatrixHelper::getRandomAminoAcid();
@@ -745,11 +765,10 @@ void DeeWorld::gameLogic(float dt) {
 
 void DeeWorld::createNewAminoAcid(char c) {
 
-
 	BoardAcid * acid = new BoardAcid();
 	acid->setAcid(c);
 
-	char  tt [] = "t";
+	char tt[] = "t";
 	tt[0] = c;
 
 	std::string str = string(tt);
@@ -761,7 +780,6 @@ void DeeWorld::createNewAminoAcid(char c) {
 			visibleSize.height * 1 / 10,
 			CCSizeMake(20, visibleSize.height * 1 / 7), kCCTextAlignmentRight);
 	acid->_label = label;
-
 
 	acid->_label->setPosition(
 			ccp(visibleSize.width - 15, visibleSize.height * 1 / 6));
@@ -775,7 +793,8 @@ void DeeWorld::createNewAminoAcid(char c) {
 		tmpQueue.push(el);
 
 		CCFiniteTimeAction* actionMove = CCMoveTo::create((float) 0.8,
-				ccp(el->_label->getPositionX()-20, el->_label->getPositionY()));
+				ccp(el->_label->getPositionX() - 20,
+						el->_label->getPositionY()));
 
 		// Sebi: we have to add some dummy parameters otherwise it fails on Android
 		CCSequence *readySequence = CCSequence::create(actionMove, NULL,
