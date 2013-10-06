@@ -25,16 +25,20 @@ DebugDraw::~DebugDraw() {
 
 void DebugDraw::draw(void) {
 	int c = m_lines->size();
+	ccPointSize(50);
+
 	for (int i = 0; i < c; i++) {
 		DebugLine line = m_lines->at(i);
-		glColor4f(line.r, line.g, line.b, 1);
+		cocos2d::ccDrawColor4F(1.0f, 0.0f, 0.0f, 1.0f);
+		//glColor4f(line.r, line.g, line.b, 1);
 		ccDrawLine(line.pt1, line.pt2);
+
 	}
 
 	c = m_points->size();
 	for (int i = 0; i < c; i++) {
 		DebugPoint pt = m_points->at(i);
-		glColor4f(pt.r, pt.g, pt.b, 1);
+		cocos2d::ccDrawColor4F(1.0f, 0.0f, 0.0f, 1.0f);
 		ccDrawPoint(pt.pt);
 	}
 }

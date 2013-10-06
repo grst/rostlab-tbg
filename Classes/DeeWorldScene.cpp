@@ -6,7 +6,6 @@
 #include "helper/PositionHelper.h"
 #include "helper/MatrixHelper.h"
 #include "helper/AminoAcid.h"
-#include "helper/DebugDraw.h"
 #include <iostream>
 #include <string>
 
@@ -14,7 +13,7 @@ USING_NS_CC;
 
 #define PTM_RATIO 32.0
 #define NUMBER_START_TARGETS 4
-#define INTRO_TIME_SECONDS 2
+#define INTRO_TIME_SECONDS 1
 #define PLAYER_IMAGE "Player.png"
 
 using namespace cocos2d;
@@ -30,13 +29,14 @@ DeeWorld::~DeeWorld() {
 		_scoreLabel = NULL;
 	}
 
+	CC_SAFE_RELEASE(_scoreNumber);
+
 	// cpp don't need to call super dealloc
 	// virtual destructor will do this
 }
 
 DeeWorld::DeeWorld() {
 
-	m_lines = new std::vector<DebugLine>();
 	//_targets(NULL);
 }
 
@@ -126,6 +126,20 @@ bool DeeWorld::init() {
 		/////////////////////////////
 		// 2. add your codes below...
 
+		//testing drawing
+
+		CCLog("starting init");
+
+		/*
+		 m_debugDraw = DebugDraw::create();
+		 m_debugDraw->appendLine(ccp(50, 50), ccp(200, 200), 1.0, 1.0, 1.0);
+		 m_debugDraw->appendPoint(ccp(50, 50), 1.0, 1.0, 1.0);
+		 m_debugDraw->draw();
+		 m_debugDraw->setPosition(200, 200);
+		 CCSize * size = new CCSize(400.0, 400.0);
+		 */
+		//	m_debugDraw->setContentSize(*size);
+		//	this->addChild(m_debugDraw, 1);
 		player = CCSprite::create(PLAYER_IMAGE, CCRectMake(0, 0, 27, 40));
 		player->setZOrder(3);
 
@@ -136,9 +150,14 @@ bool DeeWorld::init() {
 
 		this->schedule(schedule_selector(DeeWorld::gameLogic), 1.0);
 
+		CCLog("before touch event");
+
 		this->setTouchEnabled(true);
 
+		CCLog("before loading game");
 		this->loadGame();
+
+		CCLog("after loading game");
 
 		// use updateGame instead of update, otherwise it will conflict with SelectorProtocol::update
 		// see http://www.cocos2d-x.org/boards/6/topics/1478
@@ -149,13 +168,6 @@ bool DeeWorld::init() {
 
 		bRet = true;
 
-		//testing drawing
-
-		 m_debugDraw = DebugDraw::create();
-		scene->addChild(debugDraw);
-
-		m_debugDraw->appendLine(ccp(0, 0), ccp(100, 100));
-
 	} while (0);
 
 // Register the layer to touch dispatcher
@@ -164,6 +176,8 @@ bool DeeWorld::init() {
 
 	CCDirector::sharedDirector()->getTouchDispatcher()->addStandardDelegate(
 			this, 10);
+
+	CCLog("init successful");
 
 	return bRet;
 }
@@ -174,6 +188,7 @@ void DeeWorld::loadGame() {
 	player->setPosition(
 			ccp(visibleSize.width / 2, player->getContentSize().height));
 
+	CCLog("setting score");
 //score
 	score = 0;
 // int -> str
@@ -186,18 +201,20 @@ void DeeWorld::loadGame() {
 	this->_scoreLabel->setColor(ccc3(20, 20, 255));
 	this->addChild(_scoreLabel);
 
+	CCLog("setting code");
 //code
 	int i;
 	for (i = 0; i < 3; i++) {
 		this->createNewAminoAcid(MatrixHelper::getRandomAminoAcid());
 	}
 
+	CCLog("setting timer");
 //timer
 	this->timer = INTRO_TIME_SECONDS;
 
 	this->_timerLabel = CCLabelTTF::create("", "Helvetica",
 			visibleSize.height * 2 / 3,
-			CCSizeMake(visibleSize.width, visibleSize.height),
+			visibleSize,
 			kCCTextAlignmentCenter);
 	this->_timerLabel->retain();
 	this->_timerLabel->setPosition(
@@ -214,6 +231,7 @@ void DeeWorld::loadGame() {
 
 	_targetsAlive = NUMBER_START_TARGETS;
 	_targets = new CCArray;
+
 }
 
 void DeeWorld::countdown() {
@@ -375,10 +393,6 @@ void DeeWorld::moveTarget(TBGTarget* tbg) {
 		CCFiniteTimeAction* box2dDone = CCCallFuncN::create(this,
 				callfuncN_selector(DeeWorld::spriteDone));
 
-		CCFadeIn *fadeInReadyText = CCFadeIn::create(1.0f);
-		CCDelayTime *readyDelay = CCDelayTime::create(0.5f);
-		CCFadeOut *fadeOutReadyText = CCFadeOut::create(1.0f);
-
 		// Sebi: we have to add some dummy parameters otherwise it fails on Android
 		CCSequence *readySequence = CCSequence::create(actionMove,
 				actionMoveDone, box2dDone, NULL, NULL);
@@ -426,7 +440,6 @@ void DeeWorld::spriteMoveFinished(CCNode* sender, void* tbg_void) {
 		this->moveTarget(tbg);
 	}
 }
-
 
 // cpp with cocos2d-x
 void DeeWorld::ccTouchesBegan(cocos2d::CCSet* touches,
@@ -477,10 +490,68 @@ void DeeWorld::ccTouchesMoved(cocos2d::CCSet* touches,
 		touch = (CCTouch*) (*it);
 		it++;
 	}
+
+	CCPoint playerPoint = player->getPosition();
+
 	CCPoint pt = touch->getLocationInView();
-	player->setPosition(ccp(pt.x, tempHeight - pt.y));
+	float y = tempHeight - pt.y;
+	player->setPosition(ccp(pt.x, y));
 	player->draw();
 	player->update(0.01);
+
+	CCDrawNode *node = CCDrawNode::create();
+
+	ccColor4F color;
+	switch (arc4random() % 4) {
+	case 0:
+		color = ccc4FFromccc4B(ccc4(255, 0, 0, 255));
+		break;
+	case 1:
+		color = ccc4FFromccc4B(ccc4(200, 0, 0, 255));
+		break;
+	case 2:
+		color = ccc4FFromccc4B(ccc4(160, 0, 0, 255));
+		break;
+	case 3:
+		color = ccc4FFromccc4B(ccc4(100, 0, 0, 255));
+		break;
+	case 4:
+		color = ccc4FFromccc4B(
+				ccc4(arc4random() % 256, arc4random() % 256, arc4random() % 256,
+						255));
+		break;
+	}
+
+	// TODO color is not working correct (same red!) - ideally we make a nice gradient
+	CCLog("r: %f, g, :%f ,b: %f", color.r, color.g, color.b);
+
+	int thickness = 5;
+	CCPoint points[4];
+	points[0] = ccp(0, 0);
+	points[1] = ccp(0, std::abs(pt.x - playerPoint.x));
+	points[2] = ccp(std::abs(pt.x - playerPoint.x),
+			std::abs(y - playerPoint.y));
+	points[3] = ccp(std::abs(y - playerPoint.y), 0);
+
+	node->drawPolygon(points, 4, color, 0, ccc4FFromccc4B(ccc4(0, 0, 0, 255)));
+	node->setPosition(playerPoint.x, playerPoint.y);
+	node->draw();
+
+	if (movementLines.size() >= 40) {
+		CCDrawNode * nodeDel = movementLines.front();
+		movementLines.pop();
+		this->removeChild(nodeDel);
+		//nodeDel->release();
+		//CC_SAFE_RELEASE(nodeDel);
+	}
+	movementLines.push(node);
+
+	this->addChild(node, 1);
+
+	CCActionInterval * fadeOut = CCFadeOut::create(1.0);
+	CCActionInterval * move = CCMoveTo::create(2.0, ccp(-10, -10));
+	//	CCActionInterval * tilt = CC
+	node->runAction(move);
 
 	return;
 	/*
@@ -741,6 +812,26 @@ void DeeWorld::tick(float delta) {
 
 			this->score = score + 1;
 
+			// show score
+			int scoring = rand() % 10;
+			std::string str = static_cast<ostringstream*>(&(ostringstream()
+					<< scoring))->str();
+			CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
+			this->_scoreNumber = CCLabelTTF::create(str.c_str(), "Helvetica",
+					400, visibleSize,
+					kCCTextAlignmentCenter);
+			this->_scoreNumber->retain();
+			this->_scoreNumber->setPosition(
+					ccp(visibleSize.width / 2, visibleSize.height / 2));
+			this->_scoreNumber->setColor(ccc3(0, 255, 0));
+			this->addChild(_scoreNumber);
+
+			CCActionInterval * tintToNumber = CCTintTo::create(1.0, 255, 20,
+					50);
+			this->_scoreNumber->runAction(tintToNumber);
+			CCActionInterval * scaleTo = CCScaleTo::create(1.0, 0.01);
+			this->_scoreNumber->runAction(scaleTo);
+
 			if (_code.size() > 0) {
 				BoardAcid * acid = this->_code.front();
 
@@ -803,6 +894,7 @@ void DeeWorld::gameLogic(float dt) {
 // do some crazy stuff here
 }
 
+// TODO  this function appears to crash sometimes on Android
 void DeeWorld::createNewAminoAcid(char c) {
 
 	BoardAcid * acid = new BoardAcid();
@@ -813,18 +905,22 @@ void DeeWorld::createNewAminoAcid(char c) {
 
 	std::string str = string(tt);
 
+	CCLog("adding Acid %c", c);
+
 // Create the actions
 	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 
 	CCLabelTTF * label = CCLabelTTF::create(str.c_str(), "Helvetica",
-			visibleSize.height * 1 / 10,
-			CCSizeMake(20, visibleSize.height * 1 / 7), kCCTextAlignmentRight);
+			30,
+			CCSizeMake(30, visibleSize.height * 1 / 6), kCCTextAlignmentRight);
 	acid->_label = label;
 
 	acid->_label->setPosition(
-			ccp(visibleSize.width - 15, visibleSize.height * 1 / 6));
+			ccp(visibleSize.width - 20, visibleSize.height * 1 / 7));
 	acid->_label->setColor(ccc3(20, 20, 255));
 	this->addChild(acid->_label);
+
+	CCLog("moving AAs");
 
 // move all elements a bit
 	std::queue<BoardAcid*> tmpQueue;

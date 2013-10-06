@@ -12,3 +12,7 @@
 int HelperFunctions::mod(int a, int b) {
     return ((a%b) + b) %b;
 }
+
+float HelperFunctions::randomValueBetween(float low, float high) {
+    return (((float) arc4random() / 0xFFFFFFFFu) * (high - low)) + low;
+}

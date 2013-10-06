@@ -8,26 +8,17 @@
 #include <cmath>
 
 #include "cocos2d.h"
+
 #include "Box2D.h"
 //for debug-draw
 #include "box2d/B2DebugDrawLayer.h"
 #include "box2d/GLES-Render.h"
 #include "TBGTarget.h"
 #include "BoardAcid.h"
-
-
 #include "box2d/ContactListener.h"
 
 #include "SimpleAudioEngine.h"
 
-typedef struct
- {
-     CCPoint pt1;
-     CCPoint pt2;
-     float r;
-     float g;
-     float b;
-} DebugLine;
 
 class DeeWorld: public cocos2d::CCLayerColor {
 public:
@@ -40,8 +31,6 @@ public:
 
 	// there's no 'id' in cpp, so we recommand to return the exactly class pointer
 	static cocos2d::CCScene* scene();
-
-	virtual void draw(void);
 
 	// a selector callback
 	virtual void menuCloseCallback(cocos2d::CCObject* pSender);
@@ -94,10 +83,10 @@ private:
 	std::queue<BoardAcid*> _code;
 	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _timerLabel, timerLabel);
 	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _scoreLabel, scoreLabel);
+	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _scoreNumber, scoreNumber);
 	bool validTouch;
 	int tempHeight;
-	std::queue<BoardAcid*> movementLines;
-	 std::vector<DebugLine>* m_lines;
+	std::queue<CCDrawNode*> movementLines;
 };
 
 #endif  // __DEEWORLD_SCENE_H__
