@@ -46,10 +46,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
     pDirector->setAnimationInterval(1.0 / 60);
 
     // create a scene. it's an autorelease object
-   // CCScene *pScene = SplashScreenScene::create();
+    //CCScene *pScene = SplashScreenScene::create();
 
     // for dev reasons use normal screen
-    CCScene *pScene = DeeWorld::scene();
+   CCScene *pScene = DeeWorld::scene();
 
 
     // run

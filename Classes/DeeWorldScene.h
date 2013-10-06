@@ -69,7 +69,6 @@ protected:
     cocos2d::CCArray *_targets;
 	cocos2d::CCSprite *player;    
 	std::string aminoAcidSeq;
-	int _targetsAlive;
 
 	void addTarget();
 

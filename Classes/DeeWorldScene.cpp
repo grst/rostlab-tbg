@@ -125,64 +125,63 @@ bool DeeWorld::init() {
 
 		/////////////////////////////
 		// 2. add your codes below...
-        
-        ////TAGS
-        // 0 = player
-        // 1 = target
-        // 2 = projectile (not in use any more)
-        // 3 = wall
-        
-        
-        //walls limiting the screen
-        CCSprite *bottom = CCSprite::create();
-        CCSprite *left = CCSprite::create();
-        CCSprite *top = CCSprite::create();
-        CCSprite *right = CCSprite::create();
 
-        bottom->setColor(ccc3(0, 0, 0));
-        bottom->setTextureRect(CCRectMake(0, 0, visibleSize.width, 20));
+		////TAGS
+		// 0 = player
+		// 1 = target
+		// 2 = projectile (not in use any more)
+		// 3 = wall
+
+		//walls limiting the screen
+		CCSprite *bottom = CCSprite::create();
+		CCSprite *left = CCSprite::create();
+		CCSprite *top = CCSprite::create();
+		CCSprite *right = CCSprite::create();
+
+		bottom->setColor(ccc3(0, 0, 0));
+		bottom->setTextureRect(CCRectMake(0, 0, visibleSize.width, 20));
 //        bottom->setTextureRect(CCRectMake(240, 0, 480, 20));
-        bottom->setPosition(ccp(visibleSize.width/2, 0));
-        
-        left->setColor(ccc3(0, 0, 0));
-        left->setTextureRect(CCRectMake( 0, 0, 20, visibleSize.height));
+		bottom->setPosition(ccp(visibleSize.width / 2, 0));
+
+		left->setColor(ccc3(0, 0, 0));
+		left->setTextureRect(CCRectMake(0, 0, 20, visibleSize.height));
 //        left->setTextureRect(CCRectMake( 0, 170, 20, 340));
-        left->setPosition(ccp(0, visibleSize.height/2));
+		left->setPosition(ccp(0, visibleSize.height / 2));
 
-        top->setColor(ccc3(0, 0, 0));
-        top->setTextureRect(CCRectMake(0, 0, visibleSize.width, 20));
+		top->setColor(ccc3(0, 0, 0));
+		top->setTextureRect(CCRectMake(0, 0, visibleSize.width, 20));
 //        top->setTextureRect(CCRectMake(340, 240, 480, 20));
-        top->setPosition(ccp(visibleSize.width/2, visibleSize.height));
+		top->setPosition(ccp(visibleSize.width / 2, visibleSize.height));
 
-        right->setColor(ccc3(0, 0, 0));
-        right->setTextureRect(CCRectMake(0, 0, 20, visibleSize.height));
+		right->setColor(ccc3(0, 0, 0));
+		right->setTextureRect(CCRectMake(0, 0, 20, visibleSize.height));
 //        right->setTextureRect(CCRectMake(480, 170, 20, 340));
-        right->setPosition(ccp(visibleSize.width, visibleSize.height/2));
+		right->setPosition(ccp(visibleSize.width, visibleSize.height / 2));
 
-        
-        CreateBox2DBodyForSprite(bottom, 0, NULL);
-        CreateBox2DBodyForSprite(left, 0, NULL);
-        CreateBox2DBodyForSprite(top, 0, NULL);
-        CreateBox2DBodyForSprite(right, 0, NULL);
-        
-        this->addChild(bottom, 3, 3);
-        this->addChild(left, 3, 3);
-        this->addChild(top, 3, 3);
-        this->addChild(right, 3, 3);
-        
-        //player
+		CreateBox2DBodyForSprite(bottom, 0, NULL);
+		CreateBox2DBodyForSprite(left, 0, NULL);
+		CreateBox2DBodyForSprite(top, 0, NULL);
+		CreateBox2DBodyForSprite(right, 0, NULL);
+
+		this->addChild(bottom, 3, 3);
+		this->addChild(left, 3, 3);
+		this->addChild(top, 3, 3);
+		this->addChild(right, 3, 3);
+
+		//player
 		player = CCSprite::create(PLAYER_IMAGE, CCRectMake(0, 0, 27, 40));
 		player->setZOrder(3);
 
 		//create the box for the player (currently with rectangle)
 		CreateBox2DBodyForSprite(player, 0, NULL);
 
-        //z-order 3, tag=0
+		//z-order 3, tag=0
 		this->addChild(player, 3, 0);
 
 		this->schedule(schedule_selector(DeeWorld::gameLogic), 1.0);
 
-		CCLog("before touch event");
+		//load the scoring matrix
+		MatrixHelper::loadMatrix("BLOSUM62.txt");
 
 		this->setTouchEnabled(true);
 
@@ -245,9 +244,7 @@ void DeeWorld::loadGame() {
 	this->timer = INTRO_TIME_SECONDS;
 
 	this->_timerLabel = CCLabelTTF::create("", "Helvetica",
-			visibleSize.height * 2 / 3,
-			visibleSize,
-			kCCTextAlignmentCenter);
+			visibleSize.height * 2 / 3, visibleSize, kCCTextAlignmentCenter);
 	this->_timerLabel->retain();
 	this->_timerLabel->setPosition(
 			ccp(visibleSize.width / 2, visibleSize.height / 2));
@@ -261,7 +258,6 @@ void DeeWorld::loadGame() {
 
 	updateView();
 
-	_targetsAlive = NUMBER_START_TARGETS;
 	_targets = new CCArray;
 
 }
@@ -321,40 +317,40 @@ void DeeWorld::addTarget() {
 	tbg->setSprite(target);
 	target->setZOrder(2);
 
-    //Place target in a randomly picked corner.
-    int startX, startY;
-    int corner = arc4random() % 4;
-    //target-dimensions
-    CCSize tSize = target->getContentSize();
-    CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
-    corner = 0;
-    switch(corner) {
-        case 0:
-            //left bottom
-            startX = 0 - tSize.width;
-            startY = 0 - tSize.height;
-            break;
-        case 1:
-            //left top
-            startY = winSize.height + tSize.height;
-            startX = 0 - tSize.width;
-            break;
-        case 2:
-            //right top
-            startX = winSize.width + tSize.width;
-            startY = winSize.height + tSize.height;
-            break;
-        case 3:
-            //right bottom
-            startX = winSize.width + tSize.width;
-            startY = 0 - tSize.height;
-            break;
-    }
+	//Place target in a randomly picked corner.
+	int startX, startY;
+	int corner = arc4random() % 4;
+	//target-dimensions
+	CCSize tSize = target->getContentSize();
+	CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
+	corner = 0;
+	switch (corner) {
+	case 0:
+		//left bottom
+		startX = 0 - tSize.width;
+		startY = 0 - tSize.height;
+		break;
+	case 1:
+		//left top
+		startY = winSize.height + tSize.height;
+		startX = 0 - tSize.width;
+		break;
+	case 2:
+		//right top
+		startX = winSize.width + tSize.width;
+		startY = winSize.height + tSize.height;
+		break;
+	case 3:
+		//right bottom
+		startX = winSize.width + tSize.width;
+		startY = 0 - tSize.height;
+		break;
+	}
 
-    // TODO temp fix to test scoring event
-    startX =100;
-    startY = 100;
-    CCLog("Start-Position:x=%i,y=%i", startX, startY);
+	// TODO temp fix to test scoring event
+	startX = 100;
+	startY = 100;
+	CCLog("Start-Position:x=%i,y=%i", startX, startY);
 	target->setPosition(ccp(startX, startY));
 
 	this->addChild(target);
@@ -371,17 +367,16 @@ void DeeWorld::addTarget() {
 void DeeWorld::moveTarget(TBGTarget* tbg) {
 
 	CCSprite *target = tbg->getSprite();
-    AminoAcid *aa = dynamic_cast<AminoAcid*>(target);
-    if(aa != 0) {
-        CCLog("this is an aa object");
-        // Determine where to spawn the target along the Y axis
-        CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
-    
-        
-        CCPoint point = PositionHelper::calculateNewPos(aa, winSize);
-        
-        CCLog("endX: %d, endY: %d", int(point.x), int(point.y));
-        
+	AminoAcid *aa = dynamic_cast<AminoAcid*>(target);
+	if (aa != 0) {
+		CCLog("this is an aa object");
+		// Determine where to spawn the target along the Y axis
+		CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
+
+		CCPoint point = PositionHelper::calculateNewPos(aa, winSize);
+
+		CCLog("endX: %d, endY: %d", int(point.x), int(point.y));
+
 //        // be secure we have a valid end result
 //        if (point.x < 0) {
 //            point.x = 0;
@@ -397,34 +392,32 @@ void DeeWorld::moveTarget(TBGTarget* tbg) {
 //        if (point.y > winSize.height) {
 //            point.y = winSize.height;
 //        }
-        
-        // Determine speed of the target
-        int minDuration = (int) 2.0;
-        int maxDuration = (int) 4.0;
-        int rangeDuration = maxDuration - minDuration;
-        
-        int actualDuration = (rand() % rangeDuration) + minDuration;
-        
-        // Create the actions
-        CCFiniteTimeAction* actionMove = CCMoveTo::create((float) actualDuration,
-                                                          point);
-        
-        CCFiniteTimeAction* actionMoveDone = CCCallFuncND::create(this,
-                                                                  callfuncND_selector(DeeWorld::spriteMoveFinished), (void*) tbg);
-        CCFiniteTimeAction* box2dDone = CCCallFuncN::create(this,
-                                                            callfuncN_selector(DeeWorld::spriteDone));
-        
-        CCFadeIn *fadeInReadyText = CCFadeIn::create(1.0f);
-        CCDelayTime *readyDelay = CCDelayTime::create(0.5f);
-        CCFadeOut *fadeOutReadyText = CCFadeOut::create(1.0f);
-        
-        // Sebi: we have to add some dummy parameters otherwise it fails on Android
-        CCSequence *readySequence = CCSequence::create(actionMove, actionMoveDone,
-                                                       box2dDone, NULL, NULL);
-        aa->runAction(readySequence);
-    }
-    
-	
+
+		// Determine speed of the target
+		int minDuration = (int) 2.0;
+		int maxDuration = (int) 4.0;
+		int rangeDuration = maxDuration - minDuration;
+
+		int actualDuration = (rand() % rangeDuration) + minDuration;
+
+		// Create the actions
+		CCFiniteTimeAction* actionMove = CCMoveTo::create(
+				(float) actualDuration, point);
+
+		CCFiniteTimeAction* actionMoveDone = CCCallFuncND::create(this,
+				callfuncND_selector(DeeWorld::spriteMoveFinished), (void*) tbg);
+		CCFiniteTimeAction* box2dDone = CCCallFuncN::create(this,
+				callfuncN_selector(DeeWorld::spriteDone));
+
+		CCFadeIn *fadeInReadyText = CCFadeIn::create(1.0f);
+		CCDelayTime *readyDelay = CCDelayTime::create(0.5f);
+		CCFadeOut *fadeOutReadyText = CCFadeOut::create(1.0f);
+
+		// Sebi: we have to add some dummy parameters otherwise it fails on Android
+		CCSequence *readySequence = CCSequence::create(actionMove,
+				actionMoveDone, box2dDone, NULL, NULL);
+		aa->runAction(readySequence);
+	}
 
 }
 
@@ -836,40 +829,39 @@ void DeeWorld::tick(float delta) {
 
 			// TODO only one scoring every five seconds - block it otherwise?
 
-			_targetsAlive = _targetsAlive - 1;
-			CCLOG("remaining % d", _targetsAlive);
-
-			this->score = score + 1;
-
-			// show score
-			int scoring = rand() % 10;
-			std::string str = static_cast<ostringstream*>(&(ostringstream()
-					<< scoring))->str();
-			CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
-			this->_scoreNumber = CCLabelTTF::create(str.c_str(), "Helvetica",
-					200, visibleSize,
-					kCCTextAlignmentCenter);
-			this->_scoreNumber->retain();
-			this->_scoreNumber->setPosition(
-					ccp(visibleSize.width / 2, visibleSize.height / 2));
-			this->_scoreNumber->setColor(ccc3(0, 255, 0));
-			this->addChild(_scoreNumber);
-
-			CCActionInterval * tintToNumber = CCTintTo::create(1.0, 255, 20,
-					50);
-			this->_scoreNumber->runAction(tintToNumber);
-			CCActionInterval * scaleTo = CCScaleTo::create(1.0, 0.01);
-			this->_scoreNumber->runAction(scaleTo);
-
 			if (_code.size() > 0) {
 				BoardAcid * acid = this->_code.front();
+
+				char wantedAcid = acid->acid;
+				// TODO change this
+				char playerAcid = 'A';
+
+				// show score
+				int scoring = MatrixHelper::getScoreForAminoAcid(wantedAcid, 'A');
+
+				this->score = scoring;
+
+				std::string str = static_cast<ostringstream*>(&(ostringstream()
+						<< scoring))->str();
+				CCSize visibleSize =
+						CCDirector::sharedDirector()->getVisibleSize();
+				this->_scoreNumber = CCLabelTTF::create(str.c_str(),
+						"Helvetica", 200, visibleSize, kCCTextAlignmentCenter);
+				this->_scoreNumber->retain();
+				this->_scoreNumber->setPosition(
+						ccp(visibleSize.width / 2, visibleSize.height / 2));
+				this->_scoreNumber->setColor(ccc3(0, 255, 0));
+				this->addChild(_scoreNumber);
+
+				CCActionInterval * tintToNumber = CCTintTo::create(1.0, 255, 20,
+						50);
+				this->_scoreNumber->runAction(tintToNumber);
+				CCActionInterval * scaleTo = CCScaleTo::create(1.0, 0.01);
+				this->_scoreNumber->runAction(scaleTo);
 
 				cocos2d::CCLabelTTF* label = acid->_label;
 				//label->setString("y");
 
-				// Create the actions
-				CCSize visibleSize =
-						CCDirector::sharedDirector()->getVisibleSize();
 
 				CCFiniteTimeAction* actionMove = CCMoveTo::create((float) 0.8,
 						ccp(visibleSize.height, visibleSize.width));
@@ -939,8 +931,7 @@ void DeeWorld::createNewAminoAcid(char c) {
 // Create the actions
 	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 
-	CCLabelTTF * label = CCLabelTTF::create(str.c_str(), "Helvetica",
-			30,
+	CCLabelTTF * label = CCLabelTTF::create(str.c_str(), "Helvetica", 30,
 			CCSizeMake(30, visibleSize.height * 1 / 6), kCCTextAlignmentRight);
 	acid->_label = label;
 
