@@ -350,6 +350,10 @@ void DeeWorld::addTarget() {
             startY = 0 - tSize.height;
             break;
     }
+
+    // TODO temp fix to test scoring event
+    startX =100;
+    startY = 100;
     CCLog("Start-Position:x=%i,y=%i", startX, startY);
 	target->setPosition(ccp(startX, startY));
 
@@ -830,6 +834,8 @@ void DeeWorld::tick(float delta) {
 
 			//ATTETION we don't delete the sprite out of the array, this might cause memory leaks
 
+			// TODO only one scoring every five seconds - block it otherwise?
+
 			_targetsAlive = _targetsAlive - 1;
 			CCLOG("remaining % d", _targetsAlive);
 
@@ -841,7 +847,7 @@ void DeeWorld::tick(float delta) {
 					<< scoring))->str();
 			CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 			this->_scoreNumber = CCLabelTTF::create(str.c_str(), "Helvetica",
-					400, visibleSize,
+					200, visibleSize,
 					kCCTextAlignmentCenter);
 			this->_scoreNumber->retain();
 			this->_scoreNumber->setPosition(
