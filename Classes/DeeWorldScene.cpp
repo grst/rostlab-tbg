@@ -125,28 +125,60 @@ bool DeeWorld::init() {
 
 		/////////////////////////////
 		// 2. add your codes below...
+        
+        ////TAGS
+        // 0 = player
+        // 1 = target
+        // 2 = projectile (not in use any more)
+        // 3 = wall
+        
+        
+        //walls limiting the screen
+        CCSprite *bottom = CCSprite::create();
+        CCSprite *left = CCSprite::create();
+        CCSprite *top = CCSprite::create();
+        CCSprite *right = CCSprite::create();
 
-		//testing drawing
+        bottom->setColor(ccc3(0, 0, 0));
+        bottom->setTextureRect(CCRectMake(0, 0, visibleSize.width, 20));
+//        bottom->setTextureRect(CCRectMake(240, 0, 480, 20));
+        bottom->setPosition(ccp(visibleSize.width/2, 0));
+        
+        left->setColor(ccc3(0, 0, 0));
+        left->setTextureRect(CCRectMake( 0, 0, 20, visibleSize.height));
+//        left->setTextureRect(CCRectMake( 0, 170, 20, 340));
+        left->setPosition(ccp(0, visibleSize.height/2));
 
-		CCLog("starting init");
+        top->setColor(ccc3(0, 0, 0));
+        top->setTextureRect(CCRectMake(0, 0, visibleSize.width, 20));
+//        top->setTextureRect(CCRectMake(340, 240, 480, 20));
+        top->setPosition(ccp(visibleSize.width/2, visibleSize.height));
 
-		/*
-		 m_debugDraw = DebugDraw::create();
-		 m_debugDraw->appendLine(ccp(50, 50), ccp(200, 200), 1.0, 1.0, 1.0);
-		 m_debugDraw->appendPoint(ccp(50, 50), 1.0, 1.0, 1.0);
-		 m_debugDraw->draw();
-		 m_debugDraw->setPosition(200, 200);
-		 CCSize * size = new CCSize(400.0, 400.0);
-		 */
-		//	m_debugDraw->setContentSize(*size);
-		//	this->addChild(m_debugDraw, 1);
+        right->setColor(ccc3(0, 0, 0));
+        right->setTextureRect(CCRectMake(0, 0, 20, visibleSize.height));
+//        right->setTextureRect(CCRectMake(480, 170, 20, 340));
+        right->setPosition(ccp(visibleSize.width, visibleSize.height/2));
+
+        
+        CreateBox2DBodyForSprite(bottom, 0, NULL);
+        CreateBox2DBodyForSprite(left, 0, NULL);
+        CreateBox2DBodyForSprite(top, 0, NULL);
+        CreateBox2DBodyForSprite(right, 0, NULL);
+        
+        this->addChild(bottom, 3, 3);
+        this->addChild(left, 3, 3);
+        this->addChild(top, 3, 3);
+        this->addChild(right, 3, 3);
+        
+        //player
 		player = CCSprite::create(PLAYER_IMAGE, CCRectMake(0, 0, 27, 40));
 		player->setZOrder(3);
 
 		//create the box for the player (currently with rectangle)
 		CreateBox2DBodyForSprite(player, 0, NULL);
 
-		this->addChild(player, 0, 0); // tag 0 for player, 1 target, 2 projectile
+        //z-order 3, tag=0
+		this->addChild(player, 3, 0);
 
 		this->schedule(schedule_selector(DeeWorld::gameLogic), 1.0);
 
@@ -284,54 +316,41 @@ void DeeWorld::addTarget() {
 
 	CCLog("ImagePath: %s", MatrixHelper::getImagePathForAcid(tbg->acidType));
 
-	CCSprite *target = CCSprite::create(
-			MatrixHelper::getImagePathForAcid(tbg->acidType),
-			CCRectMake(0, 0, 50, 50));
-//target->setZOrder(10);
+	AminoAcid *target = AminoAcid::create(tbg->acidType);
+	//target->setZOrder(10);
 	tbg->setSprite(target);
 	target->setZOrder(2);
 
-// Determine where to spawn the target along the Y axis
-	CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
-	float minY = target->getContentSize().height / 2;
-	float maxY = winSize.height - target->getContentSize().height / 2;
-	int rangeY = (int) (maxY - minY);
-// srand( TimGetTicks() );
-	int actualY = (rand() % rangeY) + (int) minY;
-
-// Create the target slightly off-screen along the right edge,
-// and along a random position along the Y axis as calculated
-
-// TODO set the target somewhere
-	int ranEdge = rand() % 4;
-	int startX = 0;
-	int startY = 0;
-
-	switch (ranEdge) {
-
-// right
-	case 0:
-		startX = winSize.width + (target->getContentSize().width / 2);
-		startY = CCDirector::sharedDirector()->getVisibleOrigin().y + actualY;
-		break;
-// lower
-	case 1:
-		startX = CCDirector::sharedDirector()->getVisibleOrigin().y + actualY;
-		startY = 0 - target->getContentSize().width / 2;
-		break;
-
-// left
-	case 2:
-		startY = CCDirector::sharedDirector()->getVisibleOrigin().y + actualY;
-		startX = 0 - target->getContentSize().width / 2;
-		break;
-// upper
-	case 3:
-		startY = winSize.width + (target->getContentSize().width / 2);
-		startX = CCDirector::sharedDirector()->getVisibleOrigin().y + actualY;
-		break;
-	}
-
+    //Place target in a randomly picked corner.
+    int startX, startY;
+    int corner = arc4random() % 4;
+    //target-dimensions
+    CCSize tSize = target->getContentSize();
+    CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
+    corner = 0;
+    switch(corner) {
+        case 0:
+            //left bottom
+            startX = 0 - tSize.width;
+            startY = 0 - tSize.height;
+            break;
+        case 1:
+            //left top
+            startY = winSize.height + tSize.height;
+            startX = 0 - tSize.width;
+            break;
+        case 2:
+            //right top
+            startX = winSize.width + tSize.width;
+            startY = winSize.height + tSize.height;
+            break;
+        case 3:
+            //right bottom
+            startX = winSize.width + tSize.width;
+            startY = 0 - tSize.height;
+            break;
+    }
+    CCLog("Start-Position:x=%i,y=%i", startX, startY);
 	target->setPosition(ccp(startX, startY));
 
 	this->addChild(target);
@@ -348,56 +367,60 @@ void DeeWorld::addTarget() {
 void DeeWorld::moveTarget(TBGTarget* tbg) {
 
 	CCSprite *target = tbg->getSprite();
-	AminoAcid *aa = dynamic_cast<AminoAcid*>(target);
-	if (aa != 0) {
-		CCLog("this is an aa object");
-		// Determine where to spawn the target along the Y axis
-		CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
-
-		//recognize the edge
-		int angle = aa->getDirection();
-
-		CCPoint point = PositionHelper::calculateNewPos(aa, winSize);
-
-		CCLog("endX: %d, endY: %d", int(point.x), int(point.y));
-
-		// be secure we have a valid end result
-		if (point.x < 0) {
-			point.x = 0;
-		}
-
-		if (point.y < target->getContentSize().height) {
-			point.y = target->getContentSize().height;
-		}
-
-		if (point.x > winSize.width) {
-			point.x = winSize.width;
-		}
-		if (point.y > winSize.height) {
-			point.y = winSize.height;
-		}
-
-		// Determine speed of the target
-		int minDuration = (int) 2.0;
-		int maxDuration = (int) 4.0;
-		int rangeDuration = maxDuration - minDuration;
-
-		int actualDuration = (rand() % rangeDuration) + minDuration;
-
-		// Create the actions
-		CCFiniteTimeAction* actionMove = CCMoveTo::create(
-				(float) actualDuration, point);
-
-		CCFiniteTimeAction* actionMoveDone = CCCallFuncND::create(this,
-				callfuncND_selector(DeeWorld::spriteMoveFinished), (void*) tbg);
-		CCFiniteTimeAction* box2dDone = CCCallFuncN::create(this,
-				callfuncN_selector(DeeWorld::spriteDone));
-
-		// Sebi: we have to add some dummy parameters otherwise it fails on Android
-		CCSequence *readySequence = CCSequence::create(actionMove,
-				actionMoveDone, box2dDone, NULL, NULL);
-		aa->runAction(readySequence);
-	}
+    AminoAcid *aa = dynamic_cast<AminoAcid*>(target);
+    if(aa != 0) {
+        CCLog("this is an aa object");
+        // Determine where to spawn the target along the Y axis
+        CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
+    
+        
+        CCPoint point = PositionHelper::calculateNewPos(aa, winSize);
+        
+        CCLog("endX: %d, endY: %d", int(point.x), int(point.y));
+        
+//        // be secure we have a valid end result
+//        if (point.x < 0) {
+//            point.x = 0;
+//        }
+//        
+//        if (point.y < target->getContentSize().height) {
+//            point.y = target->getContentSize().height;
+//        }
+//        
+//        if (point.x > winSize.width) {
+//            point.x = winSize.width;
+//        }
+//        if (point.y > winSize.height) {
+//            point.y = winSize.height;
+//        }
+        
+        // Determine speed of the target
+        int minDuration = (int) 2.0;
+        int maxDuration = (int) 4.0;
+        int rangeDuration = maxDuration - minDuration;
+        
+        int actualDuration = (rand() % rangeDuration) + minDuration;
+        
+        // Create the actions
+        CCFiniteTimeAction* actionMove = CCMoveTo::create((float) actualDuration,
+                                                          point);
+        
+        CCFiniteTimeAction* actionMoveDone = CCCallFuncND::create(this,
+                                                                  callfuncND_selector(DeeWorld::spriteMoveFinished), (void*) tbg);
+        CCFiniteTimeAction* box2dDone = CCCallFuncN::create(this,
+                                                            callfuncN_selector(DeeWorld::spriteDone));
+        
+        CCFadeIn *fadeInReadyText = CCFadeIn::create(1.0f);
+        CCDelayTime *readyDelay = CCDelayTime::create(0.5f);
+        CCFadeOut *fadeOutReadyText = CCFadeOut::create(1.0f);
+        
+        // Sebi: we have to add some dummy parameters otherwise it fails on Android
+        CCSequence *readySequence = CCSequence::create(actionMove, actionMoveDone,
+                                                       box2dDone, NULL, NULL);
+        aa->runAction(readySequence);
+    }
+    
+	
 
 }
 

@@ -29,8 +29,15 @@ cocos2d::CCPoint PositionHelper::calculateNewPos(AminoAcid *aa, cocos2d::CCSize 
     CCLog("current direction: %i", direction);
     
     if(direction != -1) {
-        //mirror at current edge. 
-        direction = HelperFunctions::mod(-direction, 360);
+        //mirror at current edge.
+        int edge = detectEdge(pos, winSize);
+        if(edge%2 == 0) {
+            //upper or lower
+            direction = HelperFunctions::mod(-direction, 360);
+        } else {
+            //left or right
+            direction = HelperFunctions::mod(180-direction, 360);
+        }
         aa->setDirection(direction);
     } else {
         //set initial direction
@@ -42,9 +49,11 @@ cocos2d::CCPoint PositionHelper::calculateNewPos(AminoAcid *aa, cocos2d::CCSize 
     
     float radius = sqrt(pow(winSize.height, 2) + pow(winSize.width, 2));
     CCLog("r=%f,a=%i", radius, direction);
-    CCPoint coords = polarToCartesian(direction, radius);
+    CCPoint coords = polarToCartesian(direction, (double) radius);
+    CCLog("current position: x=%f,y=%f", pos.x, pos.y);
+    CCLog("target position: x=%f,y=%f", coords.x, coords.y);
     //add destination to current position.
-    return ccp(coords.x + pos.x, coords.y = pos.y);
+    return ccp(coords.x + pos.x, coords.y + pos.y);
 
 
 //	int endX = 0;
@@ -146,7 +155,8 @@ cocos2d::CCPoint PositionHelper::calculateNewPos(AminoAcid *aa, cocos2d::CCSize 
 }
 
 CCPoint PositionHelper::polarToCartesian(double angle, double radius) {
-    return ccp((int) cos(angle)*radius, (int) sin(angle)*radius);
+    angle = HelperFunctions::radian(angle);
+    return ccp( cos(angle)*radius,  sin(angle)*radius);
 }
 
 int PositionHelper::detectEdge(cocos2d::CCPoint pos,cocos2d::CCSize winSize) {
@@ -159,7 +169,7 @@ int PositionHelper::detectEdge(cocos2d::CCPoint pos,cocos2d::CCSize winSize) {
 	int y = int(pos.y);
 	//left edge
 	if (x <= sensi) {
-		edge = 2;
+		edge = 1;
 	}
 	// right
 	if (x >= winSize.width - sensi) {
@@ -167,7 +177,7 @@ int PositionHelper::detectEdge(cocos2d::CCPoint pos,cocos2d::CCSize winSize) {
 		if (edge < 5) {
 			corner = 1;
 		}
-		edge = 0;
+		edge = 3;
 	}
 
 	//upper edge
@@ -176,7 +186,7 @@ int PositionHelper::detectEdge(cocos2d::CCPoint pos,cocos2d::CCSize winSize) {
 		if (edge < 5) {
 			corner = 1;
 		}
-		edge = 3;
+		edge = 2;
 
 	}
 
@@ -186,7 +196,7 @@ int PositionHelper::detectEdge(cocos2d::CCPoint pos,cocos2d::CCSize winSize) {
 		if (edge < 5) {
 			corner = 1;
 		}
-		edge = 1;
+		edge = 0;
 	}
     
     return edge;
