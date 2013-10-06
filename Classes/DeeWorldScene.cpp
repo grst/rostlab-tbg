@@ -408,34 +408,66 @@ void DeeWorld::spriteMoveFinished(CCNode* sender, void* tbg_void) {
 // cpp with cocos2d-x
 void DeeWorld::ccTouchesBegan(cocos2d::CCSet* touches,
 		cocos2d::CCEvent* event) {
-	return;
-	/* CCSetIterator it = touches->begin();
-	CCTouch* touch;
+	cocos2d::CCLog("sizeBegan: %d", touches->count());
 
-	CCPoint pt;
-	for (int iTouchCount = 0; iTouchCount < touches->count(); iTouchCount++) {
-		touch = (CCTouch*) (*it);
-		pt = touch->getLocationInView();
-	//	cocos2d::CCLog("ccTouchesBegan id:%i x:%i,y:%in", touch->getID(),
-				(int) pt.x, (int) pt.y);
-		it++;
-	} */
+	validTouch = true;
+
+	CCSetIterator it = touches->begin();
+	CCTouch* touch = (CCTouch*) *it;
+	CCPoint pt = touch->getLocationInView();
+	CCSize size = CCDirector::sharedDirector()->getWinSize();
+	float height = size.height;
+	float y = height - pt.y;
+	int tolerance = 10;
+
+	if (std::abs(pt.x - player->getPositionX()) - tolerance
+			> player->getContentSize().width) {
+		//non valid
+		cocos2d::CCLog(
+				"ccTouchesCanceled id:%i x:%i,y:%in -- player x:%i, y:%in",
+				touch->getID(), (int) pt.x, (int) pt.y,
+				(int) player->getPositionX(), (int) player - getPositionY());
+		validTouch = false;
+	}
+	if (std::abs(y - player->getPositionY()) - tolerance
+			> player->getContentSize().height) {
+		//non valid
+		cocos2d::CCLog(
+				"ccTouchesCanceled id:%i x:%i,y:%in -- player x:%i, y:%in",
+				touch->getID(), (int) pt.x, (int) pt.y,
+				(int) player->getPositionX(), (int) player - getPositionY());
+		validTouch = false;
+	}
+
+	/* CCSetIterator it = touches->begin();
+	 CCTouch* touch;
+
+	 CCPoint pt;
+	 for (int iTouchCount = 0; iTouchCount < touches->count(); iTouchCount++) {
+	 touch = (CCTouch*) (*it);
+	 pt = touch->getLocationInView();
+	 //	cocos2d::CCLog("ccTouchesBegan id:%i x:%i,y:%in", touch->getID(),
+	 (int) pt.x, (int) pt.y);
+	 it++;
+	 } */
 }
 
 // cpp with cocos2d-x
 void DeeWorld::ccTouchesMoved(cocos2d::CCSet* touches,
 		cocos2d::CCEvent* event) {
+
+	if (validTouch == false) {
+		return;
+	}
+
 	CCSetIterator it = touches->begin();
 	CCTouch* touch;
-
-	int tolerance =10;
 
 	CCPoint pt;
 	for (int iTouchCount = 0; iTouchCount < touches->count(); iTouchCount++) {
 		touch = (CCTouch*) (*it);
 		pt = touch->getLocationInView();
-//		cocos2d::CCLog("ccTouchesMoved id:%i x:%i,y:%in", touch->getID(),
-//				(int) pt.x, (int) pt.y);
+
 		it++;
 
 //world y
@@ -446,19 +478,7 @@ void DeeWorld::ccTouchesMoved(cocos2d::CCSet* touches,
 
 		//CCLog("x: %f, y: %f", pt.x, pt.y);
 
-		//look if the touch event is in the players rectangle
-		if (iTouchCount == 0) {
-			if (std::abs(pt.x - player->getPositionX()) - tolerance
-					> player->getContentSize().width) {
-				//non valid
-				break;
-			}
-			if (std::abs(y - player->getPositionY()) - tolerance
-					> player->getContentSize().height) {
-				//non valid
-				break;
-			}
-		}
+		cocos2d::CCLog("size: %d", touches->count());
 
 //set player
 		player->setPosition(ccp(pt.x, y));
@@ -468,6 +488,7 @@ void DeeWorld::ccTouchesMoved(cocos2d::CCSet* touches,
 // cpp with cocos2d-x
 void DeeWorld::ccTouchesEnded(cocos2d::CCSet* touches,
 		cocos2d::CCEvent* event) {
+	cocos2d::CCLog("sizeEnd: %d", touches->count());
 	return;
 // Choose one of the touches to work with
 	CCTouch* touch = (CCTouch*) (touches->anyObject());
@@ -599,15 +620,15 @@ void DeeWorld::spriteDone(CCNode* sender) {
 
 void DeeWorld::updateView() {
 
-	//update score
+//update score
 	string temp =
 			static_cast<ostringstream*>(&(ostringstream() << this->score))->str();
 	this->_scoreLabel->setString(temp.c_str());
 	this->_scoreLabel->draw();
 	this->_scoreLabel->update(0.5);
 
-	//update code
-	//this->_codeLabel->setString(code.c_str());
+//update code
+//this->_codeLabel->setString(code.c_str());
 }
 
 void DeeWorld::tick(float delta) {
@@ -773,7 +794,7 @@ void DeeWorld::createNewAminoAcid(char c) {
 
 	std::string str = string(tt);
 
-	// Create the actions
+// Create the actions
 	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 
 	CCLabelTTF * label = CCLabelTTF::create(str.c_str(), "Helvetica",
@@ -786,7 +807,7 @@ void DeeWorld::createNewAminoAcid(char c) {
 	acid->_label->setColor(ccc3(20, 20, 255));
 	this->addChild(acid->_label);
 
-	// move all elements a bit
+// move all elements a bit
 	std::queue<BoardAcid*> tmpQueue;
 	while (!_code.empty()) {
 		BoardAcid* el = _code.front();
@@ -811,6 +832,6 @@ void DeeWorld::createNewAminoAcid(char c) {
 }
 
 void DeeWorld::manageCollision(TBGTarget* tbg) {
-	//TODO
+//TODO
 	return;
 }

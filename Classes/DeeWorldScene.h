@@ -83,7 +83,7 @@ private:
 	std::queue<BoardAcid*> _code;
 	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _timerLabel, timerLabel);
 	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _scoreLabel, scoreLabel);
-
+	bool validTouch;
 };
 
 #endif  // __DEEWORLD_SCENE_H__
