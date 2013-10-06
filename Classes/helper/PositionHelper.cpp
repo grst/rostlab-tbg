@@ -26,59 +26,26 @@ cocos2d::CCPoint PositionHelper::calculateNewPos(AminoAcid *aa, cocos2d::CCSize 
     int direction = aa->getDirection();
 	//int edge = 5;
 	//int corner = 0;
+    CCLog("current direction: %i", direction);
     
     if(direction != -1) {
         //mirror at current edge. 
-        direction = 180 - direction;
+        direction = HelperFunctions::mod(-direction, 360);
         aa->setDirection(direction);
     } else {
         //set initial direction
         //TODO: possibly there are issues when the AA is placed at an edge and would fly into the off
-        direction = rand()%360;
+        //direction = rand()%360;
+        direction = 30;
         aa->setDirection(direction);
     }
     
     float radius = sqrt(pow(winSize.height, 2) + pow(winSize.width, 2));
+    CCLog("r=%f,a=%i", radius, direction);
     CCPoint coords = polarToCartesian(direction, radius);
     //add destination to current position.
     return ccp(coords.x + pos.x, coords.y = pos.y);
 
-//    //////////
-//    //detect Position
-//	int sensi = 5;
-//	int x = int(pos.x);
-//	int y = int(pos.y);
-//	//left edge
-//	if (x <= sensi) {
-//		edge = 2;
-//	}
-//	// right
-//	if (x >= winSize.width - sensi) {
-//		// look for corners
-//		if (edge < 5) {
-//			corner = 1;
-//		}
-//		edge = 0;
-//	}
-//
-//	//upper edge
-//	if (y >= winSize.height - sensi) {
-//		// look for corners
-//		if (edge < 5) {
-//			corner = 1;
-//		}
-//		edge = 3;
-//
-//	}
-//
-//	// lower edge
-//	if (y <= sensi) {
-//		// look for corners
-//		if (edge < 5) {
-//			corner = 1;
-//		}
-//		edge = 1;
-//	}
 
 //	int endX = 0;
 //	int endY = 0;
@@ -180,4 +147,48 @@ cocos2d::CCPoint PositionHelper::calculateNewPos(AminoAcid *aa, cocos2d::CCSize 
 
 CCPoint PositionHelper::polarToCartesian(double angle, double radius) {
     return ccp((int) cos(angle)*radius, (int) sin(angle)*radius);
+}
+
+int PositionHelper::detectEdge(cocos2d::CCPoint pos,cocos2d::CCSize winSize) {
+    //////////
+    //detect Position
+	int sensi = 5;
+    int edge = 5;
+    int corner = 0;
+	int x = int(pos.x);
+	int y = int(pos.y);
+	//left edge
+	if (x <= sensi) {
+		edge = 2;
+	}
+	// right
+	if (x >= winSize.width - sensi) {
+		// look for corners
+		if (edge < 5) {
+			corner = 1;
+		}
+		edge = 0;
+	}
+
+	//upper edge
+	if (y >= winSize.height - sensi) {
+		// look for corners
+		if (edge < 5) {
+			corner = 1;
+		}
+		edge = 3;
+
+	}
+
+	// lower edge
+	if (y <= sensi) {
+		// look for corners
+		if (edge < 5) {
+			corner = 1;
+		}
+		edge = 1;
+	}
+    
+    return edge;
+
 }

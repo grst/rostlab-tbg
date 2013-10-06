@@ -20,7 +20,7 @@ char AminoAcid::getType() {
 }
 //d is an angle between 0 and 360 degree
 void AminoAcid::setDirection(int d){
-    this->direction = d%360;
+    this->direction = HelperFunctions::mod(d, 360);
 }
 //type is a valid one-letter IUPAC AminoAcid code
 void AminoAcid::setType(char t){
