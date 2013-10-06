@@ -9,12 +9,17 @@
 #define POSITIONHELPER_H_
 
 #include "cocos2d.h"
+#include "AminoAcid.h"
+#include "math.h"
+#include "HelperFunctions.h"
 
 class PositionHelper {
 public:
 	PositionHelper();
 	virtual ~PositionHelper();
-	static  cocos2d::CCPoint calculateNewPos(cocos2d::CCPoint pos, cocos2d::CCSize tarSize, cocos2d::CCSize winSize);
+	static  cocos2d::CCPoint calculateNewPos(AminoAcid *aa, cocos2d::CCSize winSize);
+    static int detectEdge(cocos2d::CCPoint pos, cocos2d::CCSize winSize);
+    static cocos2d::CCPoint polarToCartesian(double angle, double radius);
 };
 
 #endif /* POSITIONHELPER_H_ */

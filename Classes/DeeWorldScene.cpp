@@ -5,13 +5,14 @@
 #include "BoardAcid.h"
 #include "helper/PositionHelper.h"
 #include "helper/MatrixHelper.h"
+#include "helper/AminoAcid.h"
 #include <iostream>
 #include <string>
 
 USING_NS_CC;
 
 #define PTM_RATIO 32.0
-#define NUMBER_START_TARGETS 6
+#define NUMBER_START_TARGETS 1
 #define INTRO_TIME_SECONDS 1
 #define PLAYER_IMAGE "Player.png"
 
@@ -307,58 +308,63 @@ void DeeWorld::addTarget() {
 void DeeWorld::moveTarget(TBGTarget* tbg) {
 
 	CCSprite *target = tbg->getSprite();
-
-	// Determine where to spawn the target along the Y axis
-	CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
-
-	//recognize the edge
-	CCPoint pos = target->getPosition();
-	CCSize tarSize = target->getContentSize();
-
-	CCPoint point = PositionHelper::calculateNewPos(pos, tarSize, winSize);
-
-	CCLog("endX: %d, endY: %d", int(point.x), int(point.y));
-
-	// be secure we have a valid end result
-	if (point.x < 0) {
-		point.x = 0;
-	}
-
-	if (point.y < target->getContentSize().height) {
-		point.y = target->getContentSize().height;
-	}
-
-	if (point.x > winSize.width) {
-		point.x = winSize.width;
-	}
-	if (point.y > winSize.height) {
-		point.y = winSize.height;
-	}
-
-// Determine speed of the target
-	int minDuration = (int) 2.0;
-	int maxDuration = (int) 4.0;
-	int rangeDuration = maxDuration - minDuration;
-
-	int actualDuration = (rand() % rangeDuration) + minDuration;
-
-// Create the actions
-	CCFiniteTimeAction* actionMove = CCMoveTo::create((float) actualDuration,
-			point);
-
-	CCFiniteTimeAction* actionMoveDone = CCCallFuncND::create(this,
-			callfuncND_selector(DeeWorld::spriteMoveFinished), (void*) tbg);
-	CCFiniteTimeAction* box2dDone = CCCallFuncN::create(this,
-			callfuncN_selector(DeeWorld::spriteDone));
-
-	CCFadeIn *fadeInReadyText = CCFadeIn::create(1.0f);
-	CCDelayTime *readyDelay = CCDelayTime::create(0.5f);
-	CCFadeOut *fadeOutReadyText = CCFadeOut::create(1.0f);
-
-// Sebi: we have to add some dummy parameters otherwise it fails on Android
-	CCSequence *readySequence = CCSequence::create(actionMove, actionMoveDone,
-			box2dDone, NULL, NULL);
-	target->runAction(readySequence);
+    AminoAcid *aa = dynamic_cast<AminoAcid*>(target);
+    if(aa != 0) {
+        CCLog("this is an aa object");
+        // Determine where to spawn the target along the Y axis
+        CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
+        
+        //recognize the edge
+        int angle = aa->getDirection();
+        
+        
+        CCPoint point = PositionHelper::calculateNewPos(aa, winSize);
+        
+        CCLog("endX: %d, endY: %d", int(point.x), int(point.y));
+        
+        // be secure we have a valid end result
+        if (point.x < 0) {
+            point.x = 0;
+        }
+        
+        if (point.y < target->getContentSize().height) {
+            point.y = target->getContentSize().height;
+        }
+        
+        if (point.x > winSize.width) {
+            point.x = winSize.width;
+        }
+        if (point.y > winSize.height) {
+            point.y = winSize.height;
+        }
+        
+        // Determine speed of the target
+        int minDuration = (int) 2.0;
+        int maxDuration = (int) 4.0;
+        int rangeDuration = maxDuration - minDuration;
+        
+        int actualDuration = (rand() % rangeDuration) + minDuration;
+        
+        // Create the actions
+        CCFiniteTimeAction* actionMove = CCMoveTo::create((float) actualDuration,
+                                                          point);
+        
+        CCFiniteTimeAction* actionMoveDone = CCCallFuncND::create(this,
+                                                                  callfuncND_selector(DeeWorld::spriteMoveFinished), (void*) tbg);
+        CCFiniteTimeAction* box2dDone = CCCallFuncN::create(this,
+                                                            callfuncN_selector(DeeWorld::spriteDone));
+        
+        CCFadeIn *fadeInReadyText = CCFadeIn::create(1.0f);
+        CCDelayTime *readyDelay = CCDelayTime::create(0.5f);
+        CCFadeOut *fadeOutReadyText = CCFadeOut::create(1.0f);
+        
+        // Sebi: we have to add some dummy parameters otherwise it fails on Android
+        CCSequence *readySequence = CCSequence::create(actionMove, actionMoveDone,
+                                                       box2dDone, NULL, NULL);
+        aa->runAction(readySequence);
+    }
+    
+	
 
 }
 
