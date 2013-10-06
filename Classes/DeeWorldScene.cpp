@@ -244,54 +244,82 @@ void DeeWorld::addTarget() {
 
 	CCLog("ImagePath: %s", MatrixHelper::getImagePathForAcid(tbg->acidType));
 
-	CCSprite *target = CCSprite::create(
-			MatrixHelper::getImagePathForAcid(tbg->acidType),
-			CCRectMake(0, 0, 50, 50));
+	AminoAcid *target = AminoAcid::create(tbg->acidType);
 	//target->setZOrder(10);
 	tbg->setSprite(target);
 	target->setZOrder(2);
 
-	// Determine where to spawn the target along the Y axis
-	CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
-	float minY = target->getContentSize().height / 2;
-	float maxY = winSize.height - target->getContentSize().height / 2;
-	int rangeY = (int) (maxY - minY);
-	// srand( TimGetTicks() );
-	int actualY = (rand() % rangeY) + (int) minY;
+    //Place target in a randomly picked corner.
+    int startX, startY;
+    int corner = arc4random() % 4;
+    //target-dimensions
+    CCSize tSize = target->getContentSize();
+    CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
+    corner = 0;
+    switch(corner) {
+        case 0:
+            //left bottom
+            startX = 0 - tSize.width;
+            startY = 0 - tSize.height;
+            break;
+        case 1:
+            //left top
+            startY = winSize.height + tSize.height;
+            startX = 0 - tSize.width;
+            break;
+        case 2:
+            //right top
+            startX = winSize.width + tSize.width;
+            startY = winSize.height + tSize.height;
+            break;
+        case 3:
+            //right bottom
+            startX = winSize.width + tSize.width;
+            startY = 0 - tSize.height;
+            break;
+    }
+    
+//	// Determine where to spawn the target along the Y axis
+//	CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
+//	float minY = target->getContentSize().height / 2;
+//	float maxY = winSize.height - target->getContentSize().height / 2;
+//	int rangeY = (int) (maxY - minY);
+//	// srand( TimGetTicks() );
+//	int actualY = (arc4random() % rangeY) + (int) minY;
+//
+//	// Create the target slightly off-screen along the right edge,
+//	// and along a random position along the Y axis as calculated
+//
+//	// TODO set the target somewhere
+//	int startX = 0;
+//	int startY = 0;
+//
+//	switch (ranEdge) {
+//
+//	// right
+//	case 0:
+//		startX = winSize.width + (target->getContentSize().width / 2);
+//		startY = CCDirector::sharedDirector()->getVisibleOrigin().y + actualY;
+//		break;
+//// lower
+//	case 1:
+//		startX = CCDirector::sharedDirector()->getVisibleOrigin().y + actualY;
+//		startY = 0 - target->getContentSize().width / 2;
+//		break;
+//
+//// left
+//	case 2:
+//		startY = CCDirector::sharedDirector()->getVisibleOrigin().y + actualY;
+//		startX = 0 - target->getContentSize().width / 2;
+//		break;
+//// upper
+//	case 3:
+//		startY = winSize.width + (target->getContentSize().width / 2);
+//		startX = CCDirector::sharedDirector()->getVisibleOrigin().y + actualY;
+//		break;
+//	}
 
-	// Create the target slightly off-screen along the right edge,
-	// and along a random position along the Y axis as calculated
-
-	// TODO set the target somewhere
-	int ranEdge = rand() % 4;
-	int startX = 0;
-	int startY = 0;
-
-	switch (ranEdge) {
-
-	// right
-	case 0:
-		startX = winSize.width + (target->getContentSize().width / 2);
-		startY = CCDirector::sharedDirector()->getVisibleOrigin().y + actualY;
-		break;
-// lower
-	case 1:
-		startX = CCDirector::sharedDirector()->getVisibleOrigin().y + actualY;
-		startY = 0 - target->getContentSize().width / 2;
-		break;
-
-// left
-	case 2:
-		startY = CCDirector::sharedDirector()->getVisibleOrigin().y + actualY;
-		startX = 0 - target->getContentSize().width / 2;
-		break;
-// upper
-	case 3:
-		startY = winSize.width + (target->getContentSize().width / 2);
-		startX = CCDirector::sharedDirector()->getVisibleOrigin().y + actualY;
-		break;
-	}
-
+    CCLog("Start-Position:x=%i,y=%i", startX, startY);
 	target->setPosition(ccp(startX, startY));
 
 	this->addChild(target);
@@ -313,30 +341,27 @@ void DeeWorld::moveTarget(TBGTarget* tbg) {
         CCLog("this is an aa object");
         // Determine where to spawn the target along the Y axis
         CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
-        
-        //recognize the edge
-        int angle = aa->getDirection();
-        
+    
         
         CCPoint point = PositionHelper::calculateNewPos(aa, winSize);
         
         CCLog("endX: %d, endY: %d", int(point.x), int(point.y));
         
-        // be secure we have a valid end result
-        if (point.x < 0) {
-            point.x = 0;
-        }
-        
-        if (point.y < target->getContentSize().height) {
-            point.y = target->getContentSize().height;
-        }
-        
-        if (point.x > winSize.width) {
-            point.x = winSize.width;
-        }
-        if (point.y > winSize.height) {
-            point.y = winSize.height;
-        }
+//        // be secure we have a valid end result
+//        if (point.x < 0) {
+//            point.x = 0;
+//        }
+//        
+//        if (point.y < target->getContentSize().height) {
+//            point.y = target->getContentSize().height;
+//        }
+//        
+//        if (point.x > winSize.width) {
+//            point.x = winSize.width;
+//        }
+//        if (point.y > winSize.height) {
+//            point.y = winSize.height;
+//        }
         
         // Determine speed of the target
         int minDuration = (int) 2.0;

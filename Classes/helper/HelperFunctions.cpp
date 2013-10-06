@@ -12,3 +12,7 @@
 int HelperFunctions::mod(int a, int b) {
     return ((a%b) + b) %b;
 }
+
+double HelperFunctions::radian(double degrees){
+    return degrees * (M_PI/180);
+}

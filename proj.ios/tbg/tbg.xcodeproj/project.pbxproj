@@ -133,6 +133,7 @@
 		2105D3EA17DCCFEE002C5B53 /* stripes.png in Resources */ = {isa = PBXBuildFile; fileRef = 2105D3A417DCCFEE002C5B53 /* stripes.png */; };
 		2105D3ED17DCD664002C5B53 /* AminoAcid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2105D3EC17DCD664002C5B53 /* AminoAcid.cpp */; };
 		2105D3F017DCF20D002C5B53 /* HelperFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2105D3EE17DCF20D002C5B53 /* HelperFunctions.cpp */; };
+		2105D3F318018120002C5B53 /* BoardAcid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2105D3F118018120002C5B53 /* BoardAcid.cpp */; };
 		A9BE060C1767446800DD9825 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9BE060B1767446800DD9825 /* QuartzCore.framework */; };
 		A9BE060E1767446800DD9825 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9BE060D1767446800DD9825 /* OpenGLES.framework */; };
 		A9BE06101767446800DD9825 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9BE060F1767446800DD9825 /* OpenAL.framework */; };
@@ -565,6 +566,8 @@
 		2105D3EC17DCD664002C5B53 /* AminoAcid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AminoAcid.cpp; sourceTree = "<group>"; };
 		2105D3EE17DCF20D002C5B53 /* HelperFunctions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HelperFunctions.cpp; sourceTree = "<group>"; };
 		2105D3EF17DCF20D002C5B53 /* HelperFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelperFunctions.h; sourceTree = "<group>"; };
+		2105D3F118018120002C5B53 /* BoardAcid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BoardAcid.cpp; path = ../../Classes/BoardAcid.cpp; sourceTree = "<group>"; };
+		2105D3F218018120002C5B53 /* BoardAcid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BoardAcid.h; path = ../../Classes/BoardAcid.h; sourceTree = "<group>"; };
 		A9BE06081767446800DD9825 /* tbg.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = tbg.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9BE060B1767446800DD9825 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		A9BE060D1767446800DD9825 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -1391,6 +1394,8 @@
 		212D9D0F17ABEE6E00FB9A49 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				2105D3F118018120002C5B53 /* BoardAcid.cpp */,
+				2105D3F218018120002C5B53 /* BoardAcid.h */,
 				2105D33A17DCCFD4002C5B53 /* AppDelegate.cpp */,
 				2105D33B17DCCFD4002C5B53 /* AppDelegate.h */,
 				2105D33C17DCCFD4002C5B53 /* box2d */,
@@ -2955,6 +2960,7 @@
 				2105D35B17DCCFD4002C5B53 /* TBGTarget.cpp in Sources */,
 				2105D3ED17DCD664002C5B53 /* AminoAcid.cpp in Sources */,
 				2105D3F017DCF20D002C5B53 /* HelperFunctions.cpp in Sources */,
+				2105D3F318018120002C5B53 /* BoardAcid.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
