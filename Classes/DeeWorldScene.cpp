@@ -6,14 +6,14 @@
 #include "helper/PositionHelper.h"
 #include "helper/MatrixHelper.h"
 #include "helper/AminoAcid.h"
-#include "helper/DebugDraw.h"
+//#include "helper/DebugDraw.h"
 #include <iostream>
 #include <string>
 
 USING_NS_CC;
 
 #define PTM_RATIO 32.0
-#define NUMBER_START_TARGETS 4
+#define NUMBER_START_TARGETS 1
 #define INTRO_TIME_SECONDS 2
 #define PLAYER_IMAGE "Player.png"
 
@@ -125,14 +125,59 @@ bool DeeWorld::init() {
 
 		/////////////////////////////
 		// 2. add your codes below...
+        
+        ////TAGS
+        // 0 = player
+        // 1 = target
+        // 2 = projectile (not in use any more)
+        // 3 = wall
+        
+        
+        //walls limiting the screen
+        CCSprite *bottom = CCSprite::create();
+        CCSprite *left = CCSprite::create();
+        CCSprite *top = CCSprite::create();
+        CCSprite *right = CCSprite::create();
 
+        bottom->setColor(ccc3(0, 0, 0));
+        bottom->setTextureRect(CCRectMake(0, 0, visibleSize.width, 20));
+//        bottom->setTextureRect(CCRectMake(240, 0, 480, 20));
+        bottom->setPosition(ccp(visibleSize.width/2, 0));
+        
+        left->setColor(ccc3(0, 0, 0));
+        left->setTextureRect(CCRectMake( 0, 0, 20, visibleSize.height));
+//        left->setTextureRect(CCRectMake( 0, 170, 20, 340));
+        left->setPosition(ccp(0, visibleSize.height/2));
+
+        top->setColor(ccc3(0, 0, 0));
+        top->setTextureRect(CCRectMake(0, 0, visibleSize.width, 20));
+//        top->setTextureRect(CCRectMake(340, 240, 480, 20));
+        top->setPosition(ccp(visibleSize.width/2, visibleSize.height));
+
+        right->setColor(ccc3(0, 0, 0));
+        right->setTextureRect(CCRectMake(0, 0, 20, visibleSize.height));
+//        right->setTextureRect(CCRectMake(480, 170, 20, 340));
+        right->setPosition(ccp(visibleSize.width, visibleSize.height/2));
+
+        
+        CreateBox2DBodyForSprite(bottom, 0, NULL);
+        CreateBox2DBodyForSprite(left, 0, NULL);
+        CreateBox2DBodyForSprite(top, 0, NULL);
+        CreateBox2DBodyForSprite(right, 0, NULL);
+        
+        this->addChild(bottom, 3, 3);
+        this->addChild(left, 3, 3);
+        this->addChild(top, 3, 3);
+        this->addChild(right, 3, 3);
+        
+        //player
 		player = CCSprite::create(PLAYER_IMAGE, CCRectMake(0, 0, 27, 40));
-		player->setZOrder(3);
 
 		//create the box for the player (currently with rectangle)
 		CreateBox2DBodyForSprite(player, 0, NULL);
 
-		this->addChild(player, 0, 0); // tag 0 for player, 1 target, 2 projectile
+        //z-order 3, tag=0
+		this->addChild(player, 3, 0);
 
 		this->schedule(schedule_selector(DeeWorld::gameLogic), 1.0);
 
@@ -149,12 +194,6 @@ bool DeeWorld::init() {
 
 		bRet = true;
 
-		//testing drawing
-
-		 m_debugDraw = DebugDraw::create();
-		scene->addChild(debugDraw);
-
-		m_debugDraw->appendLine(ccp(0, 0), ccp(100, 100));
 
 	} while (0);
 
@@ -300,47 +339,6 @@ void DeeWorld::addTarget() {
             startY = 0 - tSize.height;
             break;
     }
-    
-//	// Determine where to spawn the target along the Y axis
-//	CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
-//	float minY = target->getContentSize().height / 2;
-//	float maxY = winSize.height - target->getContentSize().height / 2;
-//	int rangeY = (int) (maxY - minY);
-//	// srand( TimGetTicks() );
-//	int actualY = (arc4random() % rangeY) + (int) minY;
-//
-//	// Create the target slightly off-screen along the right edge,
-//	// and along a random position along the Y axis as calculated
-//
-//	// TODO set the target somewhere
-//	int startX = 0;
-//	int startY = 0;
-//
-//	switch (ranEdge) {
-//
-//	// right
-//	case 0:
-//		startX = winSize.width + (target->getContentSize().width / 2);
-//		startY = CCDirector::sharedDirector()->getVisibleOrigin().y + actualY;
-//		break;
-//// lower
-//	case 1:
-//		startX = CCDirector::sharedDirector()->getVisibleOrigin().y + actualY;
-//		startY = 0 - target->getContentSize().width / 2;
-//		break;
-//
-//// left
-//	case 2:
-//		startY = CCDirector::sharedDirector()->getVisibleOrigin().y + actualY;
-//		startX = 0 - target->getContentSize().width / 2;
-//		break;
-//// upper
-//	case 3:
-//		startY = winSize.width + (target->getContentSize().width / 2);
-//		startX = CCDirector::sharedDirector()->getVisibleOrigin().y + actualY;
-//		break;
-//	}
-
     CCLog("Start-Position:x=%i,y=%i", startX, startY);
 	target->setPosition(ccp(startX, startY));
 
