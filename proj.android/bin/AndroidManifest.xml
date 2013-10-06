@@ -25,5 +25,6 @@ android:icon="@drawable/ic_launcher" android:debuggable="true">
     <supports-screens android:largeScreens="true"
                       android:smallScreens="true"
                       android:anyDensity="true"
+                      android:hardwareAccelerated="true" 
                       android:normalScreens="true"/>
 </manifest> 

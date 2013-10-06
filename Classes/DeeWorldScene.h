@@ -20,6 +20,15 @@
 
 #include "SimpleAudioEngine.h"
 
+typedef struct
+ {
+     CCPoint pt1;
+     CCPoint pt2;
+     float r;
+     float g;
+     float b;
+} DebugLine;
+
 class DeeWorld: public cocos2d::CCLayerColor {
 public:
 	DeeWorld();
@@ -31,6 +40,8 @@ public:
 
 	// there's no 'id' in cpp, so we recommand to return the exactly class pointer
 	static cocos2d::CCScene* scene();
+
+	virtual void draw(void);
 
 	// a selector callback
 	virtual void menuCloseCallback(cocos2d::CCObject* pSender);
@@ -84,6 +95,9 @@ private:
 	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _timerLabel, timerLabel);
 	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _scoreLabel, scoreLabel);
 	bool validTouch;
+	int tempHeight;
+	std::queue<BoardAcid*> movementLines;
+	 std::vector<DebugLine>* m_lines;
 };
 
 #endif  // __DEEWORLD_SCENE_H__

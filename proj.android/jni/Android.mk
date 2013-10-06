@@ -19,6 +19,7 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/helper/AminoAcid.cpp \
                    ../../Classes/box2d/GLES-Render.cpp  \
                    ../../Classes/helper/PositionHelper.cpp  \
+                   ../../Classes/helper/DebugDraw.cpp  \
                    ../../Classes/helper/MatrixHelper.cpp  \
                    ../../Classes/helper/HelperFunctions.cpp  \
                    ../../Classes/helper/WebOpNative.cpp
