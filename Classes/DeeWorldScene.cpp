@@ -2,6 +2,7 @@
 #include "SplashScreenScene.h"
 #include "SimpleAudioEngine.h"
 #include "TBGTarget.h"
+#include "BoardAcid.h"
 #include "helper/PositionHelper.h"
 #include "helper/MatrixHelper.h"
 #include <iostream>
@@ -20,6 +21,11 @@ DeeWorld::~DeeWorld() {
 	if (_targets) {
 		_targets->release();
 		_targets = NULL;
+	}
+
+	if (_scoreLabel) {
+		_scoreLabel->release();
+		_scoreLabel = NULL;
 	}
 
 	// cpp don't need to call super dealloc
@@ -79,18 +85,17 @@ bool DeeWorld::init() {
 		CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 		CCPoint origin = CCDirector::sharedDirector()->getVisibleOrigin();
 
-	/*	pCloseItem->setPosition(
-				ccp(
-						origin.x + visibleSize.width
-								- pCloseItem->getContentSize().width / 2,
-						origin.y + pCloseItem->getContentSize().height / 2)); */
+		/*	pCloseItem->setPosition(
+		 ccp(
+		 origin.x + visibleSize.width
+		 - pCloseItem->getContentSize().width / 2,
+		 origin.y + pCloseItem->getContentSize().height / 2)); */
 
 		pCloseItem->setPosition(
-						ccp(
+				ccp(
 
-										pCloseItem->getContentSize().width / 2,
-								origin.y + pCloseItem->getContentSize().height / 2));
-
+				pCloseItem->getContentSize().width / 2,
+						origin.y + pCloseItem->getContentSize().height / 2));
 
 		// Create a menu with the "close" menu item, it's an auto release object.
 		CCMenu* pMenu = CCMenu::create(pCloseItem, NULL);
@@ -118,6 +123,7 @@ bool DeeWorld::init() {
 		// 2. add your codes below...
 
 		player = CCSprite::create(PLAYER_IMAGE, CCRectMake(0, 0, 27, 40));
+		player->setZOrder(3);
 
 		//create the box for the player (currently with rectangle)
 		CreateBox2DBodyForSprite(player, 0, NULL);
@@ -155,33 +161,22 @@ void DeeWorld::loadGame() {
 			ccp(visibleSize.width / 2, player->getContentSize().height));
 
 	//score
-	score =0;
+	score = 0;
 	// int -> str
-	string temp = static_cast<ostringstream*>(&(ostringstream()
-					<< this->timer))->str();
-	this->_scoreLabel = CCLabelTTF::create(temp.c_str(), "Helvetica",
+	this->_scoreLabel = CCLabelTTF::create("0", "Helvetica",
 			visibleSize.height * 1 / 8,
 			CCSizeMake(60, visibleSize.height * 1 / 7), kCCTextAlignmentRight);
 	this->_scoreLabel->retain();
 	this->_scoreLabel->setPosition(
-			ccp(visibleSize.width - 30, visibleSize.height +10));
+			ccp(visibleSize.width - 30, visibleSize.height + 10));
 	this->_scoreLabel->setColor(ccc3(20, 20, 255));
 	this->addChild(_scoreLabel);
 
 	//code
 	int i;
-	for(i=0; i< 3; i++){
-		code = MatrixHelper::getRandomAminoAcid() + code;
+	for (i = 0; i < 3; i++) {
+		this->createNewAminoAcid(MatrixHelper::getRandomAminoAcid());
 	}
-
-	this->_codeLabel = CCLabelTTF::create(code.c_str(), "Helvetica",
-			visibleSize.height * 1 / 8,
-			CCSizeMake(100, visibleSize.height * 1 / 7), kCCTextAlignmentRight);
-	this->_codeLabel->retain();
-	this->_codeLabel->setPosition(
-			ccp(visibleSize.width - 50, visibleSize.height * 1 / 6 ));
-	this->_codeLabel->setColor(ccc3(20, 20, 255));
-	this->addChild(_codeLabel);
 
 	//timer
 	this->timer = INTRO_TIME_SECONDS;
@@ -197,6 +192,8 @@ void DeeWorld::loadGame() {
 	this->addChild(_timerLabel);
 
 	this->countdown();
+
+	updateView();
 
 	_targetsAlive = NUMBER_START_TARGETS;
 	_targets = new CCArray;
@@ -249,7 +246,9 @@ void DeeWorld::addTarget() {
 	CCSprite *target = CCSprite::create(
 			MatrixHelper::getImagePathForAcid(tbg->acidType),
 			CCRectMake(0, 0, 50, 50));
+	//target->setZOrder(10);
 	tbg->setSprite(target);
+	target->setZOrder(2);
 
 	// Determine where to spawn the target along the Y axis
 	CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
@@ -455,6 +454,7 @@ void DeeWorld::ccTouchesEnded(cocos2d::CCSet* touches,
 }
 
 void DeeWorld::updateGame(float dt) {
+
 	return;
 	CCArray *targetsToDelete = new CCArray;
 	CCObject* jt = NULL;
@@ -481,6 +481,7 @@ void DeeWorld::updateGame(float dt) {
 	}
 
 	targetsToDelete->release();
+
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -570,6 +571,19 @@ void DeeWorld::spriteDone(CCNode* sender) {
 //    m_spriteSheet->removeChild(sprite, true);
 }
 
+void DeeWorld::updateView() {
+
+	//update score
+	string temp =
+			static_cast<ostringstream*>(&(ostringstream() << this->score))->str();
+	this->_scoreLabel->setString(temp.c_str());
+	this->_scoreLabel->draw();
+	this->_scoreLabel->update(0.5);
+
+	//update code
+	//this->_codeLabel->setString(code.c_str());
+}
+
 void DeeWorld::tick(float delta) {
 
 	_b2dWorld->Step(delta, 10, 10);
@@ -656,22 +670,53 @@ void DeeWorld::tick(float delta) {
 
 			//ATTETION we don't delete the sprite out of the array, this might cause memory leaks
 
-			//_targetsAlive = _targetsAlive - 1;
+			_targetsAlive = _targetsAlive - 1;
 			CCLOG("remaining % d", _targetsAlive);
-			if (_targetsAlive <= 0) {
 
-				SplashScreenScene *splashScene = SplashScreenScene::create();
-				splashScene->getLayer()->getLabel()->setString("You Lose :[");
+			this->score = score + 1;
 
-				//transition to next scene for one sec
-				CCDirector::sharedDirector()->replaceScene(
-						CCTransitionFade::create(1.0f, splashScene));
+			if (_code.size() > 0) {
+				BoardAcid * acid = this->_code.front();
+
+				cocos2d::CCLabelTTF* label = acid->_label;
+				//label->setString("y");
+
+				// Create the actions
+				CCSize visibleSize =
+						CCDirector::sharedDirector()->getVisibleSize();
+
+				CCFiniteTimeAction* actionMove = CCMoveTo::create((float) 0.8,
+						ccp(visibleSize.height, visibleSize.width));
+
+				// Sebi: we have to add some dummy parameters otherwise it fails on Android
+				CCSequence *readySequence = CCSequence::create(actionMove, NULL,
+				NULL);
+				label->runAction(readySequence);
+
+				//delete acid;
+				//break;
+				_code.pop();
+
+				createNewAminoAcid (MatrixHelper::getRandomAminoAcid());
 			}
+
+			//this->code.pMatrixHelper::getRandomAminoAcid();
+			this->updateView();
+			/*	if (_targetsAlive <= 0) {
+
+			 SplashScreenScene *splashScene = SplashScreenScene::create();
+			 splashScene->getLayer()->getLabel()->setString("You Lose :[");
+
+			 //transition to next scene for one sec
+			 CCDirector::sharedDirector()->replaceScene(
+			 CCTransitionFade::create(1.0f, splashScene));
+			 }
+			 */
 
 		}
 
 // Destroy the Box2D body as well
-
+		_b2dWorld->DestroyBody(body);
 	}
 
 //    // If we've destroyed anything, play an amusing and malicious sound effect!  ;]
@@ -690,6 +735,54 @@ void DeeWorld::registerWithTouchDispatcher() {
 
 void DeeWorld::gameLogic(float dt) {
 // do some crazy stuff here
+}
+
+void DeeWorld::createNewAminoAcid(char c) {
+
+
+	BoardAcid * acid = new BoardAcid();
+	acid->setAcid(c);
+
+	char  tt [] = "t";
+	tt[0] = c;
+
+	std::string str = string(tt);
+
+	// Create the actions
+	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
+
+	CCLabelTTF * label = CCLabelTTF::create(str.c_str(), "Helvetica",
+			visibleSize.height * 1 / 10,
+			CCSizeMake(20, visibleSize.height * 1 / 7), kCCTextAlignmentRight);
+	acid->_label = label;
+
+
+	acid->_label->setPosition(
+			ccp(visibleSize.width - 15, visibleSize.height * 1 / 6));
+	acid->_label->setColor(ccc3(20, 20, 255));
+	this->addChild(acid->_label);
+
+	// move all elements a bit
+	std::queue<BoardAcid*> tmpQueue;
+	while (!_code.empty()) {
+		BoardAcid* el = _code.front();
+		tmpQueue.push(el);
+
+		CCFiniteTimeAction* actionMove = CCMoveTo::create((float) 0.8,
+				ccp(el->_label->getPositionX()-20, el->_label->getPositionY()));
+
+		// Sebi: we have to add some dummy parameters otherwise it fails on Android
+		CCSequence *readySequence = CCSequence::create(actionMove, NULL,
+		NULL);
+		el->_label->runAction(readySequence);
+
+		_code.pop();
+	}
+
+	_code = tmpQueue;
+
+	_code.push(acid);
+
 }
 
 void DeeWorld::manageCollision(TBGTarget* tbg) {

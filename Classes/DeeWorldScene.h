@@ -1,12 +1,18 @@
 #ifndef __DEEWORLD_SCENE_H__
 #define __DEEWORLD_SCENE_H__
 
+#include <queue>
+#include <iostream>
+#include <string>
+#include <ctype.h>
+
 #include "cocos2d.h"
 #include "Box2D.h"
 //for debug-draw
 #include "box2d/B2DebugDrawLayer.h"
 #include "box2d/GLES-Render.h"
 #include "TBGTarget.h"
+#include "BoardAcid.h"
 
 
 #include "box2d/ContactListener.h"
@@ -69,11 +75,12 @@ protected:
 private:
 	void manageCollision(TBGTarget* acid);
 	void countdown();
+	void updateView();
+	void createNewAminoAcid(char c);
 	int score;
 	int timer;
-	std::string code;
+	std::queue<BoardAcid*> _code;
 	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _timerLabel, timerLabel);
-	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _codeLabel, codeLabel);
 	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _scoreLabel, scoreLabel);
 
 };

@@ -12,10 +12,11 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/AppDelegate.cpp \
                    ../../Classes/box2d/B2DebugDrawLayer.cpp \
                    ../../Classes/DeeWorldScene.cpp \
+                   ../../Classes/TBGTarget.cpp  \
+                   ../../Classes/BoardAcid.cpp  \
                    ../../Classes/SplashScreenScene.cpp \
                    ../../Classes/box2d/ContactListener.cpp \
                    ../../Classes/box2d/GLES-Render.cpp  \
-                   ../../Classes/TBGTarget.cpp  \
                    ../../Classes/helper/PositionHelper.cpp  \
                    ../../Classes/helper/MatrixHelper.cpp  \
                    ../../Classes/helper/WebOpNative.cpp

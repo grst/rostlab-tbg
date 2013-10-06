@@ -19,6 +19,8 @@ MatrixHelper::~MatrixHelper() {
 const  char * MatrixHelper::getImagePathForAcid(char c){
 	const  char *  url;
 
+	c = 'A';
+
 	switch(c){
 		case 'A': url="DAlanine.png"; break;
 		case 'C': url="LArginine.png"; break;
@@ -53,7 +55,7 @@ const  char * MatrixHelper::getImagePathForAcid(char c){
 
  char MatrixHelper::getRandomAminoAcid(){
 	int i= rand() % 20;
-	char a= 'A';
+	char a;
 	switch(i){
 	case 0: a='A'; break;
 	case 1: a='C'; break;
@@ -76,8 +78,6 @@ const  char * MatrixHelper::getImagePathForAcid(char c){
 	case 18: a='W'; break;
 	case 19: a='Y'; break;
 	}
-
-	a = 'A';
 
 	return a;
 }
