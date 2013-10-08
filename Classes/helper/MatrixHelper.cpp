@@ -6,7 +6,7 @@
  */
 
 #include "MatrixHelper.h"
-#include "helper/HelperFunctions.h"
+#include "HelperFunctions.h"
 
 int ** MatrixHelper::scoringMatrix = new int*[20];
 bool MatrixHelper::firstTime = false;
@@ -200,8 +200,8 @@ void MatrixHelper::loadMatrix(std::string name) {
 		firstTime = true;
 	}
 
-	std::string pFileName = "matrices/"+name;
-	char pMode = 'r';
+    //on iOS only file name required, doesn't work with relative path. 
+	std::string pFileName = name;
 
 	// Create input file stream
 	// Initialize variables needed
@@ -218,6 +218,11 @@ void MatrixHelper::loadMatrix(std::string name) {
 	// Get data of file
 	fileContents = cocos2d::CCFileUtils::sharedFileUtils()->getFileData(
 			fullPath.c_str(), "r", &fileSize);
+    
+    if(fileContents == NULL) {
+        cocos2d::CCLog("Error reading Matrix");
+    }
+    cocos2d::CCLog((char *)fileContents);
 	contents.append((char *) fileContents);
 
 	// Create a string stream so that we can use getline( ) on it

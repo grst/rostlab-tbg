@@ -7,15 +7,39 @@
 
 #include "TBGTarget.h"
 #include "helper/MatrixHelper.h"
+#include "helper/HelperFunctions.h"
+#include "cocos2d.h"
+USING_NS_CC;
 
 TBGTarget::TBGTarget() {
-	velX = rand() % 4 + 1;
-	velY = rand() % 4 + 1;
-	acidType = MatrixHelper::getRandomAminoAcid();
+	type = MatrixHelper::getRandomAminoAcid();
+    //initialize sprite
+    m_Sprite = cocos2d::CCSprite::create(
+                            MatrixHelper::getImagePathForAcid(type),
+                                               CCRectMake(0, 0, 50, 50));
+    m_Sprite->setTag(1); //target
+    m_Sprite->setZOrder(3);
+    //default value: negative
+    direction = -1;
 }
 
 TBGTarget::~TBGTarget() {
 	delete this->m_Sprite;
+}
+
+int TBGTarget::getDirection() {
+    return this->direction;
+}
+char TBGTarget::getType() {
+    return this->type;
+}
+//d is an angle between 0 and 360 degree
+void TBGTarget::setDirection(int d){
+    this->direction = HelperFunctions::mod(d, 360);
+}
+//type is a valid one-letter IUPAC AminoAcid code
+void TBGTarget::setType(char t){
+    this->type = t;
 }
 
 void TBGTarget::setSprite(cocos2d::CCSprite* sprite) {
@@ -30,11 +54,7 @@ cocos2d::CCSprite * TBGTarget::getSprite() {
  */
 int TBGTarget::getScore(TBGTarget * other) {
 
-	// TODO compare
-	if (other->acidType == this->acidType) {
-		return 10;
-	}
-
+	// TODO apply Matrix score
 	return 1;
 
 }

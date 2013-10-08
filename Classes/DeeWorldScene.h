@@ -37,10 +37,12 @@ public:
 
 	// implement the "static node()" method manually
 	CREATE_FUNC (DeeWorld);
+    
+    
 
 	void loadGame();
 
-	void moveTarget(TBGTarget* target);
+	void moveTarget(TBGTarget* target, int edge);
 	void createTargets();
 
 	void spriteMoveFinished(cocos2d::CCNode* sender, void* tbg);
@@ -50,6 +52,8 @@ public:
 	void updateGame(float dt);
 
 	void registerWithTouchDispatcher();
+    
+    int getEdge(CCSprite* wall);
 
 	//Touch Handlers
 	virtual void ccTouchesBegan(cocos2d::CCSet * touches, cocos2d::CCEvent * event); // When touches are started.
@@ -73,6 +77,11 @@ protected:
 	void addTarget();
 
 private:
+    //init functions
+    void makeMenu();
+    void initBox2D();
+    void initWorld();
+    
 	void manageCollision(TBGTarget* acid);
 	void countdown();
 	void updateView();
@@ -86,6 +95,7 @@ private:
 	bool validTouch;
 	int tempHeight;
 	std::queue<CCDrawNode*> movementLines;
+    CCSprite *bottom, *left, *top, *right; //Walls
 };
 
 #endif  // __DEEWORLD_SCENE_H__

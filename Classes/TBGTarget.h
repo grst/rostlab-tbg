@@ -18,14 +18,22 @@ class  TBGTarget : public cocos2d::CCObject {
 public:
 	TBGTarget();
 	~TBGTarget();
+    
 	void setSprite(cocos2d::CCSprite* sprite);
 	cocos2d::CCSprite * getSprite();
-	float velX;
-	float velY;
-	char acidType;
+	
 	int getScore(TBGTarget* other);
+    void setDirection(int d);
+    int getDirection();
+    void setType(char t);
+    char getType();
+    
 private:
 	cocos2d::CCSprite * m_Sprite;
+    //moving angle of the amino acid
+    int direction;
+    //IUPAC one letter code amino acid type
+	char type;
 
 };
 
