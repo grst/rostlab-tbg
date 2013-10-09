@@ -24,7 +24,7 @@ cocos2d::CCPoint PositionHelper::calculateNewPos(AminoAcid *target, cocos2d::CCS
     int direction = target->getDirection();
 	//int edge = 5;
 	//int corner = 0;
-    CCLog("current direction: %i", direction);
+    CCLog("current direction: %i, edge: %i", direction, edge);
     
     if(direction != -1) {
         //mirror at current edge.

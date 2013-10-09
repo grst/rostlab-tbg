@@ -132,7 +132,6 @@ void DeeWorld::makeMenu() {
         return;
     }
     // Place the menu item bottom-left conner.
-    CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
     CCPoint origin = CCDirector::sharedDirector()->getVisibleOrigin();
     
     pCloseItem->setPosition(
@@ -296,7 +295,7 @@ void DeeWorld::createTargets() {
 
 // cpp with cocos2d-x
 void DeeWorld::addTarget() {
-	CCSprite *target = AminoAcid::create();
+	AminoAcid *target = AminoAcid::create();
     
 	//Place target in a randomly picked corner.
 	int startX, startY;
@@ -367,6 +366,7 @@ void DeeWorld::moveTarget(AminoAcid* target, int edge) {
     CCFiniteTimeAction* box2dDone = CCCallFuncN::create(this,
                                                         callfuncN_selector(DeeWorld::spriteDone));
     
+    //TODO: unused variables
     CCFadeIn *fadeInReadyText = CCFadeIn::create(1.0f);
     CCDelayTime *readyDelay = CCDelayTime::create(0.5f);
     CCFadeOut *fadeOutReadyText = CCFadeOut::create(1.0f);
@@ -422,7 +422,6 @@ void DeeWorld::spriteMoveFinished(CCNode* sender, void* tbg_void) {
 void DeeWorld::ccTouchesBegan(cocos2d::CCSet* touches,
                               cocos2d::CCEvent* event) {
 	validTouch = true;
-	int touchNumber = 0;
 	tempHeight = CCDirector::sharedDirector()->getWinSize().height;
     
 	CCSetIterator it = touches->begin();
@@ -502,7 +501,6 @@ void DeeWorld::ccTouchesMoved(cocos2d::CCSet* touches,
 	// TODO color is not working correct (same red!) - ideally we make a nice gradient
 	CCLog("r: %f, g, :%f ,b: %f", color.r, color.g, color.b);
     
-	int thickness = 5;
 	CCPoint points[4];
 	points[0] = ccp(0, 0);
 	points[1] = ccp(0, std::abs(pt.x - playerPoint.x));
@@ -722,8 +720,6 @@ void DeeWorld::tick(float delta) {
 			int iTagA = spriteA->getTag();
 			int iTagB = spriteB->getTag();
             
-			TBGTarget * acid = NULL;
-            
 			// Is sprite A a player and sprite B a target?  If so, push the target on a list to be destroyed...
 			if (iTagA == 0 && iTagB == 1) {
 				toDestroy.push_back(bodyB);
@@ -740,10 +736,11 @@ void DeeWorld::tick(float delta) {
             else if(iTagA == 1 && iTagB == 3){
                 CCLog("Collision: Target on Wall");
                 int edge = getEdge(spriteB);
+                moveTarget(dynamic_cast<AminoAcid*>(spriteA), edge);
             } else if (iTagA == 3 && iTagB == 1) {
                 CCLog("Collision: Wall on Target");
                 int edge = getEdge(spriteA);
-                //moveTarget(spriteB, edge);
+                moveTarget(dynamic_cast<AminoAcid*>(spriteB), edge);
             }
             
 		}
@@ -903,7 +900,7 @@ void DeeWorld::createNewAminoAcid(char c) {
     
 }
 
-void DeeWorld::manageCollision(TBGTarget* tbg) {
+void DeeWorld::manageCollision(AminoAcid* aa) {
     //TODO
 	return;
 }

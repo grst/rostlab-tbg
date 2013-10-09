@@ -22,11 +22,11 @@ char AminoAcid::getType() {
 void AminoAcid::setDirection(int d){
     this->direction = HelperFunctions::mod(d, 360);
 }
-//type is a valid one-letter IUPAC AminoAcid code
-void AminoAcid::setType(char t){
-    this->type = t;
-    //TODO: also change sprite image
-}
+////type is a valid one-letter IUPAC AminoAcid code
+//void AminoAcid::setType(char t){
+//    this->type = t;
+//    //TODO: also change sprite image
+//}
 
 /**
  * @return Score according to Scoring-Matrix (e.g. BLOSUM62)
@@ -53,10 +53,12 @@ AminoAcid* AminoAcid::create(char type){
                                         MatrixHelper::getImagePathForAcid(type),
                                         CCRectMake(0, 0, 50, 50)))
     {
-        pobSprite->setType(type);
+        pobSprite->type = type;
+        pobSprite->direction = -1; //negative default value.
         pobSprite->setTag(1);
         pobSprite->setZOrder(3);
         pobSprite->autorelease();
+        
         return pobSprite;
     }
     CC_SAFE_DELETE(pobSprite);

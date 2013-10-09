@@ -42,7 +42,7 @@ public:
 
 	void loadGame();
 
-	void moveTarget(TBGTarget* target, int edge);
+	void moveTarget(AminoAcid* target, int edge);
 	void createTargets();
 
 	void spriteMoveFinished(cocos2d::CCNode* sender, void* tbg);
@@ -82,7 +82,7 @@ private:
     void initBox2D();
     void initWorld();
     
-	void manageCollision(TBGTarget* acid);
+	void manageCollision(AminoAcid* acid);
 	void countdown();
 	void updateView();
 	void createNewAminoAcid(char c);
