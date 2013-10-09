@@ -1,8 +1,6 @@
 #include "DeeWorldScene.h"
 #include "SplashScreenScene.h"
 #include "SimpleAudioEngine.h"
-#include "TBGTarget.h"
-#include "BoardAcid.h"
 #include "helper/PositionHelper.h"
 #include "helper/MatrixHelper.h"
 #include <iostream>
@@ -298,12 +296,7 @@ void DeeWorld::createTargets() {
 
 // cpp with cocos2d-x
 void DeeWorld::addTarget() {
-    
-	TBGTarget* tbgTarget = new TBGTarget();
-    
-	CCLog("ImagePath: %s", MatrixHelper::getImagePathForAcid(tbgTarget->getType()));
-    
-	CCSprite *target = tbgTarget->getSprite();
+	CCSprite *target = AminoAcid::create();
     
 	//Place target in a randomly picked corner.
 	int startX, startY;
@@ -342,20 +335,17 @@ void DeeWorld::addTarget() {
 	target->setPosition(ccp(startX, startY));
     
 	this->addChild(target);
-	_targets->addObject(tbgTarget);
+	_targets->addObject(target);
     
 	CreateBox2DBodyForSprite(target, 0, NULL);
-	this->moveTarget(tbgTarget, corner);
+	this->moveTarget(target, corner);
     
 }
 
-void DeeWorld::moveTarget(TBGTarget* tbgTarget, int edge) {
-    
-	CCSprite *target = tbgTarget->getSprite();
-    
+void DeeWorld::moveTarget(AminoAcid* target, int edge) {
     CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
 
-    CCPoint point = PositionHelper::calculateNewPos(tbgTarget, winSize, edge);
+    CCPoint point = PositionHelper::calculateNewPos(target, winSize, edge);
     
     CCLog("endX: %d, endY: %d", int(point.x), int(point.y));
     
@@ -367,11 +357,13 @@ void DeeWorld::moveTarget(TBGTarget* tbgTarget, int edge) {
     int actualDuration = (rand() % rangeDuration) + minDuration;
     
     // Create the actions
+    //TODO: what are all these actions about?
     CCFiniteTimeAction* actionMove = CCMoveTo::create(
                                                       (float) actualDuration, point);
     
+    //TODO: the void-parameter is unnecessary!?
     CCFiniteTimeAction* actionMoveDone = CCCallFuncND::create(this,
-                                                              callfuncND_selector(DeeWorld::spriteMoveFinished), (void*) tbgTarget);
+                                                              callfuncND_selector(DeeWorld::spriteMoveFinished), (void*) target);
     CCFiniteTimeAction* box2dDone = CCCallFuncN::create(this,
                                                         callfuncN_selector(DeeWorld::spriteDone));
     
@@ -382,7 +374,7 @@ void DeeWorld::moveTarget(TBGTarget* tbgTarget, int edge) {
     // Sebi: we have to add some dummy parameters otherwise it fails on Android
     CCSequence *readySequence = CCSequence::create(actionMove,
                                                    actionMoveDone, box2dDone, NULL, NULL);
-    tbgTarget->getSprite()->runAction(readySequence);
+    target->runAction(readySequence);
 }
 
 
@@ -390,10 +382,8 @@ void DeeWorld::moveTarget(TBGTarget* tbgTarget, int edge) {
 void DeeWorld::spriteMoveFinished(CCNode* sender, void* tbg_void) {
     
 	CCSprite *sprite = (CCSprite *) sender;
-    
-	TBGTarget *tbg = (TBGTarget*) tbg_void;
-    
-	if (sprite->getTag() == 1)  // target
+
+    if (sprite->getTag() == 1)  // target
     {
         //////
         // box2d stuff!
@@ -558,9 +548,13 @@ void DeeWorld::updateGame(float dt) {
 	CCArray *targetsToDelete = new CCArray;
 	CCObject* jt = NULL;
     
+    //TODO: this whole loop is useless !?
+    //--> this is a sort of collision detection, that was there before Box2D
+    //--> this whole method is unnecessary!!
+    
     // for (jt = _targets->begin(); jt != _targets->end(); jt++)
 	CCARRAY_FOREACH(_targets, jt) {
-		CCSprite *target = dynamic_cast<TBGTarget*>(jt)->getSprite();
+		CCSprite *target = dynamic_cast<AminoAcid*>(jt);
 		CCRect targetRect = CCRectMake(
                                        target->getPosition().x - (target->getContentSize().width / 2),
                                        target->getPosition().y - (target->getContentSize().height / 2),

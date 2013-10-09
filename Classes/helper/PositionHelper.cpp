@@ -6,7 +6,6 @@
  */
 
 #include "PositionHelper.h"
-#include "TBGTarget.h"
 
 USING_NS_CC;
 
@@ -19,11 +18,10 @@ PositionHelper::~PositionHelper() {
 	// TODO Auto-generated destructor stub
 }
 
-cocos2d::CCPoint PositionHelper::calculateNewPos(TBGTarget *tbgTarget, cocos2d::CCSize winSize, int edge) {
-    CCSprite *target = tbgTarget->getSprite();
+cocos2d::CCPoint PositionHelper::calculateNewPos(AminoAcid *target, cocos2d::CCSize winSize, int edge) {
     cocos2d::CCPoint pos = target->getPosition();
     cocos2d::CCSize tarSize = target->getContentSize();
-    int direction = tbgTarget->getDirection();
+    int direction = target->getDirection();
 	//int edge = 5;
 	//int corner = 0;
     CCLog("current direction: %i", direction);
@@ -38,13 +36,13 @@ cocos2d::CCPoint PositionHelper::calculateNewPos(TBGTarget *tbgTarget, cocos2d::
             //left or right
             direction = HelperFunctions::mod(180-direction, 360);
         }
-        tbgTarget->setDirection(direction);
+        target->setDirection(direction);
     } else {
         //set initial direction
         //TODO: possibly there are issues when the target is placed at an edge and would fly into the off
         //direction = rand()%360;
         direction = 30;
-        tbgTarget->setDirection(direction);
+        target->setDirection(direction);
     }
     
     float radius = sqrt(pow(winSize.height, 2) + pow(winSize.width, 2));

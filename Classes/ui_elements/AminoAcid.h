@@ -20,6 +20,7 @@ public:
     int getDirection();
     void setType(char t);
     char getType();
+    static AminoAcid* create();
     static AminoAcid* create(char type);
     int getScore(AminoAcid* other);
 };

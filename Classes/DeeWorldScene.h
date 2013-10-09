@@ -13,8 +13,8 @@
 //for debug-draw
 #include "box2d/B2DebugDrawLayer.h"
 #include "box2d/GLES-Render.h"
-#include "TBGTarget.h"
-#include "BoardAcid.h"
+#include "ui_elements/AminoAcid.h"
+#include "ui_elements/BoardAcid.h"
 #include "box2d/ContactListener.h"
 
 #include "SimpleAudioEngine.h"

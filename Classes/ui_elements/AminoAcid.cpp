@@ -25,6 +25,7 @@ void AminoAcid::setDirection(int d){
 //type is a valid one-letter IUPAC AminoAcid code
 void AminoAcid::setType(char t){
     this->type = t;
+    //TODO: also change sprite image
 }
 
 /**
@@ -35,6 +36,17 @@ int AminoAcid::getScore(AminoAcid* other){
     return 1;
 }
 
+/**
+ * creates an AminoAcidSprite of a random AminoAcidType
+ */
+AminoAcid* AminoAcid::create() {
+    return AminoAcid::create(MatrixHelper::getRandomAminoAcid());
+}
+
+/**
+ * creates an AminoAcidSprite of a specific AminoAcidType
+ * @param type valid IUPAC one-letter-code
+ */
 AminoAcid* AminoAcid::create(char type){
     AminoAcid *pobSprite = new AminoAcid();
     if (pobSprite && pobSprite->initWithFile(
