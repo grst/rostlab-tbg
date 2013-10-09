@@ -9,7 +9,7 @@
 #define POSITIONHELPER_H_
 
 #include "cocos2d.h"
-#include "AminoAcid.h"
+#include "ui_elements/AminoAcid.h"
 #include "math.h"
 #include "HelperFunctions.h"
 

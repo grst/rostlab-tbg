@@ -7,7 +7,7 @@
 //
 
 #include "AminoAcid.h"
-#include "MatrixHelper.h"
+#include "helper/MatrixHelper.h"
   
 USING_NS_CC;
 

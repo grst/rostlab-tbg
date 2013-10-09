@@ -11,11 +11,10 @@ LOCAL_MODULE_FILENAME := libgame
 LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/AppDelegate.cpp \
                    ../../Classes/box2d/B2DebugDrawLayer.cpp \
-                   ../../Classes/TBGTarget.cpp  \
-                   ../../Classes/BoardAcid.cpp  \
                    ../../Classes/SplashScreenScene.cpp \
                    ../../Classes/box2d/ContactListener.cpp \
-                   ../../Classes/helper/AminoAcid.cpp \
+                   ../../Classes/ui_elements/AminoAcid.cpp \
+                   ../../Classes/ui_elements/BoardAcid.cpp \
                    ../../Classes/box2d/GLES-Render.cpp  \
                    ../../Classes/helper/PositionHelper.cpp  \
                    ../../Classes/helper/DebugDraw.cpp  \
