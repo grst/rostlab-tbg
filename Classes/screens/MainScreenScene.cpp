@@ -1,5 +1,5 @@
 #include "MainScreenScene.h"
-#include "helper/WebOpNative.h"
+#include "../helper/WebOpNative.h"
 
 using namespace cocos2d;
 
