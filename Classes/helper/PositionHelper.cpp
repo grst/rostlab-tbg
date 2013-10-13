@@ -41,7 +41,7 @@ cocos2d::CCPoint PositionHelper::calculateNewPos(AminoAcid *target, cocos2d::CCS
         //set initial direction
         //TODO: possibly there are issues when the target is placed at an edge and would fly into the off
         //direction = rand()%360;
-        direction = 30;
+        direction = 70;
         target->setDirection(direction);
     }
     

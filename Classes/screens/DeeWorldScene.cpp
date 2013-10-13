@@ -1,8 +1,8 @@
 #include "DeeWorldScene.h"
 #include "SplashScreenScene.h"
 #include "SimpleAudioEngine.h"
-#include "helper/PositionHelper.h"
-#include "helper/MatrixHelper.h"
+#include "../helper/PositionHelper.h"
+#include "../helper/MatrixHelper.h"
 #include <iostream>
 #include <string>
 
@@ -59,57 +59,35 @@ CCScene* DeeWorld::scene() {
 // on "init" you need to initialize your instance
 bool DeeWorld::init() {
     
-	if (!CCLayer::init())
-		return false;
+	if (!CCLayer::init()) {
+        return false;
+    }
+    if(!CCLayerColor::initWithColor(ccc4(255, 255, 255, 255))) {
+        return false;
+    }
+        
+    makeMenu();
+    initBox2D();
     
-	bool bRet = false;
-	do {
-		//super init
-		CC_BREAK_IF(!CCLayerColor::initWithColor(ccc4(255, 255, 255, 255)));
+    ////TAGS
+    // 0 = player
+    // 1 = target
+    // 2 = projectile (not in use any more)
+    // 3 = wall
+    initWorld();
+    initPlayer();
+    
+    //load the scoring matrix
+    MatrixHelper::loadMatrix("BLOSUM62.txt");
+    
+    this->setTouchEnabled(true);
+    
+    this->loadGame();
+    
+    
+    // disabled temporarily  (annoying!!)
+    // CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("background-music-aac.wav", true);
         
-        makeMenu();
-        initBox2D();
-        
-		////TAGS
-		// 0 = player
-		// 1 = target
-		// 2 = projectile (not in use any more)
-		// 3 = wall
-        initWorld();
-		
-        
-		//player
-		player = CCSprite::create(PLAYER_IMAGE, CCRectMake(0, 0, 27, 40));
-		player->setZOrder(3);
-        
-		//create the box for the player (currently with rectangle)
-		CreateBox2DBodyForSprite(player, 0, NULL);
-        
-		//z-order 3, tag=0
-		this->addChild(player, 3, 0);
-        
-		this->schedule(schedule_selector(DeeWorld::gameLogic), 1.0);
-        
-		//load the scoring matrix
-		MatrixHelper::loadMatrix("BLOSUM62.txt");
-        
-		this->setTouchEnabled(true);
-        
-		CCLog("before loading game");
-		this->loadGame();
-        
-		CCLog("after loading game");
-        
-		// use updateGame instead of update, otherwise it will conflict with SelectorProtocol::update
-		// see http://www.cocos2d-x.org/boards/6/topics/1478
-		this->schedule(schedule_selector(DeeWorld::updateGame));
-        
-		// disabled temporarily  (annoying!!)
-		// CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("background-music-aac.wav", true);
-        
-		bRet = true;
-        
-	} while (0);
     
     // Register the layer to touch dispatcher
     // Sebi: Android fails with the dispatcher ..
@@ -120,7 +98,7 @@ bool DeeWorld::init() {
     
 	CCLog("init successful");
     
-	return bRet;
+	return true;
 }
 
 void DeeWorld::makeMenu() {
@@ -157,10 +135,34 @@ void DeeWorld::menuCloseCallback(CCObject* pSender) {
 }
 
 void DeeWorld::initBox2D() {
-    b2Vec2 gravity = b2Vec2(0.0f, 0.0f); //no gravity
+    b2Vec2 gravity = b2Vec2(0.0f, -0.0f); //no gravity
     _b2dWorld = new b2World(gravity);
     
     this->schedule(schedule_selector(DeeWorld::tick));
+    
+//    /////////////////////// Box2dTests ////////////////////////////
+//    //step for physics simulation
+//    float32 timeStep = 1/20.0;      //the length of time passed to simulate (seconds)
+//    int32 velocityIterations = 8;   //how strongly to correct velocity
+//    int32 positionIterations = 3;   //how strongly to correct position
+//    
+//
+//    b2BodyDef myBodyDef;
+//    myBodyDef.type = b2_dynamicBody; //this will be a dynamic body
+//    myBodyDef.position.Set(200, 200); //a little to the left
+//    
+//    b2Body* dynamicBody1 = _b2dWorld->CreateBody(&myBodyDef);
+//    b2CircleShape circleShape;
+//    circleShape.m_p.Set(0, 0); //position, relative to body position
+//    circleShape.m_radius = 1; //radius
+//    
+//    b2FixtureDef myFixtureDef;
+//    myFixtureDef.shape = &circleShape; //this is a pointer to the shape above
+//    dynamicBody1->CreateFixture(&myFixtureDef); //add a fixture to the body
+//    
+//    _b2dWorld->Step( timeStep, velocityIterations, positionIterations);
+//    
+//    /////////////////// END TESTS //////////////////////////////////////
     
     //debug draw made easy with helper class
     this->addChild(B2DebugDrawLayer::create(_b2dWorld, PTM_RATIO), 9999);
@@ -172,44 +174,50 @@ void DeeWorld::initBox2D() {
 
 void DeeWorld::initWorld() {
     CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
-    //walls limiting the screen
-    bottom = CCSprite::create();
-    left = CCSprite::create();
-    top = CCSprite::create();
-    right = CCSprite::create();
+    // Create edges around the entire screen
+	b2BodyDef groundBodyDef;
+	groundBodyDef.position.Set(0,0);
     
-    bottom->setColor(ccc3(0, 0, 0));
-    bottom->setTextureRect(CCRectMake(0, 0, visibleSize.width, 20));
-    bottom->setPosition(ccp(visibleSize.width / 2, 0));
+	b2Body *groundBody = _b2dWorld->CreateBody(&groundBodyDef);
+	b2EdgeShape groundEdge;
+	b2FixtureDef boxShapeDef;
+	boxShapeDef.shape = &groundEdge;
     
-    left->setColor(ccc3(0, 0, 0));
-    left->setTextureRect(CCRectMake(0, 0, 20, visibleSize.height));
-    left->setPosition(ccp(0, visibleSize.height / 2));
+	//wall definitions
+	groundEdge.Set(b2Vec2(0,0), b2Vec2(visibleSize.width/PTM_RATIO, 0));
+	groundBody->CreateFixture(&boxShapeDef);
+    groundEdge.Set(b2Vec2(0,0), b2Vec2(0,visibleSize.height/PTM_RATIO));
+    groundBody->CreateFixture(&boxShapeDef);
+    groundEdge.Set(b2Vec2(0, visibleSize.height/PTM_RATIO),
+                   b2Vec2(visibleSize.width/PTM_RATIO, visibleSize.height/PTM_RATIO));
+    groundBody->CreateFixture(&boxShapeDef);
+    groundEdge.Set(b2Vec2(visibleSize.width/PTM_RATIO, visibleSize.height/PTM_RATIO),
+                   b2Vec2(visibleSize.width/PTM_RATIO, 0));
+    groundBody->CreateFixture(&boxShapeDef);
+}
+
+void DeeWorld::initPlayer() {
+    CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
+    //player
+    CCSprite *sPlayer = CCSprite::create(PLAYER_IMAGE, CCRectMake(0, 0, 27, 40));
+    sPlayer->setZOrder(3);
+    sPlayer->setPosition(
+                         ccp(visibleSize.width / 2, sPlayer->getContentSize().height));
     
-    top->setColor(ccc3(0, 0, 0));
-    top->setTextureRect(CCRectMake(0, 0, visibleSize.width, 20));
-    top->setPosition(ccp(visibleSize.width / 2, visibleSize.height));
+    //create the box for the player (currently with rectangle)
+    player = CreateBox2DBodyForSprite(sPlayer, 0, NULL);
     
-    right->setColor(ccc3(0, 0, 0));
-    right->setTextureRect(CCRectMake(0, 0, 20, visibleSize.height));
-    right->setPosition(ccp(visibleSize.width, visibleSize.height / 2));
+    //z-order 3, tag=0
+    this->addChild(sPlayer, 3, 0);
     
-    CreateBox2DBodyForSprite(bottom, 0, NULL);
-    CreateBox2DBodyForSprite(left, 0, NULL);
-    CreateBox2DBodyForSprite(top, 0, NULL);
-    CreateBox2DBodyForSprite(right, 0, NULL);
-    
-    this->addChild(bottom, 3, 3);
-    this->addChild(left, 3, 3);
-    this->addChild(top, 3, 3);
-    this->addChild(right, 3, 3);
+    this->schedule(schedule_selector(DeeWorld::gameLogic), 1.0);
+
 }
 
 void DeeWorld::loadGame() {
 	this->score = 0;
 	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
-	player->setPosition(
-                        ccp(visibleSize.width / 2, player->getContentSize().height));
+	
     
 	CCLog("setting score");
     //score
@@ -295,13 +303,13 @@ void DeeWorld::createTargets() {
 
 // cpp with cocos2d-x
 void DeeWorld::addTarget() {
-	AminoAcid *target = AminoAcid::create();
+	AminoAcid *sTarget = AminoAcid::create();
     
 	//Place target in a randomly picked corner.
 	int startX, startY;
 	int corner = arc4random() % 4;
 	//target-dimensions
-	CCSize tSize = target->getContentSize();
+	CCSize tSize = sTarget->getContentSize();
 	CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
 	corner = 0;
 	switch (corner) {
@@ -331,13 +339,16 @@ void DeeWorld::addTarget() {
 	startX = 100;
 	startY = 100;
 	CCLog("Start-Position:x=%i,y=%i", startX, startY);
-	target->setPosition(ccp(startX, startY));
+	sTarget->setPosition(ccp(startX, startY));
     
-	this->addChild(target);
-	_targets->addObject(target);
+	this->addChild(sTarget);
+	
     
-	CreateBox2DBodyForSprite(target, 0, NULL);
-	this->moveTarget(target, corner);
+	b2Body* target = CreateBox2DBodyForSprite(sTarget, 0, NULL);
+    target->ApplyLinearImpulse(b2Vec2(300, 300), target->GetPosition());
+    
+    //_targets->addObject(target);
+	//this->moveTarget(target, corner);
     
 }
 
@@ -428,26 +439,27 @@ void DeeWorld::ccTouchesBegan(cocos2d::CCSet* touches,
 	CCTouch* touch = (CCTouch*) *it;
 	CCPoint pt = touch->getLocationInView();
 	CCSize size = CCDirector::sharedDirector()->getWinSize();
+    CCSprite* sPlayer = (CCSprite*) player->GetUserData();
 	float height = size.height;
 	float y = height - pt.y;
 	int tolerance = 10;
     
-	if (std::abs(pt.x - player->getPositionX()) - tolerance
-        > player->getContentSize().width) {
+	if (std::abs(pt.x - sPlayer->getPositionX()) - tolerance
+        > sPlayer->getContentSize().width) {
 		//non valid
 		cocos2d::CCLog(
                        "ccTouchesCanceled id:%i x:%i,y:%in -- player x:%i, y:%in",
                        touch->getID(), (int) pt.x, (int) pt.y,
-                       (int) player->getPositionX(), (int) player - getPositionY());
+                       (int) sPlayer->getPositionX(), (int) sPlayer - getPositionY());
 		validTouch = false;
 	}
-	if (std::abs(y - player->getPositionY()) - tolerance
-        > player->getContentSize().height) {
+	if (std::abs(y - sPlayer->getPositionY()) - tolerance
+        > sPlayer->getContentSize().height) {
 		//non valid
 		cocos2d::CCLog(
                        "ccTouchesCanceled id:%i x:%i,y:%in -- player x:%i, y:%in",
                        touch->getID(), (int) pt.x, (int) pt.y,
-                       (int) player->getPositionX(), (int) player - getPositionY());
+                       (int) sPlayer->getPositionX(), (int) sPlayer - getPositionY());
 		validTouch = false;
 	}
 }
@@ -467,66 +479,69 @@ void DeeWorld::ccTouchesMoved(cocos2d::CCSet* touches,
 		it++;
 	}
     
-	CCPoint playerPoint = player->getPosition();
+	b2Vec2 playerPoint = player->GetPosition();
     
 	CCPoint pt = touch->getLocationInView();
 	float y = tempHeight - pt.y;
-	player->setPosition(ccp(pt.x, y));
-	player->draw();
-	player->update(0.01);
+	player->SetTransform(b2Vec2(pt.x /PTM_RATIO, y /PTM_RATIO), 0);
+	//player->draw();
+	//player->update(0.01);
     
 	CCDrawNode *node = CCDrawNode::create();
     
-	ccColor4F color;
-	switch (arc4random() % 4) {
-        case 0:
-            color = ccc4FFromccc4B(ccc4(255, 0, 0, 255));
-            break;
-        case 1:
-            color = ccc4FFromccc4B(ccc4(200, 0, 0, 255));
-            break;
-        case 2:
-            color = ccc4FFromccc4B(ccc4(160, 0, 0, 255));
-            break;
-        case 3:
-            color = ccc4FFromccc4B(ccc4(100, 0, 0, 255));
-            break;
-        case 4:
-            color = ccc4FFromccc4B(
-                                   ccc4(arc4random() % 256, arc4random() % 256, arc4random() % 256,
-                                        255));
-            break;
-	}
-    
-	// TODO color is not working correct (same red!) - ideally we make a nice gradient
-	CCLog("r: %f, g, :%f ,b: %f", color.r, color.g, color.b);
-    
-	CCPoint points[4];
-	points[0] = ccp(0, 0);
-	points[1] = ccp(0, std::abs(pt.x - playerPoint.x));
-	points[2] = ccp(std::abs(pt.x - playerPoint.x),
-                    std::abs(y - playerPoint.y));
-	points[3] = ccp(std::abs(y - playerPoint.y), 0);
-    
-	node->drawPolygon(points, 4, color, 0, ccc4FFromccc4B(ccc4(0, 0, 0, 255)));
-	node->setPosition(playerPoint.x, playerPoint.y);
-	node->draw();
-    
-	if (movementLines.size() >= 40) {
-		CCDrawNode * nodeDel = movementLines.front();
-		movementLines.pop();
-		this->removeChild(nodeDel);
-		//nodeDel->release();
-		//CC_SAFE_RELEASE(nodeDel);
-	}
-	movementLines.push(node);
-    
-	this->addChild(node, 1);
-    
-	CCActionInterval * fadeOut = CCFadeOut::create(1.0);
-	CCActionInterval * move = CCMoveTo::create(2.0, ccp(-10, -10));
-	//	CCActionInterval * tilt = CC
-	node->runAction(move);
+//    // Movement line disabled for developing purposes
+//    {
+//	ccColor4F color;
+//	switch (arc4random() % 4) {
+//        case 0:
+//            color = ccc4FFromccc4B(ccc4(255, 0, 0, 255));
+//            break;
+//        case 1:
+//            color = ccc4FFromccc4B(ccc4(200, 0, 0, 255));
+//            break;
+//        case 2:
+//            color = ccc4FFromccc4B(ccc4(160, 0, 0, 255));
+//            break;
+//        case 3:
+//            color = ccc4FFromccc4B(ccc4(100, 0, 0, 255));
+//            break;
+//        case 4:
+//            color = ccc4FFromccc4B(
+//                                   ccc4(arc4random() % 256, arc4random() % 256, arc4random() % 256,
+//                                        255));
+//            break;
+//	}
+//    
+//	// TODO color is not working correct (same red!) - ideally we make a nice gradient
+//	CCLog("r: %f, g, :%f ,b: %f", color.r, color.g, color.b);
+//    
+//	CCPoint points[4];
+//	points[0] = ccp(0, 0);
+//	points[1] = ccp(0, std::abs(pt.x - playerPoint.x));
+//	points[2] = ccp(std::abs(pt.x - playerPoint.x),
+//                    std::abs(y - playerPoint.y));
+//	points[3] = ccp(std::abs(y - playerPoint.y), 0);
+//    
+//	node->drawPolygon(points, 4, color, 0, ccc4FFromccc4B(ccc4(0, 0, 0, 255)));
+//	node->setPosition(playerPoint.x, playerPoint.y);
+//	node->draw();
+//    
+//	if (movementLines.size() >= 40) {
+//		CCDrawNode * nodeDel = movementLines.front();
+//		movementLines.pop();
+//		this->removeChild(nodeDel);
+//		//nodeDel->release();
+//		//CC_SAFE_RELEASE(nodeDel);
+//	}
+//	movementLines.push(node);
+//    
+//	this->addChild(node, 1);
+//    
+//	CCActionInterval * fadeOut = CCFadeOut::create(1.0);
+//	CCActionInterval * move = CCMoveTo::create(2.0, ccp(-10, -10));
+//	//	CCActionInterval * tilt = CC
+//	node->runAction(move);
+//    }
     
 	return;
 }
@@ -540,49 +555,14 @@ void DeeWorld::ccTouchesEnded(cocos2d::CCSet* touches,
                                                                  "pew-pew-lei.wav");
 }
 
-void DeeWorld::updateGame(float dt) {
-    
-	return;
-	CCArray *targetsToDelete = new CCArray;
-	CCObject* jt = NULL;
-    
-    //TODO: this whole loop is useless !?
-    //--> this is a sort of collision detection, that was there before Box2D
-    //--> this whole method is unnecessary!!
-    
-    // for (jt = _targets->begin(); jt != _targets->end(); jt++)
-	CCARRAY_FOREACH(_targets, jt) {
-		CCSprite *target = dynamic_cast<AminoAcid*>(jt);
-		CCRect targetRect = CCRectMake(
-                                       target->getPosition().x - (target->getContentSize().width / 2),
-                                       target->getPosition().y - (target->getContentSize().height / 2),
-                                       target->getContentSize().width,
-                                       target->getContentSize().height);
-        
-        // if (CCRect::CCRectIntersectsRect(projectileRect, targetRect))
-        //if (projectileRect.intersectsRect(targetRect)) {
-        //		targetsToDelete->addObject(target);
-        //	}
-	}
-    
-	CCARRAY_FOREACH(targetsToDelete, jt) {
-		CCSprite *target = dynamic_cast<CCSprite*>(jt);
-		_targets->removeObject(target);
-		this->removeChild(target, true);
-	}
-    
-	targetsToDelete->release();
-    
-}
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 // This function send the vertice data to Box2D. Also, if you pass iNumVerts==0 and verts==NULL it simply creates a
 // box round your sprite
 
-void DeeWorld::CreateBox2DBodyForSprite(cocos2d::CCSprite *sprite,
+b2Body* DeeWorld::CreateBox2DBodyForSprite(cocos2d::CCSprite *sprite,
                                         int iNumVerts, b2Vec2 verts[]) {
 	if (_b2dWorld == NULL) {
-		return;
+		return NULL;
 	}
     
 	CCPoint pos = sprite->getPosition();
@@ -591,39 +571,26 @@ void DeeWorld::CreateBox2DBodyForSprite(cocos2d::CCSprite *sprite,
 	b2BodyDef spriteBodyDef;
     
 	spriteBodyDef.type = b2_dynamicBody;
-	spriteBodyDef.position.Set(pos.x / PTM_RATIO, pos.y / PTM_RATIO);
-    
+	spriteBodyDef.position.Set(pos.x / PTM_RATIO, pos.y / PTM_RATIO);    
 	spriteBodyDef.userData = sprite;
 	b2Body *spriteBody = _b2dWorld->CreateBody(&spriteBodyDef);
     
 	b2PolygonShape spriteShape;
+    b2FixtureDef spriteShapeDef;
+    spriteShapeDef.shape = &spriteShape;
+    spriteShapeDef.density = 10.0;
+    spriteShapeDef.isSensor = false;
+    spriteShapeDef.restitution = 1.0f;
     
 	if (iNumVerts != 0) {
 		spriteShape.Set(verts, iNumVerts);
-		b2FixtureDef spriteShapeDef;
-		spriteShapeDef.shape = &spriteShape;
-		spriteShapeDef.density = 10.0;
-		spriteShapeDef.isSensor = true;
-        
 		spriteBody->CreateFixture(&spriteShapeDef);
 	} else {
-        // No Vertice supplied so just make a box round the sprite
-		b2BodyDef spriteBodyDef;
-		spriteBodyDef.type = b2_dynamicBody;
-		spriteBodyDef.position.Set(pos.x / PTM_RATIO, pos.y / PTM_RATIO);
-		spriteBodyDef.userData = sprite;
-		b2Body *spriteBody = _b2dWorld->CreateBody(&spriteBodyDef);
-        
-		b2PolygonShape spriteShape;
 		spriteShape.SetAsBox(size.width / PTM_RATIO / 2,
                              size.height / PTM_RATIO / 2);
-		b2FixtureDef spriteShapeDef;
-		spriteShapeDef.shape = &spriteShape;
-		spriteShapeDef.density = 10.0;
-		spriteShapeDef.isSensor = true; // isSensor true when you want to know when objects will collide without triggering a box2d collision response
 		spriteBody->CreateFixture(&spriteShapeDef);
 	}
-    
+    return spriteBody;
 }
 
 void DeeWorld::spriteDone(CCNode* sender) {
@@ -676,7 +643,7 @@ void DeeWorld::updateView() {
 }
 
 void DeeWorld::tick(float delta) {
-    
+       
 	_b2dWorld->Step(delta, 10, 10);
     // Loop through all of the Box2D bodies in our Box2D world..
 	for (b2Body *b = _b2dWorld->GetBodyList(); b; b = b->GetNext()) {
@@ -688,21 +655,13 @@ void DeeWorld::tick(float delta) {
 			// it that way, so cast it...
 			CCSprite *sprite = (CCSprite *) b->GetUserData();
             
-			// sprite might already have been removed -> null pointer exception
-			if (sprite != NULL) {
-                
-				// Convert the Cocos2D position/rotation of the sprite to the Box2D position/rotation
-				CCPoint Pos = sprite->getPosition();
-				b2Vec2 b2Position = b2Vec2(Pos.x / PTM_RATIO,
-                                           Pos.y / PTM_RATIO);
-				float32 b2Angle = -1
-                * CC_DEGREES_TO_RADIANS(sprite->getRotation());
-                
-				// Update the Box2D position/rotation to match the Cocos2D position/rotation
-				b->SetTransform(b2Position, b2Angle);
-			}
-		}
+            //update sprites to match the simulation
+            sprite->setPosition(ccp(b->GetPosition().x * PTM_RATIO, b->GetPosition().y * PTM_RATIO));
+            sprite->setRotation(-1 * CC_RADIANS_TO_DEGREES(b->GetAngle()));
+        }
 	}
+    
+    //return;
     
     // Loop through all of the box2d bodies that are currently colliding, that we have
     // gathered with our custom contact listener...
@@ -732,19 +691,20 @@ void DeeWorld::tick(float delta) {
 				CCLog("Collision: Target on Player");
 				//this->manageCollision(acid);
 			}
-            // Is sprite A a target and sprite B a wall
-            else if(iTagA == 1 && iTagB == 3){
-                CCLog("Collision: Target on Wall");
-                int edge = getEdge(spriteB);
-                moveTarget(dynamic_cast<AminoAcid*>(spriteA), edge);
-            } else if (iTagA == 3 && iTagB == 1) {
-                CCLog("Collision: Wall on Target");
-                int edge = getEdge(spriteA);
-                moveTarget(dynamic_cast<AminoAcid*>(spriteB), edge);
-            }
+//            // Is sprite A a target and sprite B a wall
+//            else if(iTagA == 1 && iTagB == 3){
+//                CCLog("Collision: Target on Wall");
+//                int edge = getEdge(spriteB);
+//                moveTarget(dynamic_cast<AminoAcid*>(spriteA), edge);
+//            } else if (iTagA == 3 && iTagB == 1) {
+//                CCLog("Collision: Wall on Target");
+//                int edge = getEdge(spriteA);
+//                moveTarget(dynamic_cast<AminoAcid*>(spriteB), edge);
+//            }
             
 		}
 	}
+    
     
     // Loop through all of the box2d bodies we want to destroy...
 	std::vector<b2Body *>::iterator pos2;

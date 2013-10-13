@@ -52,9 +52,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
     //CCScene *pScene = SplashScreenScene::create();
 
     // for dev reasons use normal screen
-   //CCScene *pScene = DeeWorld::scene();
+   CCScene *pScene = DeeWorld::scene();
 
-   CCScene *pScene = MainScreenScene::create();
+    //GS: changed back to DeeWorld for dev purposes. 
+   //CCScene *pScene = MainScreenScene::create();
 
 
     // run
