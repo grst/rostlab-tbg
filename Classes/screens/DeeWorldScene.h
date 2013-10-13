@@ -79,6 +79,7 @@ private:
     void makeMenu();
     void initBox2D();
     void initWorld();
+    void initPlayer();
     
 	void manageCollision(AminoAcid* acid);
 	void countdown();

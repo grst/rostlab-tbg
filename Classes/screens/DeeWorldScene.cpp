@@ -59,56 +59,35 @@ CCScene* DeeWorld::scene() {
 // on "init" you need to initialize your instance
 bool DeeWorld::init() {
     
-	if (!CCLayer::init())
-		return false;
+	if (!CCLayer::init()) {
+        return false;
+    }
+    if(!CCLayerColor::initWithColor(ccc4(255, 255, 255, 255))) {
+        return false;
+    }
+        
+    makeMenu();
+    initBox2D();
     
-	bool bRet = false;
-	do {
-		//super init
-		CC_BREAK_IF(!CCLayerColor::initWithColor(ccc4(255, 255, 255, 255)));
-        CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
+    ////TAGS
+    // 0 = player
+    // 1 = target
+    // 2 = projectile (not in use any more)
+    // 3 = wall
+    initWorld();
+    initPlayer();
+    
+    //load the scoring matrix
+    MatrixHelper::loadMatrix("BLOSUM62.txt");
+    
+    this->setTouchEnabled(true);
+    
+    this->loadGame();
+    
+    
+    // disabled temporarily  (annoying!!)
+    // CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("background-music-aac.wav", true);
         
-        makeMenu();
-        initBox2D();
-        
-		////TAGS
-		// 0 = player
-		// 1 = target
-		// 2 = projectile (not in use any more)
-		// 3 = wall
-        initWorld();
-		
-        
-		//player
-		CCSprite *sPlayer = CCSprite::create(PLAYER_IMAGE, CCRectMake(0, 0, 27, 40));
-		sPlayer->setZOrder(3);
-        sPlayer->setPosition(
-                            ccp(visibleSize.width / 2, sPlayer->getContentSize().height));
-        
-		//create the box for the player (currently with rectangle)
-		player = CreateBox2DBodyForSprite(sPlayer, 0, NULL);
-        
-		//z-order 3, tag=0
-		this->addChild(sPlayer, 3, 0);
-        
-		this->schedule(schedule_selector(DeeWorld::gameLogic), 1.0);
-        
-		//load the scoring matrix
-		MatrixHelper::loadMatrix("BLOSUM62.txt");
-        
-		this->setTouchEnabled(true);
-        
-		CCLog("before loading game");
-		this->loadGame();
-        
-		CCLog("after loading game");
-        
-		// disabled temporarily  (annoying!!)
-		// CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("background-music-aac.wav", true);
-        
-		bRet = true;
-        
-	} while (0);
     
     // Register the layer to touch dispatcher
     // Sebi: Android fails with the dispatcher ..
@@ -119,7 +98,7 @@ bool DeeWorld::init() {
     
 	CCLog("init successful");
     
-	return bRet;
+	return true;
 }
 
 void DeeWorld::makeMenu() {
@@ -215,37 +194,24 @@ void DeeWorld::initWorld() {
     groundEdge.Set(b2Vec2(visibleSize.width/PTM_RATIO, visibleSize.height/PTM_RATIO),
                    b2Vec2(visibleSize.width/PTM_RATIO, 0));
     groundBody->CreateFixture(&boxShapeDef);
-//    //walls limiting the screen
-//    bottom = CCSprite::create();
-//    left = CCSprite::create();
-//    top = CCSprite::create();
-//    right = CCSprite::create();
-//    
-//    bottom->setColor(ccc3(0, 0, 0));
-//    bottom->setTextureRect(CCRectMake(0, 0, visibleSize.width, 20));
-//    bottom->setPosition(ccp(visibleSize.width / 2, 0));
-//    
-//    left->setColor(ccc3(0, 0, 0));
-//    left->setTextureRect(CCRectMake(0, 0, 20, visibleSize.height));
-//    left->setPosition(ccp(0, visibleSize.height / 2));
-//    
-//    top->setColor(ccc3(0, 0, 0));
-//    top->setTextureRect(CCRectMake(0, 0, visibleSize.width, 20));
-//    top->setPosition(ccp(visibleSize.width / 2, visibleSize.height));
-//
-//    right->setColor(ccc3(0, 0, 0));
-//    right->setTextureRect(CCRectMake(0, 0, 20, visibleSize.height));
-//    right->setPosition(ccp(visibleSize.width, visibleSize.height / 2));
-//    
-//    CreateBox2DBodyForSprite(bottom, 0, NULL);
-//    CreateBox2DBodyForSprite(left, 0, NULL);
-//    CreateBox2DBodyForSprite(top, 0, NULL);
-//    CreateBox2DBodyForSprite(right, 0, NULL);
-//    
-//    this->addChild(bottom, 3, 3);
-//    this->addChild(left, 3, 3);
-//    this->addChild(top, 3, 3);
-//    this->addChild(right, 3, 3);
+}
+
+void DeeWorld::initPlayer() {
+    CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
+    //player
+    CCSprite *sPlayer = CCSprite::create(PLAYER_IMAGE, CCRectMake(0, 0, 27, 40));
+    sPlayer->setZOrder(3);
+    sPlayer->setPosition(
+                         ccp(visibleSize.width / 2, sPlayer->getContentSize().height));
+    
+    //create the box for the player (currently with rectangle)
+    player = CreateBox2DBodyForSprite(sPlayer, 0, NULL);
+    
+    //z-order 3, tag=0
+    this->addChild(sPlayer, 3, 0);
+    
+    this->schedule(schedule_selector(DeeWorld::gameLogic), 1.0);
+
 }
 
 void DeeWorld::loadGame() {
@@ -337,13 +303,13 @@ void DeeWorld::createTargets() {
 
 // cpp with cocos2d-x
 void DeeWorld::addTarget() {
-	AminoAcid *target = AminoAcid::create();
+	AminoAcid *sTarget = AminoAcid::create();
     
 	//Place target in a randomly picked corner.
 	int startX, startY;
 	int corner = arc4random() % 4;
 	//target-dimensions
-	CCSize tSize = target->getContentSize();
+	CCSize tSize = sTarget->getContentSize();
 	CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
 	corner = 0;
 	switch (corner) {
@@ -373,12 +339,15 @@ void DeeWorld::addTarget() {
 	startX = 100;
 	startY = 100;
 	CCLog("Start-Position:x=%i,y=%i", startX, startY);
-	target->setPosition(ccp(startX, startY));
+	sTarget->setPosition(ccp(startX, startY));
     
-	this->addChild(target);
-	_targets->addObject(target);
+	this->addChild(sTarget);
+	
     
-	CreateBox2DBodyForSprite(target, 0, NULL);
+	b2Body* target = CreateBox2DBodyForSprite(sTarget, 0, NULL);
+    target->ApplyLinearImpulse(b2Vec2(300, 300), target->GetPosition());
+    
+    //_targets->addObject(target);
 	//this->moveTarget(target, corner);
     
 }
