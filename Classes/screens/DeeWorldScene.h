@@ -37,8 +37,6 @@ public:
 
 	// implement the "static node()" method manually
 	CREATE_FUNC (DeeWorld);
-    
-    
 
 	void loadGame();
 

@@ -1,6 +1,7 @@
 #include "AppDelegate.h"
-#include "DeeWorldScene.h"
-#include "SplashScreenScene.h"
+#include "screens/DeeWorldScene.h"
+#include "screens/MainScreenScene.h"
+#include "screens/SplashScreenScene.h"
 
 USING_NS_CC;
 
@@ -35,6 +36,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
         pDirector->setContentScaleFactor(320.0f/designSize.height);
     }
     
+    searchPaths.push_back("matrices");
+
     CCFileUtils::sharedFileUtils()->setSearchPaths(searchPaths);
     
     CCEGLView::sharedOpenGLView()->setDesignResolutionSize(designSize.width, designSize.height, kResolutionNoBorder);
@@ -49,7 +52,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
     //CCScene *pScene = SplashScreenScene::create();
 
     // for dev reasons use normal screen
-   CCScene *pScene = DeeWorld::scene();
+   //CCScene *pScene = DeeWorld::scene();
+
+   CCScene *pScene = MainScreenScene::create();
 
 
     // run
