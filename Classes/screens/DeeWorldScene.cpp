@@ -156,7 +156,7 @@ void DeeWorld::menuCloseCallback(CCObject* pSender) {
 }
 
 void DeeWorld::initBox2D() {
-    b2Vec2 gravity = b2Vec2(0.0f, -4.0f); //no gravity
+    b2Vec2 gravity = b2Vec2(0.0f, -0.0f); //no gravity
     _b2dWorld = new b2World(gravity);
     
     this->schedule(schedule_selector(DeeWorld::tick));
@@ -167,7 +167,7 @@ void DeeWorld::initBox2D() {
 //    int32 velocityIterations = 8;   //how strongly to correct velocity
 //    int32 positionIterations = 3;   //how strongly to correct position
 //    
-//    
+//
 //    b2BodyDef myBodyDef;
 //    myBodyDef.type = b2_dynamicBody; //this will be a dynamic body
 //    myBodyDef.position.Set(200, 200); //a little to the left
@@ -194,8 +194,6 @@ void DeeWorld::initBox2D() {
 }
 
 void DeeWorld::initWorld() {
-    //TODO: Walls don't need to be a sprite, invisible box2D-body is sufficient
-    //see http://www.raywenderlich.com/28602/intro-to-box2d-with-cocos2d-2-x-tutorial-bouncing-balls "GroundBody"
     CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
     // Create edges around the entire screen
 	b2BodyDef groundBodyDef;
@@ -209,6 +207,14 @@ void DeeWorld::initWorld() {
 	//wall definitions
 	groundEdge.Set(b2Vec2(0,0), b2Vec2(visibleSize.width/PTM_RATIO, 0));
 	groundBody->CreateFixture(&boxShapeDef);
+    groundEdge.Set(b2Vec2(0,0), b2Vec2(0,visibleSize.height/PTM_RATIO));
+    groundBody->CreateFixture(&boxShapeDef);
+    groundEdge.Set(b2Vec2(0, visibleSize.height/PTM_RATIO),
+                   b2Vec2(visibleSize.width/PTM_RATIO, visibleSize.height/PTM_RATIO));
+    groundBody->CreateFixture(&boxShapeDef);
+    groundEdge.Set(b2Vec2(visibleSize.width/PTM_RATIO, visibleSize.height/PTM_RATIO),
+                   b2Vec2(visibleSize.width/PTM_RATIO, 0));
+    groundBody->CreateFixture(&boxShapeDef);
 //    //walls limiting the screen
 //    bottom = CCSprite::create();
 //    left = CCSprite::create();
@@ -686,7 +692,7 @@ void DeeWorld::tick(float delta) {
         }
 	}
     
-    return;
+    //return;
     
     // Loop through all of the box2d bodies that are currently colliding, that we have
     // gathered with our custom contact listener...
@@ -729,6 +735,7 @@ void DeeWorld::tick(float delta) {
             
 		}
 	}
+    
     
     // Loop through all of the box2d bodies we want to destroy...
 	std::vector<b2Body *>::iterator pos2;
