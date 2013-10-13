@@ -37,68 +37,73 @@ bool MainScreenLayer::init() {
 				ccp(winSize.width / 2, winSize.height / 2));
 
 		// add the sprite as a child to this layer
-	//	this->addChild(pSpriteBackground, 0);
-
-
+		//	this->addChild(pSpriteBackground, 0);
 
 		// NEW /////////
-		CCSprite* informationSprite = CCSprite::createWithSpriteFrameName("CloseNormal.png");
-		CCSprite* informationSpriteClick = CCSprite::createWithSpriteFrameName("CloseNormal.png");
-		CCMenuItemSprite* infoGameItem = CCMenuItemSprite::create(informationSprite, informationSpriteClick, this, menu_selector(MainScreenLayer::menuStartGameCallback));
+		CCSprite* informationSprite = CCSprite::createWithSpriteFrameName(
+				"CloseNormal.png");
+		CCSprite* informationSpriteClick = CCSprite::createWithSpriteFrameName(
+				"CloseNormal.png");
+		CCMenuItemSprite* infoGameItem = CCMenuItemSprite::create(
+				informationSprite, informationSpriteClick, this,
+				menu_selector(MainScreenLayer::menuStartGameCallback));
 		// END NEW //////
 
-		CCSprite* startGameSprite = CCSprite::createWithSpriteFrameName("CloseNormal.png");
-		CCSprite* startGameSpriteClick = CCSprite::createWithSpriteFrameName("CloseNormal.png");
+		CCSprite* startGameSprite = CCSprite::createWithSpriteFrameName(
+				"CloseNormal.png");
+		CCSprite* startGameSpriteClick = CCSprite::createWithSpriteFrameName(
+				"CloseNormal.png");
 		// create a menu item (button) with the up/down sprites
-		CCMenuItemSprite* startGameItem = CCMenuItemSprite::create(startGameSprite, startGameSpriteClick, this, menu_selector(MainScreenLayer::menuStartGameCallback));
+		CCMenuItemSprite* startGameItem = CCMenuItemSprite::create(
+				startGameSprite, startGameSpriteClick, this,
+				menu_selector(MainScreenLayer::menuStartGameCallback));
 
 		// create a menu to hold the buttons (remembering to NULL terminate the list)
 		// NEW - we include the new info item
 		CCMenu *menu = CCMenu::create(startGameItem, infoGameItem, NULL);
 		// position the entire menu
-		menu->setPosition(100,100);
+		menu->setPosition(100, 100);
 		// add it as a child (so it appears
-		this->addChild(menu);
-
-
+		this->addChild(menu, 0);
 
 		CCMenuItemSprite *btn = CCMenuItemSprite::create(
-		        CCSprite::createWithSpriteFrameName("stripes.png"),
-		        NULL,
-		        this,
-		        menu_selector(MainScreenLayer::menuStartGameCallback));
+				CCSprite::createWithSpriteFrameName("logo.png"),
+				NULL, this,
+				menu_selector(MainScreenLayer::menuStartGameCallback));
 
-		btn->setPosition(ccp(150,150));
+		btn->setPosition(ccp(150, 150));
 		CCMenu *pMenu = CCMenu::create(btn, NULL);
-		this->addChild(pMenu, 1);
+		this->addChild(pMenu, 0);
+
+		this->_label = CCLabelTTF::create("abc", "Artial", 32);
+		_label->retain();
+		_label->setColor(ccc3(20, 0, 0));
+		_label->setPosition(ccp(winSize.width / 2, winSize.height / 2));
+		this->addChild(_label, 0);
 
 
-		this->_label = CCLabelTTF::create("", "Artial", 32);
-				_label->retain();
-				_label->setColor(ccc3(0, 0, 0));
-				_label->setPosition(ccp(winSize.width / 2, winSize.height / 2));
-				this->addChild(_label);
+		// 1. Add a menu item with "X" image, which is clicked to quit the program.
 
-				// add "MainScreen" splash screen"
-				CCSprite* pSpriteLogo = CCSprite::create("logo.png");
+				// Create a "close" menu item with close icon, it's an auto release object.
+				CCMenuItemImage *pCloseItem = CCMenuItemImage::create(
+					"CloseNormal.png",
+					"CloseSelected.png",
+					this,
+					menu_selector(MainScreenLayer::endScreen));
 
-				// position the sprite on the center of the screen
-				pSpriteLogo->setPosition(
-						ccp(winSize.width / 2, winSize.height / 2 + 40));
+				// Place the menu item bottom-right conner.
+		        CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
+		        CCPoint origin = CCDirector::sharedDirector()->getVisibleOrigin();
 
-				float scale = winSize.width;
-				CCSize logoSize = pSpriteLogo->getContentSize();
+				pCloseItem->setPosition(ccp(origin.x + visibleSize.width - pCloseItem->getContentSize().width/2,
+		                                    origin.y + pCloseItem->getContentSize().height/2));
 
-				//scale it proportionally to 80% of the screen
-				float scaleFactor = winSize.width / logoSize.width * 0.8;
+				// Create a menu with the "close" menu item, it's an auto release object.
+				CCMenu* pMenu2 = CCMenu::create(pCloseItem, NULL);
+				pMenu2->setPosition(CCPointZero);
 
-				pSpriteLogo->setScaleX(scaleFactor);
-				pSpriteLogo->setScaleY(scaleFactor);
-
-				// add the sprite as a child to this layer
-				this->addChild(pSpriteLogo, 0);
-
-
+				// Add the menu to TestWorld layer as a child layer.
+				this->addChild(pMenu2, 1);
 
 		return true;
 	} else {
@@ -106,9 +111,13 @@ bool MainScreenLayer::init() {
 	}
 }
 
-void MainScreenLayer::menuStartGameCallback(CCObject* sender)
-{
-    CCLOG("Hello!");
+void MainScreenLayer::menuStartGameCallback(CCObject* sender) {
+	CCLOG("Hello!");
+	CCScene *pScene = MainScreenScene::create();
+
+	CCDirector *pDirector = CCDirector::sharedDirector();
+	// run
+	pDirector->runWithScene(pScene);
 }
 
 void MainScreenLayer::endScreen() {
