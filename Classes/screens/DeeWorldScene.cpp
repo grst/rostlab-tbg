@@ -80,16 +80,16 @@ bool DeeWorld::init() {
 		
         
 		//player
-		player = CCSprite::create(PLAYER_IMAGE, CCRectMake(0, 0, 27, 40));
-		player->setZOrder(3);
-        player->setPosition(
-                            ccp(visibleSize.width / 2, player->getContentSize().height));
+		CCSprite *sPlayer = CCSprite::create(PLAYER_IMAGE, CCRectMake(0, 0, 27, 40));
+		sPlayer->setZOrder(3);
+        sPlayer->setPosition(
+                            ccp(visibleSize.width / 2, sPlayer->getContentSize().height));
         
 		//create the box for the player (currently with rectangle)
-		CreateBox2DBodyForSprite(player, 0, NULL);
+		player = CreateBox2DBodyForSprite(sPlayer, 0, NULL);
         
 		//z-order 3, tag=0
-		this->addChild(player, 3, 0);
+		this->addChild(sPlayer, 3, 0);
         
 		this->schedule(schedule_selector(DeeWorld::gameLogic), 1.0);
         
@@ -156,7 +156,7 @@ void DeeWorld::menuCloseCallback(CCObject* pSender) {
 }
 
 void DeeWorld::initBox2D() {
-    b2Vec2 gravity = b2Vec2(0.0f, 0.0f); //no gravity
+    b2Vec2 gravity = b2Vec2(0.0f, -4.0f); //no gravity
     _b2dWorld = new b2World(gravity);
     
     this->schedule(schedule_selector(DeeWorld::tick));
@@ -464,26 +464,27 @@ void DeeWorld::ccTouchesBegan(cocos2d::CCSet* touches,
 	CCTouch* touch = (CCTouch*) *it;
 	CCPoint pt = touch->getLocationInView();
 	CCSize size = CCDirector::sharedDirector()->getWinSize();
+    CCSprite* sPlayer = (CCSprite*) player->GetUserData();
 	float height = size.height;
 	float y = height - pt.y;
 	int tolerance = 10;
     
-	if (std::abs(pt.x - player->getPositionX()) - tolerance
-        > player->getContentSize().width) {
+	if (std::abs(pt.x - sPlayer->getPositionX()) - tolerance
+        > sPlayer->getContentSize().width) {
 		//non valid
 		cocos2d::CCLog(
                        "ccTouchesCanceled id:%i x:%i,y:%in -- player x:%i, y:%in",
                        touch->getID(), (int) pt.x, (int) pt.y,
-                       (int) player->getPositionX(), (int) player - getPositionY());
+                       (int) sPlayer->getPositionX(), (int) sPlayer - getPositionY());
 		validTouch = false;
 	}
-	if (std::abs(y - player->getPositionY()) - tolerance
-        > player->getContentSize().height) {
+	if (std::abs(y - sPlayer->getPositionY()) - tolerance
+        > sPlayer->getContentSize().height) {
 		//non valid
 		cocos2d::CCLog(
                        "ccTouchesCanceled id:%i x:%i,y:%in -- player x:%i, y:%in",
                        touch->getID(), (int) pt.x, (int) pt.y,
-                       (int) player->getPositionX(), (int) player - getPositionY());
+                       (int) sPlayer->getPositionX(), (int) sPlayer - getPositionY());
 		validTouch = false;
 	}
 }
@@ -503,66 +504,69 @@ void DeeWorld::ccTouchesMoved(cocos2d::CCSet* touches,
 		it++;
 	}
     
-	CCPoint playerPoint = player->getPosition();
+	b2Vec2 playerPoint = player->GetPosition();
     
 	CCPoint pt = touch->getLocationInView();
 	float y = tempHeight - pt.y;
-	player->setPosition(ccp(pt.x, y));
-	player->draw();
-	player->update(0.01);
+	player->SetTransform(b2Vec2(pt.x /PTM_RATIO, y /PTM_RATIO), 0);
+	//player->draw();
+	//player->update(0.01);
     
 	CCDrawNode *node = CCDrawNode::create();
     
-	ccColor4F color;
-	switch (arc4random() % 4) {
-        case 0:
-            color = ccc4FFromccc4B(ccc4(255, 0, 0, 255));
-            break;
-        case 1:
-            color = ccc4FFromccc4B(ccc4(200, 0, 0, 255));
-            break;
-        case 2:
-            color = ccc4FFromccc4B(ccc4(160, 0, 0, 255));
-            break;
-        case 3:
-            color = ccc4FFromccc4B(ccc4(100, 0, 0, 255));
-            break;
-        case 4:
-            color = ccc4FFromccc4B(
-                                   ccc4(arc4random() % 256, arc4random() % 256, arc4random() % 256,
-                                        255));
-            break;
-	}
-    
-	// TODO color is not working correct (same red!) - ideally we make a nice gradient
-	CCLog("r: %f, g, :%f ,b: %f", color.r, color.g, color.b);
-    
-	CCPoint points[4];
-	points[0] = ccp(0, 0);
-	points[1] = ccp(0, std::abs(pt.x - playerPoint.x));
-	points[2] = ccp(std::abs(pt.x - playerPoint.x),
-                    std::abs(y - playerPoint.y));
-	points[3] = ccp(std::abs(y - playerPoint.y), 0);
-    
-	node->drawPolygon(points, 4, color, 0, ccc4FFromccc4B(ccc4(0, 0, 0, 255)));
-	node->setPosition(playerPoint.x, playerPoint.y);
-	node->draw();
-    
-	if (movementLines.size() >= 40) {
-		CCDrawNode * nodeDel = movementLines.front();
-		movementLines.pop();
-		this->removeChild(nodeDel);
-		//nodeDel->release();
-		//CC_SAFE_RELEASE(nodeDel);
-	}
-	movementLines.push(node);
-    
-	this->addChild(node, 1);
-    
-	CCActionInterval * fadeOut = CCFadeOut::create(1.0);
-	CCActionInterval * move = CCMoveTo::create(2.0, ccp(-10, -10));
-	//	CCActionInterval * tilt = CC
-	node->runAction(move);
+//    // Movement line disabled for developing purposes
+//    {
+//	ccColor4F color;
+//	switch (arc4random() % 4) {
+//        case 0:
+//            color = ccc4FFromccc4B(ccc4(255, 0, 0, 255));
+//            break;
+//        case 1:
+//            color = ccc4FFromccc4B(ccc4(200, 0, 0, 255));
+//            break;
+//        case 2:
+//            color = ccc4FFromccc4B(ccc4(160, 0, 0, 255));
+//            break;
+//        case 3:
+//            color = ccc4FFromccc4B(ccc4(100, 0, 0, 255));
+//            break;
+//        case 4:
+//            color = ccc4FFromccc4B(
+//                                   ccc4(arc4random() % 256, arc4random() % 256, arc4random() % 256,
+//                                        255));
+//            break;
+//	}
+//    
+//	// TODO color is not working correct (same red!) - ideally we make a nice gradient
+//	CCLog("r: %f, g, :%f ,b: %f", color.r, color.g, color.b);
+//    
+//	CCPoint points[4];
+//	points[0] = ccp(0, 0);
+//	points[1] = ccp(0, std::abs(pt.x - playerPoint.x));
+//	points[2] = ccp(std::abs(pt.x - playerPoint.x),
+//                    std::abs(y - playerPoint.y));
+//	points[3] = ccp(std::abs(y - playerPoint.y), 0);
+//    
+//	node->drawPolygon(points, 4, color, 0, ccc4FFromccc4B(ccc4(0, 0, 0, 255)));
+//	node->setPosition(playerPoint.x, playerPoint.y);
+//	node->draw();
+//    
+//	if (movementLines.size() >= 40) {
+//		CCDrawNode * nodeDel = movementLines.front();
+//		movementLines.pop();
+//		this->removeChild(nodeDel);
+//		//nodeDel->release();
+//		//CC_SAFE_RELEASE(nodeDel);
+//	}
+//	movementLines.push(node);
+//    
+//	this->addChild(node, 1);
+//    
+//	CCActionInterval * fadeOut = CCFadeOut::create(1.0);
+//	CCActionInterval * move = CCMoveTo::create(2.0, ccp(-10, -10));
+//	//	CCActionInterval * tilt = CC
+//	node->runAction(move);
+//    }
     
 	return;
 }
@@ -580,10 +584,10 @@ void DeeWorld::ccTouchesEnded(cocos2d::CCSet* touches,
 // This function send the vertice data to Box2D. Also, if you pass iNumVerts==0 and verts==NULL it simply creates a
 // box round your sprite
 
-void DeeWorld::CreateBox2DBodyForSprite(cocos2d::CCSprite *sprite,
+b2Body* DeeWorld::CreateBox2DBodyForSprite(cocos2d::CCSprite *sprite,
                                         int iNumVerts, b2Vec2 verts[]) {
 	if (_b2dWorld == NULL) {
-		return;
+		return NULL;
 	}
     
 	CCPoint pos = sprite->getPosition();
@@ -592,39 +596,26 @@ void DeeWorld::CreateBox2DBodyForSprite(cocos2d::CCSprite *sprite,
 	b2BodyDef spriteBodyDef;
     
 	spriteBodyDef.type = b2_dynamicBody;
-	spriteBodyDef.position.Set(pos.x / PTM_RATIO, pos.y / PTM_RATIO);
-    
+	spriteBodyDef.position.Set(pos.x / PTM_RATIO, pos.y / PTM_RATIO);    
 	spriteBodyDef.userData = sprite;
 	b2Body *spriteBody = _b2dWorld->CreateBody(&spriteBodyDef);
     
 	b2PolygonShape spriteShape;
+    b2FixtureDef spriteShapeDef;
+    spriteShapeDef.shape = &spriteShape;
+    spriteShapeDef.density = 10.0;
+    spriteShapeDef.isSensor = false;
+    spriteShapeDef.restitution = 1.0f;
     
 	if (iNumVerts != 0) {
 		spriteShape.Set(verts, iNumVerts);
-		b2FixtureDef spriteShapeDef;
-		spriteShapeDef.shape = &spriteShape;
-		spriteShapeDef.density = 10.0;
-		spriteShapeDef.isSensor = false;
-        
 		spriteBody->CreateFixture(&spriteShapeDef);
 	} else {
-        // No Vertice supplied so just make a box round the sprite
-		b2BodyDef spriteBodyDef;
-		spriteBodyDef.type = b2_dynamicBody;
-		spriteBodyDef.position.Set(pos.x / PTM_RATIO, pos.y / PTM_RATIO);
-		spriteBodyDef.userData = sprite;
-		b2Body *spriteBody = _b2dWorld->CreateBody(&spriteBodyDef);
-        
-		b2PolygonShape spriteShape;
 		spriteShape.SetAsBox(size.width / PTM_RATIO / 2,
                              size.height / PTM_RATIO / 2);
-		b2FixtureDef spriteShapeDef;
-		spriteShapeDef.shape = &spriteShape;
-		spriteShapeDef.density = 10.0;
-		spriteShapeDef.isSensor = false; // isSensor true when you want to know when objects will collide without triggering a box2d collision response
 		spriteBody->CreateFixture(&spriteShapeDef);
 	}
-    
+    return spriteBody;
 }
 
 void DeeWorld::spriteDone(CCNode* sender) {
@@ -692,23 +683,7 @@ void DeeWorld::tick(float delta) {
             //update sprites to match the simulation
             sprite->setPosition(ccp(b->GetPosition().x * PTM_RATIO, b->GetPosition().y * PTM_RATIO));
             sprite->setRotation(-1 * CC_RADIANS_TO_DEGREES(b->GetAngle()));
-            
-//			// sprite might already have been removed -> null pointer exception
-//			if (sprite != NULL) {
-//                
-//				// Convert the Cocos2D position/rotation of the sprite to the Box2D position/rotation
-//				CCPoint Pos = sprite->getPosition();
-//				b2Vec2 b2Position = b2Vec2(Pos.x / PTM_RATIO,
-//                                           Pos.y / PTM_RATIO);
-//				float32 b2Angle = -1
-//                * CC_DEGREES_TO_RADIANS(sprite->getRotation());
-//                
-//                CCLog("current movement: pos.x = %f, pos.z = %f, deg = %f", Pos.x, Pos.y, b2Angle);
-//                
-//				// Update the Box2D position/rotation to match the Cocos2D position/rotation
-//				b->SetTransform(b2Position, b2Angle);
-//			}
-		}
+        }
 	}
     
     return;
@@ -729,18 +704,18 @@ void DeeWorld::tick(float delta) {
 			int iTagA = spriteA->getTag();
 			int iTagB = spriteB->getTag();
             
-//			// Is sprite A a player and sprite B a target?  If so, push the target on a list to be destroyed...
-//			if (iTagA == 0 && iTagB == 1) {
-//				toDestroy.push_back(bodyB);
-//                CCLog("Collision: Player on Target");
-//				//this->manageCollision(acid);
-//			}
-//			// Is sprite A a target and sprite B a player?  If so, push the target on a list to be destroyed...
-//			else if (iTagA == 1 && iTagB == 0) {
-//				toDestroy.push_back(bodyA);
-//				CCLog("Collision: Target on Player");
-//				//this->manageCollision(acid);
-//			}
+			// Is sprite A a player and sprite B a target?  If so, push the target on a list to be destroyed...
+			if (iTagA == 0 && iTagB == 1) {
+				toDestroy.push_back(bodyB);
+                CCLog("Collision: Player on Target");
+				//this->manageCollision(acid);
+			}
+			// Is sprite A a target and sprite B a player?  If so, push the target on a list to be destroyed...
+			else if (iTagA == 1 && iTagB == 0) {
+				toDestroy.push_back(bodyA);
+				CCLog("Collision: Target on Player");
+				//this->manageCollision(acid);
+			}
 //            // Is sprite A a target and sprite B a wall
 //            else if(iTagA == 1 && iTagB == 3){
 //                CCLog("Collision: Target on Wall");

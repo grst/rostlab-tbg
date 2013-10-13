@@ -60,7 +60,7 @@ public:
     
     //box2d
     b2World *_b2dWorld;
-    void CreateBox2DBodyForSprite(cocos2d::CCSprite *sprite, int iNumVerts, b2Vec2 verts[] );
+    b2Body* CreateBox2DBodyForSprite(cocos2d::CCSprite *sprite, int iNumVerts, b2Vec2 verts[] );
     void tick(float delta);
     void spriteDone(CCNode* sender);
     CContactListener *_contactListener;
@@ -69,7 +69,7 @@ public:
 
 protected:
     cocos2d::CCArray *_targets;
-	cocos2d::CCSprite *player;    
+	b2Body *player;
 	std::string aminoAcidSeq;
 
 	void addTarget();
