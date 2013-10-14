@@ -17,7 +17,8 @@ public:
 	UIElements();
 	virtual ~UIElements();
 
-	static void fancyMovement(std::queue<cocos2d::CCDrawNode*> movementLines, cocos2d::CCPoint pt,cocos2d::CCPoint playerPoint, DeeWorld* scene);
+	static void fancyMovement(cocos2d::CCPoint pt,cocos2d::CCPoint playerPoint, DeeWorld* scene);
+	static void createNewAminoAcid(DeeWorld* scene, char c);
 };
 
 #endif /* UIELEMENTS_H_ */

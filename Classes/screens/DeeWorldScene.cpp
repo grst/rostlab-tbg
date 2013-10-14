@@ -248,7 +248,7 @@ void DeeWorld::initInfoUI() {
 	//code
 	int i;
 	for (i = 0; i < 3; i++) {
-		this->createNewAminoAcid(MatrixHelper::getRandomAminoAcid());
+		UIElements::createNewAminoAcid(this,MatrixHelper::getRandomAminoAcid());
 	}
 
 	CCLog("setting timer");
@@ -431,7 +431,7 @@ void DeeWorld::ccTouchesMoved(cocos2d::CCSet* touches,
 	//TODO real player position
 	CCPoint playerPointCC = ccp(pt.x-5, y-5);
 	// calling fancy movement track
-	UIElements::fancyMovement(movementLines, oldPlayerPoint, playerPointCC, this);
+	UIElements::fancyMovement(oldPlayerPoint, playerPointCC, this);
 
 	return;
 }
@@ -517,9 +517,6 @@ void DeeWorld::updateInfoUI() {
 	this->_scoreLabel->setString(temp.c_str());
 	this->_scoreLabel->draw();
 	this->_scoreLabel->update(0.5);
-
-	//update code
-	//this->_codeLabel->setString(code.c_str());
 }
 
 /**
@@ -666,7 +663,7 @@ void DeeWorld::tick(float delta) {
 				//break;
 				_code.pop();
 
-				createNewAminoAcid(MatrixHelper::getRandomAminoAcid());
+				UIElements::createNewAminoAcid(this, MatrixHelper::getRandomAminoAcid());
 			}
 
 			//this->code.pMatrixHelper::getRandomAminoAcid();
@@ -685,62 +682,11 @@ void DeeWorld::tick(float delta) {
 	//    }
 }
 
-/**
- * add Aminoacid to "Pipeline"
- * TODO: this function appears to crash sometimes on Android
- */
-void DeeWorld::createNewAminoAcid(char c) {
-
-	BoardAcid * acid = new BoardAcid();
-	acid->setAcid(c);
-
-	char tt[] = "t";
-	tt[0] = c;
-
-	std::string str = string(tt);
-
-	CCLog("adding Acid %c", c);
-
-	// Create the actions
-	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
-
-	CCLabelTTF * label = CCLabelTTF::create(str.c_str(), "Helvetica", 30,
-			CCSizeMake(30, visibleSize.height * 1 / 6), kCCTextAlignmentRight);
-	acid->_label = label;
-
-	acid->_label->setPosition(
-			ccp(visibleSize.width - 20, visibleSize.height * 1 / 7));
-	acid->_label->setColor(ccc3(20, 20, 255));
-	this->addChild(acid->_label);
-
-	CCLog("moving AAs");
-
-	// move all elements a bit
-	std::queue<BoardAcid*> tmpQueue;
-	while (!_code.empty()) {
-		BoardAcid* el = _code.front();
-		tmpQueue.push(el);
-
-		CCFiniteTimeAction* actionMove = CCMoveTo::create((float) 0.8,
-				ccp(el->_label->getPositionX() - 20,
-						el->_label->getPositionY()));
-
-		// Sebi: we have to add some dummy parameters otherwise it fails on Android
-		CCSequence *readySequence = CCSequence::create(actionMove, NULL,
-		NULL);
-		el->_label->runAction(readySequence);
-
-		_code.pop();
-	}
-
-	_code = tmpQueue;
-
-	_code.push(acid);
-
-}
-
 void DeeWorld::manageCollision(AminoAcid* aa) {
 	//TODO
+
+	CCLog("Collision with %c",aa->getType());
+
 	return;
 }
 

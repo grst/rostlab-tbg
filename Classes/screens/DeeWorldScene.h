@@ -62,6 +62,7 @@ public:
     GLESDebugDraw *_debugDraw;
     
 	std::queue<CCDrawNode*> movementLines;
+	std::queue<BoardAcid*> _code;
 
 
 protected:
@@ -82,10 +83,9 @@ private:
 	void manageCollision(AminoAcid* acid);
 	void countdown();
 	void updateInfoUI();
-	void createNewAminoAcid(char c);
 	int score;
 	int timer;
-	std::queue<BoardAcid*> _code;
+
 	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _timerLabel, timerLabel);
 	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _scoreLabel, scoreLabel);
 	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _scoreNumber, scoreNumber);

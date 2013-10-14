@@ -18,8 +18,8 @@ UIElements::~UIElements() {
 	// TODO Auto-generated destructor stub
 }
 
-void UIElements::fancyMovement(std::queue<cocos2d::CCDrawNode*> movementLines,
-		cocos2d::CCPoint pt, cocos2d::CCPoint playerPoint, DeeWorld* scene) {
+void UIElements::fancyMovement(cocos2d::CCPoint pt,
+		cocos2d::CCPoint playerPoint, DeeWorld* scene) {
 
 	cocos2d::CCDrawNode *node = cocos2d::CCDrawNode::create();
 	ccColor4F color;
@@ -58,7 +58,6 @@ void UIElements::fancyMovement(std::queue<cocos2d::CCDrawNode*> movementLines,
 	node->setPosition(playerPoint.x, playerPoint.y);
 	node->draw();
 
-
 	while (scene->movementLines.size() >= 40) {
 		CCDrawNode * nodeDel = scene->movementLines.front();
 		scene->movementLines.pop();
@@ -71,10 +70,57 @@ void UIElements::fancyMovement(std::queue<cocos2d::CCDrawNode*> movementLines,
 
 	scene->addChild(node, 1);
 
-
 	CCActionInterval * fadeOut = CCFadeOut::create(1.0);
 	CCActionInterval * move = CCMoveTo::create(2.0, ccp(-10, -10));
 	//	CCActionInterval * tilt = CC
 	node->runAction(move);
+}
+
+void UIElements::createNewAminoAcid(DeeWorld* scene, char c) {
+	BoardAcid * acid = new BoardAcid();
+	acid->setAcid(c);
+
+	char tt[] = "t";
+	tt[0] = c;
+
+	std::string str = string(tt);
+
+	CCLog("adding Acid %c", c);
+
+	// Create the actions
+	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
+
+	CCLabelTTF * label = CCLabelTTF::create(str.c_str(), "Helvetica", 30,
+			CCSizeMake(30, visibleSize.height * 1 / 6), kCCTextAlignmentRight);
+	acid->_label = label;
+
+	acid->_label->setPosition(
+			ccp(visibleSize.width - 20, visibleSize.height * 1 / 7));
+	acid->_label->setColor(ccc3(20, 20, 255));
+	scene->addChild(acid->_label);
+
+	CCLog("moving AAs");
+
+	// move all elements a bit
+	std::queue<BoardAcid*> tmpQueue;
+	while (!scene->_code.empty()) {
+		BoardAcid* el = scene->_code.front();
+		tmpQueue.push(el);
+
+		CCFiniteTimeAction* actionMove = CCMoveTo::create((float) 0.8,
+				ccp(el->_label->getPositionX() - 20,
+						el->_label->getPositionY()));
+
+		// Sebi: we have to add some dummy parameters otherwise it fails on Android
+		CCSequence *readySequence = CCSequence::create(actionMove, NULL,
+		NULL);
+		el->_label->runAction(readySequence);
+
+		scene->_code.pop();
+	}
+
+	scene->_code = tmpQueue;
+
+	scene->_code.push(acid);
 }
 
