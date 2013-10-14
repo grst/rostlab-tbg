@@ -84,7 +84,7 @@ bool DeeWorld::init() {
     
     initInfoUI();
     
-    updateView();
+    updateInfoUI();
     
 	_targets = new CCArray;    
     
@@ -194,9 +194,6 @@ void DeeWorld::initPlayer() {
     
     //z-order 3, tag=0
     this->addChild(sPlayer, 3, 0);
-    
-    this->schedule(schedule_selector(DeeWorld::gameLogic), 1.0);
-
 }
 
 /**
@@ -522,7 +519,11 @@ b2Body* DeeWorld::CreateBox2DBodyForSprite(cocos2d::CCSprite *sprite,
 }
 
 
-void DeeWorld::updateView() {
+/**
+ * updates the InfoUI-Elements.
+ * set new score, set new amino-acid-code
+ */
+void DeeWorld::updateInfoUI() {
     
     //update score
 	string temp =
@@ -535,6 +536,12 @@ void DeeWorld::updateView() {
     //this->_codeLabel->setString(code.c_str());
 }
 
+/**
+ * updates game and implements game logic. 
+ * method is invoked by scheduler every #n ms
+ * TODO: implement game logic entirely, clean up
+ * TODO: move everything that has something to do with the InfoUI to external Method, better external class. 
+ */
 void DeeWorld::tick(float delta) {
        
 	_b2dWorld->Step(delta, 10, 10);
@@ -675,7 +682,7 @@ void DeeWorld::tick(float delta) {
 			}
             
 			//this->code.pMatrixHelper::getRandomAminoAcid();
-			this->updateView();
+			this->updateInfoUI();
             
 		}
         
@@ -690,19 +697,10 @@ void DeeWorld::tick(float delta) {
     //    }
 }
 
-void DeeWorld::registerWithTouchDispatcher() {
-    // CCTouchDispatcher::sharedDispatcher()->addTargetedDelegate(this,0,true);
-	CCDirector::sharedDirector()->getTouchDispatcher()->addStandardDelegate(
-                                                                            this, 0);
-    
-}
-
-void DeeWorld::gameLogic(float dt) {
-    // do some crazy stuff here
-}
-
-//add Aminoacid to "Pipeline"
-// TODO  this function appears to crash sometimes on Android
+/**
+ * add Aminoacid to "Pipeline"
+ * TODO: this function appears to crash sometimes on Android
+ */	
 void DeeWorld::createNewAminoAcid(char c) {
     
 	BoardAcid * acid = new BoardAcid();

@@ -41,10 +41,6 @@ public:
 	void createTargets();
 
 	void gameLogic(float dt);
-
-	void updateGame(float dt);
-
-	void registerWithTouchDispatcher();
     
     int getEdge(CCSprite* wall);
 
@@ -57,7 +53,6 @@ public:
     b2World *_b2dWorld;
     b2Body* CreateBox2DBodyForSprite(cocos2d::CCSprite *sprite, int iNumVerts, b2Vec2 verts[] );
     void tick(float delta);
-    void spriteDone(CCNode* sender);
     CContactListener *_contactListener;
     GLESDebugDraw *_debugDraw;
     
@@ -79,7 +74,7 @@ private:
     
 	void manageCollision(AminoAcid* acid);
 	void countdown();
-	void updateView();
+	void updateInfoUI();
 	void createNewAminoAcid(char c);
 	int score;
 	int timer;
