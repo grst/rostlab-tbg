@@ -12,6 +12,7 @@
 #include "Box2D.h"
 //for debug-draw
 #include "../box2d/B2DebugDrawLayer.h"
+
 #include "../box2d/GLES-Render.h"
 #include "../ui_elements/AminoAcid.h"
 #include "../ui_elements/BoardAcid.h"
@@ -49,6 +50,10 @@ public:
 	virtual void ccTouchesMoved(cocos2d::CCSet * touches, cocos2d::CCEvent * event); // When touches are moved
 	virtual void ccTouchesEnded(cocos2d::CCSet * touches, cocos2d::CCEvent * event); // When touches are ended.
     
+	// The back key clicked
+	virtual void keyBackClicked();
+
+
     //box2d
     b2World *_b2dWorld;
     b2Body* CreateBox2DBodyForSprite(cocos2d::CCSprite *sprite, int iNumVerts, b2Vec2 verts[] );
@@ -56,6 +61,8 @@ public:
     CContactListener *_contactListener;
     GLESDebugDraw *_debugDraw;
     
+	std::queue<CCDrawNode*> movementLines;
+
 
 protected:
     cocos2d::CCArray *_targets;
@@ -84,7 +91,7 @@ private:
 	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _scoreNumber, scoreNumber);
 	bool validTouch;
 	int tempHeight;
-	std::queue<CCDrawNode*> movementLines;
+
     CCSprite *bottom, *left, *top, *right; //Walls
 };
 

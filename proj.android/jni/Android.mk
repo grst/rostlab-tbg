@@ -19,6 +19,7 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/helper/DebugDraw.cpp  \
                    ../../Classes/helper/MatrixHelper.cpp  \
                    ../../Classes/helper/HelperFunctions.cpp  \
+                   ../../Classes/helper/UIElements.cpp \
                    ../../Classes/helper/WebOpNative.cpp \
                    ../../Classes/screens/DeeWorldScene.cpp \
                    ../../Classes/screens/MainScreenScene.cpp \

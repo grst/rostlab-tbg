@@ -74,15 +74,11 @@ bool MainScreenLayer::init() {
 				"settings.png", "settings.png", this,
 				menu_selector(MainScreenLayer::changeScene));
 
-
-
-		// TODO position it in the upper, right corner
-
 		// some stupid rectangular order of the menu
 		pCloseItem->setPosition(
-				ccp(winSize.width- pCloseItem->getContentSize().width,
-						origin.y + winSize.height * 9/10
-								- pCloseItem->getContentSize().height));
+				ccp(winSize.width- pCloseItem->getContentSize().width /2,
+						origin.y + winSize.height
+								- pCloseItem->getContentSize().height * 2));
 		// maybe we should use the dedicated align method for this?
 
 		pCloseItem->setTag(10);
