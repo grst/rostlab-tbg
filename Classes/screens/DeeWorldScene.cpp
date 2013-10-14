@@ -82,8 +82,11 @@ bool DeeWorld::init() {
     
     this->setTouchEnabled(true);
     
-    this->loadGame();
+    initInfoUI();
     
+    updateView();
+    
+	_targets = new CCArray;    
     
     // disabled temporarily  (annoying!!)
     // CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("background-music-aac.wav", true);
@@ -140,30 +143,6 @@ void DeeWorld::initBox2D() {
     
     this->schedule(schedule_selector(DeeWorld::tick));
     
-//    /////////////////////// Box2dTests ////////////////////////////
-//    //step for physics simulation
-//    float32 timeStep = 1/20.0;      //the length of time passed to simulate (seconds)
-//    int32 velocityIterations = 8;   //how strongly to correct velocity
-//    int32 positionIterations = 3;   //how strongly to correct position
-//    
-//
-//    b2BodyDef myBodyDef;
-//    myBodyDef.type = b2_dynamicBody; //this will be a dynamic body
-//    myBodyDef.position.Set(200, 200); //a little to the left
-//    
-//    b2Body* dynamicBody1 = _b2dWorld->CreateBody(&myBodyDef);
-//    b2CircleShape circleShape;
-//    circleShape.m_p.Set(0, 0); //position, relative to body position
-//    circleShape.m_radius = 1; //radius
-//    
-//    b2FixtureDef myFixtureDef;
-//    myFixtureDef.shape = &circleShape; //this is a pointer to the shape above
-//    dynamicBody1->CreateFixture(&myFixtureDef); //add a fixture to the body
-//    
-//    _b2dWorld->Step( timeStep, velocityIterations, positionIterations);
-//    
-//    /////////////////// END TESTS //////////////////////////////////////
-    
     //debug draw made easy with helper class
     this->addChild(B2DebugDrawLayer::create(_b2dWorld, PTM_RATIO), 9999);
     
@@ -172,6 +151,9 @@ void DeeWorld::initBox2D() {
     _b2dWorld->SetContactListener(_contactListener);
 }
 
+/**
+ * creates the walls around the screen
+ */
 void DeeWorld::initWorld() {
     CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
     // Create edges around the entire screen
@@ -196,6 +178,9 @@ void DeeWorld::initWorld() {
     groundBody->CreateFixture(&boxShapeDef);
 }
 
+/**
+ * initialiye Plazer box2d body and corresponding CCSprite
+ */
 void DeeWorld::initPlayer() {
     CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
     //player
@@ -214,7 +199,10 @@ void DeeWorld::initPlayer() {
 
 }
 
-void DeeWorld::loadGame() {
+/**
+ * initialize Information UI-Elements like score, timer, and amino-acid-code
+ */
+void DeeWorld::initInfoUI() {
 	this->score = 0;
 	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 	
@@ -255,14 +243,11 @@ void DeeWorld::loadGame() {
 	this->_timerLabel->runAction(tintTo);
     
 	this->countdown();
-    
-	updateView();
-    
-	_targets = new CCArray;
-    
 }
 
-//countdown at the beginning of a level
+/**
+ * countdown at the beginning of each level
+ */
 void DeeWorld::countdown() {
 	if (timer == 1) {
 		CCActionInterval * fadeOut = CCFadeOut::create(1.0);
@@ -292,6 +277,10 @@ void DeeWorld::countdown() {
 	}
 }
 
+/**
+ * adds the targets to the game. 
+ * #targets specified in NUMBER_START_TARGETS constant
+ */
 void DeeWorld::createTargets() {
 	int i;
 	for (i = 0; i < NUMBER_START_TARGETS; i++) {
@@ -299,9 +288,11 @@ void DeeWorld::createTargets() {
 	}
 }
 
-
-
-// cpp with cocos2d-x
+/**
+ * adds a target to the game. 
+ * creates the box2d body and the corresponding sprite
+ * TODO: let the target drop into the screen from a random corner and start movement
+ */
 void DeeWorld::addTarget() {
 	AminoAcid *sTarget = AminoAcid::create();
     
@@ -343,93 +334,17 @@ void DeeWorld::addTarget() {
     
 	this->addChild(sTarget);
 	
-    
+    //Move Target
 	b2Body* target = CreateBox2DBodyForSprite(sTarget, 0, NULL);
     target->ApplyLinearImpulse(b2Vec2(300, 300), target->GetPosition());
     
-    //_targets->addObject(target);
-	//this->moveTarget(target, corner);
-    
 }
 
-void DeeWorld::moveTarget(AminoAcid* target, int edge) {
-    CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
-
-    CCPoint point = PositionHelper::calculateNewPos(target, winSize, edge);
-    
-    CCLog("endX: %d, endY: %d", int(point.x), int(point.y));
-    
-    // Determine speed of the target
-    int minDuration = (int) 2.0;
-    int maxDuration = (int) 4.0;
-    int rangeDuration = maxDuration - minDuration;
-    
-    int actualDuration = (rand() % rangeDuration) + minDuration;
-    
-    // Create the actions
-    //TODO: what are all these actions about?
-    CCFiniteTimeAction* actionMove = CCMoveTo::create(
-                                                      (float) actualDuration, point);
-    
-    //TODO: the void-parameter is unnecessary!?
-    CCFiniteTimeAction* actionMoveDone = CCCallFuncND::create(this,
-                                                              callfuncND_selector(DeeWorld::spriteMoveFinished), (void*) target);
-    CCFiniteTimeAction* box2dDone = CCCallFuncN::create(this,
-                                                        callfuncN_selector(DeeWorld::spriteDone));
-    
-    //TODO: unused variables
-    CCFadeIn *fadeInReadyText = CCFadeIn::create(1.0f);
-    CCDelayTime *readyDelay = CCDelayTime::create(0.5f);
-    CCFadeOut *fadeOutReadyText = CCFadeOut::create(1.0f);
-    
-    // Sebi: we have to add some dummy parameters otherwise it fails on Android
-    CCSequence *readySequence = CCSequence::create(actionMove,
-                                                   actionMoveDone, box2dDone, NULL, NULL);
-    target->runAction(readySequence);
-}
-
-
-
-void DeeWorld::spriteMoveFinished(CCNode* sender, void* tbg_void) {
-    
-	CCSprite *sprite = (CCSprite *) sender;
-
-    if (sprite->getTag() == 1)  // target
-    {
-        //////
-        // box2d stuff!
-        // Loop through all of the Box2D bodies in our Box2D world...
-        // We're looking for the Box2D body corresponding to the sprite.
-		b2Body *spriteBody = NULL;
-		for (b2Body *b = _b2dWorld->GetBodyList(); b; b = b->GetNext()) {
-			// See if there's any user data attached to the Box2D body
-			// There should be, since we set it in addBoxBodyForSprite
-			if (b->GetUserData() != NULL) {
-                
-				// We know that the user data is a sprite since we set
-				// it that way, so cast it...
-				CCSprite *curSprite = (CCSprite *) b->GetUserData();
-                
-				// If the sprite for this body is the same as our current
-				// sprite, we've found the Box2D body we're looking for!
-				if (sprite == curSprite) {
-					spriteBody = b;
-					break;
-				}
-			}
-		}
-        
-        // If we found the body, we want to destroy it since the cat is offscreen now.
-		if (spriteBody != NULL) {
-			//	_b2dWorld->DestroyBody(spriteBody);
-		}
-        
-        //should not be necessarey any more, since there will always be a collision with the walls
-		//this->moveTarget(tbg);
-	}
-}
-
-// cpp with cocos2d-x
+/**
+ * callback for touch-start event. 
+ * necessary for movement of the player. 
+ * checks whether the touch is valid (=on the player) or not. 
+ */
 void DeeWorld::ccTouchesBegan(cocos2d::CCSet* touches,
                               cocos2d::CCEvent* event) {
 	validTouch = true;
@@ -464,7 +379,11 @@ void DeeWorld::ccTouchesBegan(cocos2d::CCSet* touches,
 	}
 }
 
-// cpp with cocos2d-x
+/**
+ * callback for touch-move event
+ * makes the player follow the finger. 
+ * TODO: move the fancy 'movement track' to own method, better own class
+ */
 void DeeWorld::ccTouchesMoved(cocos2d::CCSet* touches,
                               cocos2d::CCEvent* event) {
     
@@ -477,17 +396,16 @@ void DeeWorld::ccTouchesMoved(cocos2d::CCSet* touches,
 	for (int iTouchCount = 0; iTouchCount < touches->count(); iTouchCount++) {
 		touch = (CCTouch*) (*it);
 		it++;
-	}
-    
-	b2Vec2 playerPoint = player->GetPosition();
+	}	
     
 	CCPoint pt = touch->getLocationInView();
 	float y = tempHeight - pt.y;
 	player->SetTransform(b2Vec2(pt.x /PTM_RATIO, y /PTM_RATIO), 0);
-	//player->draw();
-	//player->update(0.01);
     
+    //TODO this 'movement track' has to go to a seperate method or even class. 
+    b2Vec2 playerPoint = player->GetPosition();
 	CCDrawNode *node = CCDrawNode::create();
+    
     
 //    // Movement line disabled for developing purposes
 //    {
@@ -546,7 +464,10 @@ void DeeWorld::ccTouchesMoved(cocos2d::CCSet* touches,
 	return;
 }
 
-// cpp with cocos2d-x
+/**
+ * callback for touch-end event
+ * currently doesn't do anything. Can be used in future to play a sound or whatever.
+ */ 
 void DeeWorld::ccTouchesEnded(cocos2d::CCSet* touches,
                               cocos2d::CCEvent* event) {
 	return;
@@ -555,10 +476,17 @@ void DeeWorld::ccTouchesEnded(cocos2d::CCSet* touches,
                                                                  "pew-pew-lei.wav");
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-// This function send the vertice data to Box2D. Also, if you pass iNumVerts==0 and verts==NULL it simply creates a
-// box round your sprite
-
+/**
+ * create a box2d body for a given sprite. 
+ * 
+ * This function send the vertice data to Box2D. Also, if you pass iNumVerts==0 and verts==NULL it simply creates a
+ * box round your sprite
+ *
+ * @param CCSprite sprite the sprite
+ * @param int iNumVerts #vertices, if 0 it will create a rectangluar box around the sprite
+ * @param b2Vec2 verts[] the vertice-data, if NULL it will create a rectangular box around the sprite
+ * @return b2Body the created box2d-body 
+ */
 b2Body* DeeWorld::CreateBox2DBodyForSprite(cocos2d::CCSprite *sprite,
                                         int iNumVerts, b2Vec2 verts[]) {
 	if (_b2dWorld == NULL) {
@@ -593,41 +521,6 @@ b2Body* DeeWorld::CreateBox2DBodyForSprite(cocos2d::CCSprite *sprite,
     return spriteBody;
 }
 
-void DeeWorld::spriteDone(CCNode* sender) {
-    
-    // This selector is called from CCCallFuncN, and it passes the object the action is
-    // run on as a parameter.  We know it's a sprite, so cast it as that!
-	CCSprite *sprite = (CCSprite *) sender;
-    
-    // Loop through all of the Box2D bodies in our Box2D world...
-    // We're looking for the Box2D body corresponding to the sprite.
-	b2Body *spriteBody = NULL;
-	for (b2Body *b = _b2dWorld->GetBodyList(); b; b = b->GetNext()) {
-        // See if there's any user data attached to the Box2D body
-        // There should be, since we set it in addBoxBodyForSprite
-		if (b->GetUserData() != NULL) {
-            
-			// We know that the user data is a sprite since we set
-			// it that way, so cast it...
-			CCSprite *curSprite = (CCSprite *) b->GetUserData();
-            
-			// If the sprite for this body is the same as our current
-			// sprite, we've found the Box2D body we're looking for!
-			if (sprite == curSprite) {
-				spriteBody = b;
-				break;
-			}
-		}
-	}
-    
-    // If we found the body, we want to destroy it since the cat is offscreen now.
-	if (spriteBody != NULL) {
-        //	_b2dWorld->DestroyBody(spriteBody);
-	}
-    
-    //    // And of course we need to remove the Cocos2D sprite too.
-    //    m_spriteSheet->removeChild(sprite, true);
-}
 
 void DeeWorld::updateView() {
     

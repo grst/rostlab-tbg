@@ -38,12 +38,7 @@ public:
 	// implement the "static node()" method manually
 	CREATE_FUNC (DeeWorld);
 
-	void loadGame();
-
-	void moveTarget(AminoAcid* target, int edge);
 	void createTargets();
-
-	void spriteMoveFinished(cocos2d::CCNode* sender, void* tbg);
 
 	void gameLogic(float dt);
 
@@ -80,6 +75,7 @@ private:
     void initBox2D();
     void initWorld();
     void initPlayer();
+    void initInfoUI();
     
 	void manageCollision(AminoAcid* acid);
 	void countdown();
