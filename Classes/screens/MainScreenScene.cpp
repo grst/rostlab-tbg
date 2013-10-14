@@ -1,5 +1,7 @@
 #include "MainScreenScene.h"
 #include "../helper/WebOpNative.h"
+#include "SettingsScreenScene.h"
+#include "DeeWorldScene.h"
 
 using namespace cocos2d;
 
@@ -25,85 +27,75 @@ MainScreenScene::~MainScreenScene() {
 bool MainScreenLayer::init() {
 	if (CCLayerColor::initWithColor(ccc4(255, 255, 255, 255))) {
 
+		// enable Android back button
+		this->setKeypadEnabled(true);
+
 		CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
-		// add "MainScreen" splash screen"
-		CCSprite* pSpriteBackground = CCSprite::create("stripes.png");
-
-		pSpriteBackground->setScale(5.0);
-
-		// position the sprite on the center of the screen
-		pSpriteBackground->setPosition(
-				ccp(winSize.width / 2, winSize.height / 2));
-
-		// add the sprite as a child to this layer
-		//	this->addChild(pSpriteBackground, 0);
-
-		// NEW /////////
-		CCSprite* informationSprite = CCSprite::createWithSpriteFrameName(
-				"CloseNormal.png");
-		CCSprite* informationSpriteClick = CCSprite::createWithSpriteFrameName(
-				"CloseNormal.png");
-		CCMenuItemSprite* infoGameItem = CCMenuItemSprite::create(
-				informationSprite, informationSpriteClick, this,
-				menu_selector(MainScreenLayer::menuStartGameCallback));
-		// END NEW //////
-
-		CCSprite* startGameSprite = CCSprite::createWithSpriteFrameName(
-				"CloseNormal.png");
-		CCSprite* startGameSpriteClick = CCSprite::createWithSpriteFrameName(
-				"CloseNormal.png");
-		// create a menu item (button) with the up/down sprites
-		CCMenuItemSprite* startGameItem = CCMenuItemSprite::create(
-				startGameSprite, startGameSpriteClick, this,
-				menu_selector(MainScreenLayer::menuStartGameCallback));
-
-		// create a menu to hold the buttons (remembering to NULL terminate the list)
-		// NEW - we include the new info item
-		CCMenu *menu = CCMenu::create(startGameItem, infoGameItem, NULL);
-		// position the entire menu
-		menu->setPosition(100, 100);
-		// add it as a child (so it appears
-		this->addChild(menu, 0);
-
-		CCMenuItemSprite *btn = CCMenuItemSprite::create(
-				CCSprite::createWithSpriteFrameName("logo.png"),
-				NULL, this,
-				menu_selector(MainScreenLayer::menuStartGameCallback));
-
-		btn->setPosition(ccp(150, 150));
-		CCMenu *pMenu = CCMenu::create(btn, NULL);
-		this->addChild(pMenu, 0);
-
-		this->_label = CCLabelTTF::create("abc", "Artial", 32);
+		this->_label = CCLabelTTF::create("Select your level", "Artial", 32);
 		_label->retain();
 		_label->setColor(ccc3(20, 0, 0));
-		_label->setPosition(ccp(winSize.width / 2, winSize.height / 2));
+		_label->setPosition(ccp(winSize.width / 2, winSize.height - 50));
 		this->addChild(_label, 0);
 
+		// Place the menu item bottom-right conner.
+		CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
+		CCPoint origin = CCDirector::sharedDirector()->getVisibleOrigin();
 
-		// 1. Add a menu item with "X" image, which is clicked to quit the program.
+		CCArray * menuIcons = CCArray::create();
 
-				// Create a "close" menu item with close icon, it's an auto release object.
-				CCMenuItemImage *pCloseItem = CCMenuItemImage::create(
-					"CloseNormal.png",
-					"CloseSelected.png",
-					this,
-					menu_selector(MainScreenLayer::endScreen));
+		int levels = 8;
 
-				// Place the menu item bottom-right conner.
-		        CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
-		        CCPoint origin = CCDirector::sharedDirector()->getVisibleOrigin();
+		for (int i = 0; i < levels; i++) {
 
-				pCloseItem->setPosition(ccp(origin.x + visibleSize.width - pCloseItem->getContentSize().width/2,
-		                                    origin.y + pCloseItem->getContentSize().height/2));
+			CCMenuItemImage *pCloseItem = CCMenuItemImage::create(
+					"CloseNormal.png", "CloseSelected.png", this,
+					menu_selector(MainScreenLayer::menuStartGameCallback));
 
-				// Create a menu with the "close" menu item, it's an auto release object.
-				CCMenu* pMenu2 = CCMenu::create(pCloseItem, NULL);
-				pMenu2->setPosition(CCPointZero);
+			// some stupid rectangular order of the menu
+			pCloseItem->setPosition(
+					ccp(
+							origin.x + (i % 4) * (winSize.width / 5)
+									+ winSize.width / 5
+									- pCloseItem->getContentSize().width / 2,
+							origin.y + winSize.height - winSize.height / 3
+									- (i / 4) * (winSize.height / 3)
 
-				// Add the menu to TestWorld layer as a child layer.
-				this->addChild(pMenu2, 1);
+									- pCloseItem->getContentSize().height / 2));
+			// maybe we should use the dedicated align method for this?
+
+			pCloseItem->setTag(i);
+
+			menuIcons->addObject(pCloseItem);
+		}
+
+
+		CCMenuItemImage *pCloseItem = CCMenuItemImage::create(
+				"settings.png", "settings.png", this,
+				menu_selector(MainScreenLayer::changeScene));
+
+
+
+		// TODO position it in the upper, right corner
+
+		// some stupid rectangular order of the menu
+		pCloseItem->setPosition(
+				ccp(winSize.width- pCloseItem->getContentSize().width,
+						origin.y + winSize.height * 9/10
+								- pCloseItem->getContentSize().height));
+		// maybe we should use the dedicated align method for this?
+
+		pCloseItem->setTag(10);
+
+		menuIcons->addObject(pCloseItem);
+
+
+		// Create a menu with our menu items
+		levelMenu = CCMenu::createWithArray(menuIcons);
+		levelMenu->setPosition(CCPointZero);
+
+		// Add the menu to TestWorld layer as a child layer.
+		this->addChild(levelMenu, 1);
 
 		return true;
 	} else {
@@ -111,24 +103,50 @@ bool MainScreenLayer::init() {
 	}
 }
 
-void MainScreenLayer::menuStartGameCallback(CCObject* sender) {
-	CCLOG("Hello!");
-	CCScene *pScene = MainScreenScene::create();
+void MainScreenLayer::changeScene(CCObject* pSender) {
 
-	CCDirector *pDirector = CCDirector::sharedDirector();
-	// run
-	pDirector->runWithScene(pScene);
+	CCMenuItem* pMenuItem = (CCMenuItem *) (pSender);
+	int tag = (int) pMenuItem->getTag();
+
+	CCLOG("Changing to settings", tag);
+
+
+	 CCScene *pScene = SettingsScreenScene::create();
+	 //transition to next scene for one sec
+	 CCDirector::sharedDirector()->replaceScene(
+	 CCTransitionFade::create(1.0f, pScene));
 }
 
-void MainScreenLayer::endScreen() {
+void MainScreenLayer::menuStartGameCallback(CCObject* pSender) {
 
-	//WebOpNative::openLink("http://www.rostlab.org");
-	/*
+	CCMenuItem* pMenuItem = (CCMenuItem *) (pSender);
+	int tag = (int) pMenuItem->getTag();
+
+	CCLOG("Starting level %d", tag);
+
+
+
 	 CCScene *pScene = DeeWorld::scene();
 	 //transition to next scene for one sec
 	 CCDirector::sharedDirector()->replaceScene(
 	 CCTransitionFade::create(1.0f, pScene));
-	 */
+}
+
+void MainScreenLayer::keyBackClicked(void) {
+    CCDirector::sharedDirector()->end();
+
+    #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+        exit(0);
+    #endif
+
+}
+
+void MainScreenLayer::keyMenuClicked(void) {
+
+	 CCScene *pScene = SettingsScreenScene::create();
+	 //transition to next scene for one sec
+	 CCDirector::sharedDirector()->replaceScene(
+	 CCTransitionFade::create(1.0f, pScene));
 }
 
 MainScreenLayer::~MainScreenLayer() {

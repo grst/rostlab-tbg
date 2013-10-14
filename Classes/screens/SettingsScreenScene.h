@@ -37,8 +37,19 @@ public:
     CREATE_FUNC(SettingsScreenLayer);
 
     void endScreen();
+    void changeScene(CCObject* pSender) ;
 
     CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _label, Label);
+
+
+    // The back key clicked
+     virtual void keyBackClicked();
+
+    // The menu key clicked. only on wophone & android
+    //virtual void keyMenuClicked();
+private:
+     cocos2d::CCMenu* levelMenu;
+
 };
 
 class SettingsScreenScene : public cocos2d::CCScene
@@ -48,7 +59,7 @@ public:
     ~SettingsScreenScene();
     bool init();
     CREATE_FUNC(SettingsScreenScene);
-  
+
     CC_SYNTHESIZE_READONLY(SettingsScreenLayer*, _layer, Layer);
 };
 

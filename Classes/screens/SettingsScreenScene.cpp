@@ -1,5 +1,6 @@
 #include "SettingsScreenScene.h"
 #include "../helper/WebOpNative.h"
+#include "MainScreenScene.h"
 
 using namespace cocos2d;
 
@@ -25,6 +26,9 @@ SettingsScreenScene::~SettingsScreenScene() {
 bool SettingsScreenLayer::init() {
 	if (CCLayerColor::initWithColor(ccc4(255, 255, 255, 255))) {
 
+		// enable Android back button
+		this->setKeypadEnabled(true);
+
 		CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
 		// add "SettingsScreen" splash screen"
@@ -43,37 +47,87 @@ bool SettingsScreenLayer::init() {
 		_label->setPosition(ccp(winSize.width / 2, winSize.height / 2));
 		this->addChild(_label);
 
-		// add "SettingsScreen" splash screen"
-		CCSprite* pSpriteLogo = CCSprite::create("logo.png");
+		//info
 
-		// position the sprite on the center of the screen
-		pSpriteLogo->setPosition(
-				ccp(winSize.width / 2, winSize.height / 2 + 40));
+		CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
+		CCPoint origin = CCDirector::sharedDirector()->getVisibleOrigin();
 
-		float scale = winSize.width;
-		CCSize logoSize = pSpriteLogo->getContentSize();
+		CCArray * menuIcons = CCArray::create();
 
-		//scale it proportionally to 80% of the screen
-		float scaleFactor = winSize.width / logoSize.width * 0.8;
+		CCMenuItemImage *pCloseItem = CCMenuItemImage::create("settings.png",
+				"settings.png", this,
+				menu_selector(SettingsScreenLayer::changeScene));
 
-		pSpriteLogo->setScaleX(scaleFactor);
-		pSpriteLogo->setScaleY(scaleFactor);
+		// some stupid rectangular order of the menu
+		pCloseItem->setPosition(
+				ccp(winSize.width / 2,
+						origin.y + winSize.height / 2));
+		// maybe we should use the dedicated align method for this?
 
-		// add the sprite as a child to this layer
-		this->addChild(pSpriteLogo, 0);
+		pCloseItem->setTag(10);
 
-		// set a delay for two seconds
-		this->runAction(
-				CCSequence::create(CCDelayTime::create(2),
-						CCCallFunc::create(this,
-								callfunc_selector(
-										SettingsScreenLayer::endScreen)),
-						NULL));
+		menuIcons->addObject(pCloseItem);
+
+		// Create a menu with our menu items
+		levelMenu = CCMenu::createWithArray(menuIcons);
+		levelMenu->setPosition(CCPointZero);
+
+		// Add the menu to TestWorld layer as a child layer.
+		this->addChild(levelMenu, 1);
 
 		return true;
 	} else {
 		return false;
 	}
+
+}
+
+void SettingsScreenLayer::keyBackClicked(void) {
+	CCDirector::sharedDirector()->end();
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+	exit(0);
+#endif
+
+}
+
+void SettingsScreenLayer::changeScene(CCObject* pSender) {
+
+	CCMenuItem* pMenuItem = (CCMenuItem *) (pSender);
+	int tag = (int) pMenuItem->getTag();
+
+
+
+	int matrixInt =
+			(cocos2d::CCUserDefault::sharedUserDefault()->getIntegerForKey(
+					"matrixInt", 0) + 1) % 3;
+	std::string matrix = "BLOSUM62.txt";
+
+	switch (matrixInt) {
+	case 0:
+		matrix = "BLOSUM62.txt";
+		break;
+	case 1:
+		matrix = "PAM100.txt";
+		break;
+	case 2:
+		matrix = "PAM250.txt";
+		break;
+	}
+
+	CCLOG("Changing matrix to %s", matrix.c_str());
+
+	cocos2d::CCUserDefault::sharedUserDefault()->setIntegerForKey("matrixInt",
+			matrixInt);
+
+	//toggle same settings
+	cocos2d::CCUserDefault::sharedUserDefault()->setStringForKey("matrix",
+			matrix);
+
+	CCScene *pScene = MainScreenScene::create();
+	//transition to next scene for one sec
+	CCDirector::sharedDirector()->replaceScene(
+			CCTransitionFade::create(1.0f, pScene));
 }
 
 void SettingsScreenLayer::endScreen() {

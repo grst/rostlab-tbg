@@ -36,11 +36,19 @@ public:
     bool init();
     CREATE_FUNC(MainScreenLayer);
 
-    void endScreen();
+
+    // The back key clicked
+    virtual void keyBackClicked();
+
+     // The menu key clicked. only on wophone & android
+     virtual void keyMenuClicked();
+
 
     CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _label, Label);
 private:
     void menuStartGameCallback(CCObject* sender);
+    void changeScene(CCObject* sender);
+    cocos2d::CCMenu* levelMenu;
 };
 
 class MainScreenScene : public cocos2d::CCScene
