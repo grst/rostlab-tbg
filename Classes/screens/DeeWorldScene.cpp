@@ -4,6 +4,7 @@
 #include "../helper/PositionHelper.h"
 #include "../helper/MatrixHelper.h"
 #include "../helper/UIElements.h"
+#include "../ui_elements/TouchTrailLayer.h"
 #include <iostream>
 #include <string>
 
@@ -56,6 +57,10 @@ CCScene* DeeWorld::scene() {
 
 		// add layer as a child to scene
 		scene->addChild(layer);
+
+		TouchTrailLayer * layerTrail = TouchTrailLayer::create();
+		scene->addChild(layerTrail);
+
 	} while (0);
 
 	// return the scene

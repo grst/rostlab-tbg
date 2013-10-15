@@ -2,14 +2,20 @@
 #include "../helper/WebOpNative.h"
 #include "SettingsScreenScene.h"
 #include "DeeWorldScene.h"
+#include "../TouchTrailLayer.h"
 
 using namespace cocos2d;
+
+#define kFileStreak "streak.png"
 
 bool MainScreenScene::init() {
 	if (CCScene::init()) {
 		this->_layer = MainScreenLayer::create();
 		this->_layer->retain();
 		this->addChild(_layer);
+
+	//	TouchTrailLayer * layer2 = TouchTrailLayer::create();
+	//	this->addChild(layer2);
 
 		return true;
 	} else {
@@ -29,6 +35,7 @@ bool MainScreenLayer::init() {
 
 		// enable Android back button
 		this->setKeypadEnabled(true);
+		 this->setTouchEnabled(true);
 
 		CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
@@ -143,6 +150,55 @@ void MainScreenLayer::keyMenuClicked(void) {
 	 //transition to next scene for one sec
 	 CCDirector::sharedDirector()->replaceScene(
 	 CCTransitionFade::create(1.0f, pScene));
+}
+
+void MainScreenLayer::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
+{
+    for (CCSetIterator it = pTouches->begin(); it != pTouches->end(); it++) {
+        CCTouch *touch = (CCTouch *)*it;
+		CCBlade *blade = CCBlade::create(kFileStreak, 4, 50);
+        _map[touch] = blade;
+		addChild(blade);
+
+        blade->setColor(ccc3(255,0,0));
+        blade->setOpacity(100);
+        blade->setDrainInterval(1.0/40);
+
+        CCPoint point = convertTouchToNodeSpace(touch);
+		blade->push(point);
+	}
+}
+
+void MainScreenLayer::ccTouchesMoved(CCSet *pTouches, CCEvent *pEvent)
+{
+    for (CCSetIterator it = pTouches->begin(); it != pTouches->end(); it++) {
+        CCTouch *touch = (CCTouch *)*it;
+        if (_map.find(touch) == _map.end()) continue;
+
+        CCBlade *blade = _map[touch];
+        CCPoint point = convertTouchToNodeSpace(touch);
+
+        // TODO fix the blade position
+        float tempHeight = CCDirector::sharedDirector()->getWinSize().height;
+        CCPoint prevPoint = touch->getPreviousLocation();
+        CCPoint prevPoint2 = ccp(prevPoint.x,tempHeight - prevPoint.y );
+        CCPoint oldPlayerPoint = ccp(point.x,  tempHeight - point.y);
+
+        point = ccpAdd(ccpMult(point, 0.5f), ccpMult(prevPoint, 0.5f));
+		blade->push(point);
+    }
+}
+
+void MainScreenLayer::ccTouchesEnded(CCSet *pTouches, CCEvent *pEvent)
+{
+    for (CCSetIterator it = pTouches->begin(); it != pTouches->end(); it++) {
+        CCTouch *touch = (CCTouch *)*it;
+        if (_map.find(touch) == _map.end()) continue;
+
+        CCBlade *blade = _map[touch];
+        blade->autoCleanup();
+        _map.erase(touch);
+    }
 }
 
 MainScreenLayer::~MainScreenLayer() {

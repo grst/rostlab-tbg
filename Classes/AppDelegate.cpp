@@ -1,4 +1,5 @@
 #include "AppDelegate.h"
+#include "ui_elements/TouchTrailLayer.h"
 #include "screens/DeeWorldScene.h"
 #include "screens/MainScreenScene.h"
 #include "screens/SplashScreenScene.h"
@@ -54,11 +55,11 @@ bool AppDelegate::applicationDidFinishLaunching() {
     //Sebi: Change here the start screen
 
     // for dev reasons use normal screen
-   CCScene *pScene = DeeWorld::scene();
+   //CCScene *pScene = DeeWorld::scene();
 
     //GS: changed back to DeeWorld for dev purposes. 
-  // CCScene *pScene = MainScreenScene::create();
-
+   CCScene *pScene = MainScreenScene::create();
+   // CCScene *pScene = TouchTrailLayer::create();
 
     // run
     pDirector->runWithScene(pScene);

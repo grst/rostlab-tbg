@@ -10,6 +10,8 @@ LOCAL_MODULE_FILENAME := libgame
 
 LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/AppDelegate.cpp \
+                   ../../Classes/ui_elements/TouchTrailLayer.cpp \
+                   ../../Classes/ui_elements/CCBlade.cpp \
                    ../../Classes/box2d/B2DebugDrawLayer.cpp \
                    ../../Classes/box2d/ContactListener.cpp \
                    ../../Classes/ui_elements/AminoAcid.cpp \
