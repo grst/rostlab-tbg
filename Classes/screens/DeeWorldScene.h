@@ -16,6 +16,7 @@
 #include "../box2d/GLES-Render.h"
 #include "../ui_elements/AminoAcid.h"
 #include "../ui_elements/BoardAcid.h"
+#include "../ui_elements/CCBlade.h"
 #include "../box2d/ContactListener.h"
 
 #include "SimpleAudioEngine.h"
@@ -52,7 +53,7 @@ public:
     
 	// The back key clicked
 	virtual void keyBackClicked();
-    
+
     //collision detected
     void BeginContact(b2Contact* contact);
     void EndContact(b2Contact* contact);
@@ -63,6 +64,7 @@ public:
     void tick(float delta);
     GLESDebugDraw *_debugDraw;
     
+    // delete this property
 	std::queue<CCDrawNode*> movementLines;
 	std::queue<BoardAcid*> _code;
 
@@ -72,7 +74,7 @@ protected:
 	b2Body *player;
     //the walls around the screen
     b2Fixture *left, *top, *right, *bottom;
-    
+
 	std::string aminoAcidSeq;
 
 	void addTarget();
@@ -97,6 +99,8 @@ private:
 	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _scoreNumber, scoreNumber);
 	bool validTouch;
 	int tempHeight;
+
+	std::map< cocos2d::CCTouch *, CCBlade * >  _map;
 
 };
 
