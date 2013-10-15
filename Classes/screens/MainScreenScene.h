@@ -27,6 +27,7 @@
 #define MainScreen_H_
 
 #include "cocos2d.h"
+#include "../ui_elements/CCBlade.h"
 
 class MainScreenLayer : public cocos2d::CCLayerColor
 {
@@ -43,12 +44,17 @@ public:
      // The menu key clicked. only on wophone & android
      virtual void keyMenuClicked();
 
+     void ccTouchesBegan(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent);
+        void ccTouchesMoved(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent);
+        void ccTouchesEnded(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent);
+
 
     CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _label, Label);
 private:
     void menuStartGameCallback(CCObject* sender);
     void changeScene(CCObject* sender);
     cocos2d::CCMenu* levelMenu;
+    std::map< cocos2d::CCTouch *, CCBlade * >  _map;
 };
 
 class MainScreenScene : public cocos2d::CCScene
