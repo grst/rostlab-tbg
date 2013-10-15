@@ -646,8 +646,8 @@ void DeeWorld::collisionHandler2(b2Fixture* fixtureA, b2Fixture* fixtureB) {
 				// show score
 				int scoring = MatrixHelper::getScoreForAminoAcid(wantedAcid,
                                                                  'A');
-
-				this->score = scoring;
+				// add to the current score
+				this->score = scoring + this->score;
 
 				std::string str = static_cast<ostringstream*>(&(ostringstream()
                                                                 << scoring))->str();
