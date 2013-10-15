@@ -205,10 +205,24 @@ void DeeWorld::initPlayer() {
 			CCRectMake(0, 0, 27, 40));
 	sPlayer->setPosition(
 			ccp(visibleSize.width / 2, visibleSize.height  / 2));
+    
+    int num = 8;
+    b2Vec2 vertices[] = {
+        b2Vec2(-116.0f / PTM_RATIO, 67.0f / PTM_RATIO),
+        b2Vec2(-30.0f / PTM_RATIO, 127.0f / PTM_RATIO),
+        b2Vec2(65.0f / PTM_RATIO, 113.0f / PTM_RATIO),
+        b2Vec2(127.0f / PTM_RATIO, 33.0f / PTM_RATIO),
+        b2Vec2(112.0f / PTM_RATIO, -65.0f / PTM_RATIO),
+        b2Vec2(34.0f / PTM_RATIO, -124.0f / PTM_RATIO),
+        b2Vec2(-66.0f / PTM_RATIO, -114.0f / PTM_RATIO),
+        b2Vec2(-126.0f / PTM_RATIO, -34.0f / PTM_RATIO)
+    };
 
-	//create the box for the player (currently with rectangle)
-	player = CreateBox2DBodyForSprite(sPlayer, 0, NULL);
-
+	//create the box for the player 
+	player = CreateBox2DBodyForSprite(sPlayer, num, vertices);
+    //only rectangle around the player (for testing)
+    //player = CreateBox2DBodyForSprite(sPlayer, 0, NULL);
+    
 	//int * value;
 	//*value = 2;
 	player->SetUserData( sPlayer );
@@ -648,7 +662,9 @@ void DeeWorld::EndContact(b2Contact* contact) {
  * create a box2d body for a given sprite. 
  * 
  * This function send the vertice data to Box2D. Also, if you pass iNumVerts==0 and verts==NULL it simply creates a
- * box round your sprite
+ * box round your sprite.
+ *
+ * Please note, that box2d has an 8-vertice-limit!
  *
  * @param CCSprite sprite the sprite
  * @param int iNumVerts #vertices, if 0 it will create a rectangluar box around the sprite
@@ -660,6 +676,9 @@ b2Body* DeeWorld::CreateBox2DBodyForSprite(cocos2d::CCSprite *sprite,
 	if (_b2dWorld == NULL) {
 		return NULL;
 	}
+    if(iNumVerts > 8) {
+        CCLog("Number of vertices exceeds 8!");
+    }
 
 	CCPoint pos = sprite->getPosition();
 	CCSize size = sprite->getContentSize();
@@ -679,7 +698,7 @@ b2Body* DeeWorld::CreateBox2DBodyForSprite(cocos2d::CCSprite *sprite,
 	spriteShapeDef.restitution = 1.0f;
 
 	if (iNumVerts != 0) {
-		spriteShape.Set(verts, iNumVerts);
+        spriteShape.Set(verts, iNumVerts);
 		spriteBody->CreateFixture(&spriteShapeDef);
 	} else {
 		spriteShape.SetAsBox(size.width / PTM_RATIO / 2,
