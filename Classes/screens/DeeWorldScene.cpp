@@ -11,7 +11,7 @@
 USING_NS_CC;
 
 #define PTM_RATIO 32.0
-#define NUMBER_START_TARGETS 1
+#define NUMBER_START_TARGETS 8
 #define INTRO_TIME_SECONDS 1
 #define TOLERANCE_PLAYER 10
 #define PLAYER_IMAGE "Player.png"
@@ -30,10 +30,6 @@ DeeWorld::~DeeWorld() {
 	}
 
 	CC_SAFE_RELEASE(_scoreNumber);
-	CC_SAFE_RELEASE(bottom);
-	CC_SAFE_RELEASE(left);
-	CC_SAFE_RELEASE(right);
-	CC_SAFE_RELEASE(top);
 
 	// cpp don't need to call super dealloc
 	// virtual destructor will do this
@@ -171,8 +167,7 @@ void DeeWorld::initBox2D() {
 	this->addChild(B2DebugDrawLayer::create(_b2dWorld, PTM_RATIO), 9999);
 
 	// Create contact listener
-	_contactListener = new CContactListener();
-	_b2dWorld->SetContactListener(_contactListener);
+    _b2dWorld->SetContactListener(this);
 }
 
 /**
@@ -184,25 +179,25 @@ void DeeWorld::initWorld() {
 	b2BodyDef groundBodyDef;
 	groundBodyDef.position.Set(0, 0);
 
-	b2Body *groundBody = _b2dWorld->CreateBody(&groundBodyDef);
+	b2Body* groundBody = _b2dWorld->CreateBody(&groundBodyDef);
 	b2EdgeShape groundEdge;
 	b2FixtureDef boxShapeDef;
 	boxShapeDef.shape = &groundEdge;
 
 	//wall definitions
 	groundEdge.Set(b2Vec2(0, 0), b2Vec2(visibleSize.width / PTM_RATIO, 0));
-	groundBody->CreateFixture(&boxShapeDef);
+	bottom = groundBody->CreateFixture(&boxShapeDef);
 	groundEdge.Set(b2Vec2(0, 0), b2Vec2(0, visibleSize.height / PTM_RATIO));
-	groundBody->CreateFixture(&boxShapeDef);
+	left = groundBody->CreateFixture(&boxShapeDef);
 	groundEdge.Set(b2Vec2(0, visibleSize.height / PTM_RATIO),
 			b2Vec2(visibleSize.width / PTM_RATIO,
 					visibleSize.height / PTM_RATIO));
-	groundBody->CreateFixture(&boxShapeDef);
+	top = groundBody->CreateFixture(&boxShapeDef);
 	groundEdge.Set(
 			b2Vec2(visibleSize.width / PTM_RATIO,
 					visibleSize.height / PTM_RATIO),
 			b2Vec2(visibleSize.width / PTM_RATIO, 0));
-	groundBody->CreateFixture(&boxShapeDef);
+	right = groundBody->CreateFixture(&boxShapeDef);
 }
 
 /**
@@ -213,7 +208,6 @@ void DeeWorld::initPlayer() {
 	//player
 	CCSprite *sPlayer = CCSprite::create(PLAYER_IMAGE,
 			CCRectMake(0, 0, 27, 40));
-	sPlayer->setZOrder(3);
 	sPlayer->setPosition(
 			ccp(visibleSize.width / 2, visibleSize.height  / 2));
 
@@ -223,8 +217,8 @@ void DeeWorld::initPlayer() {
 	//int * value;
 	//*value = 2;
 	player->SetUserData( sPlayer );
-
-
+    player->SetType(b2_kinematicBody);
+    
 	//z-order 3, tag=0
 	this->addChild(sPlayer, 3, 0);
 }
@@ -331,33 +325,37 @@ void DeeWorld::addTarget() {
 	//target-dimensions
 	CCSize tSize = sTarget->getContentSize();
 	CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
-	corner = 0;
+    b2Vec2 impulse;
 	switch (corner) {
 	case 0:
 		//left bottom
 		startX = 0 - tSize.width;
 		startY = 0 - tSize.height;
+        impulse = b2Vec2(300, 300);
 		break;
 	case 1:
 		//left top
 		startY = winSize.height + tSize.height;
 		startX = 0 - tSize.width;
+            impulse = b2Vec2(300, -300);
 		break;
 	case 2:
 		//right top
 		startX = winSize.width + tSize.width;
 		startY = winSize.height + tSize.height;
+            impulse = b2Vec2(-300, -300);
 		break;
 	case 3:
 		//right bottom
 		startX = winSize.width + tSize.width;
 		startY = 0 - tSize.height;
+            impulse = b2Vec2(-300, 300);
 		break;
 	}
 
 	// TODO temp fix to test scoring event
-	startX = 100;
-	startY = 100;
+//	startX = 100;
+//	startY = 100;
 	CCLog("Start-Position:x=%i,y=%i", startX, startY);
 	sTarget->setPosition(ccp(startX, startY));
 
@@ -365,7 +363,7 @@ void DeeWorld::addTarget() {
 
 	//Move Target
 	b2Body* target = CreateBox2DBodyForSprite(sTarget, 0, NULL);
-	target->ApplyLinearImpulse(b2Vec2(300, 300), target->GetPosition());
+	target->ApplyLinearImpulse(impulse, target->GetPosition());
 
 }
 
@@ -466,6 +464,192 @@ void DeeWorld::keyBackClicked(void) {
 }
 
 /**
+ * contact listener for one-way walls
+ */
+void DeeWorld::BeginContact(b2Contact *contact) {
+    CCLog("BeginContact");
+    b2Fixture* fixtureA = contact->GetFixtureA();
+    b2Fixture* fixtureB = contact->GetFixtureB();
+    
+    this->collisionHandler2(fixtureA, fixtureB);
+    
+    //check if one of the fixtures is the platform
+    
+    b2Fixture* platformFixture = NULL;
+    b2Fixture* otherFixture = NULL;
+    if ( fixtureA == left || fixtureA == top || fixtureA == right || fixtureA == bottom ) {
+        platformFixture = fixtureA;
+        otherFixture = fixtureB;
+    }
+    else if ( fixtureB == left || fixtureB == top || fixtureB == right || fixtureB == bottom ) {
+        platformFixture = fixtureB;
+        otherFixture = fixtureA;
+    }
+    
+    if ( !platformFixture )
+        return;
+    
+    b2Body* platformBody = platformFixture->GetBody();
+    b2Body* otherBody = otherFixture->GetBody();
+    
+    int numPoints = contact->GetManifold()->pointCount;
+    b2WorldManifold worldManifold;
+    contact->GetWorldManifold( &worldManifold );
+    
+    //check if contact points are moving in the wrong direction
+    for (int i = 0; i < numPoints; i++) {
+        b2Vec2 pointVel =
+        otherBody->GetLinearVelocityFromWorldPoint( worldManifold.points[i] );
+        if ( platformFixture == left && pointVel.x < 0 ) {
+            return;
+            //point is moving left ==> remain solid
+        } else if (platformFixture == right && pointVel.x > 0) {
+            //point is moving right ==> remain solid
+            return;
+        } else if (platformFixture == top && pointVel.y > 0) {
+            //point is moving up ==> remain solid
+            return;
+        } else if (platformFixture == bottom && pointVel.y < 0) {
+            //point is moving down ==> remain solid
+            return;
+        }
+    }
+    
+    //no points are moving downward, contact should not be solid
+    contact->SetEnabled(false);
+}
+
+/**
+ * TODO: implement game logic entirely, clean up
+ * TODO: move everything that has something to do with the InfoUI to external Method, better external class.
+ * TODO: integeate into BeginContact Handler or move parts to seperate method
+ */
+void DeeWorld::collisionHandler2(b2Fixture* fixtureA, b2Fixture* fixtureB) {
+	// Loop through all of the box2d bodies that are currently colliding, that we have
+	// gathered with our custom contact listener...
+	std::vector<b2Body *> toDestroy; //list of targets that the player collided with
+
+    // Get the box2d bodies for each object
+    b2Body *bodyA = fixtureA->GetBody();
+    b2Body *bodyB = fixtureB->GetBody();
+    if (bodyA->GetUserData() != NULL && bodyB->GetUserData() != NULL) {
+        CCSprite *spriteA = (CCSprite *) bodyA->GetUserData();
+        CCSprite *spriteB = (CCSprite *) bodyB->GetUserData();
+        int iTagA = spriteA->getTag();
+        int iTagB = spriteB->getTag();
+        
+        // Is sprite A a player and sprite B a target?  If so, push the target on a list to be destroyed...
+        if (iTagA == 0 && iTagB == 1) {
+            toDestroy.push_back(bodyB);
+            CCLog("Collision: Player on Target");
+            //this->manageCollision(acid);
+        }
+        // Is sprite A a target and sprite B a player?  If so, push the target on a list to be destroyed...
+        else if (iTagA == 1 && iTagB == 0) {
+            toDestroy.push_back(bodyA);
+            CCLog("Collision: Target on Player");
+            //this->manageCollision(acid);
+        }
+    }
+	
+    
+	// Loop through all of the box2d bodies we want to destroy...
+	std::vector<b2Body *>::iterator pos2;
+    
+	for (pos2 = toDestroy.begin(); pos2 != toDestroy.end(); ++pos2) {
+		b2Body *body = *pos2;
+        
+		// See if there's any user data attached to the Box2D body
+		// There should be, since we set it in addBoxBodyForSprite
+		if (body->GetUserData() != NULL) {
+            
+			// We know that the user data is a sprite since we set
+			// it that way, so cast it...
+			CCSprite *sprite = (CCSprite *) body->GetUserData();
+            
+			// Remove the sprite from the scene
+			//[_spriteSheet removeChild:sprite cleanup:YES];
+            
+			//delete this sprite from the array after the sequence is finished
+			//_b2dWorld->DestroyBody(body);
+			CCLog("pos.x: %d", int(sprite->getPosition().x));
+			//this->removeChild(sprite);
+            
+			//ATTETION we don't delete the sprite out of the array, this might cause memory leaks
+            
+			// TODO only one scoring every five seconds - block it otherwise?
+            
+			if (_code.size() > 0) {
+				BoardAcid * acid = this->_code.front();
+                
+				char wantedAcid = acid->acid;
+				// TODO change this
+				char playerAcid = 'A';
+                
+				// show score
+				int scoring = MatrixHelper::getScoreForAminoAcid(wantedAcid,
+                                                                 'A');
+                
+				this->score = scoring;
+                
+				std::string str = static_cast<ostringstream*>(&(ostringstream()
+                                                                << scoring))->str();
+				CCSize visibleSize =
+                CCDirector::sharedDirector()->getVisibleSize();
+				this->_scoreNumber = CCLabelTTF::create(str.c_str(),
+                                                        "Helvetica", 200, visibleSize, kCCTextAlignmentCenter);
+				this->_scoreNumber->retain();
+				this->_scoreNumber->setPosition(
+                                                ccp(visibleSize.width / 2, visibleSize.height / 2));
+				this->_scoreNumber->setColor(ccc3(0, 255, 0));
+				this->addChild(_scoreNumber);
+                
+				CCActionInterval * tintToNumber = CCTintTo::create(1.0, 255, 20,
+                                                                   50);
+				this->_scoreNumber->runAction(tintToNumber);
+				CCActionInterval * scaleTo = CCScaleTo::create(1.0, 0.01);
+				this->_scoreNumber->runAction(scaleTo);
+                
+				cocos2d::CCLabelTTF* label = acid->_label;
+				//label->setString("y");
+                
+				CCFiniteTimeAction* actionMove = CCMoveTo::create((float) 0.8,
+                                                                  ccp(visibleSize.height, visibleSize.width));
+                
+				// Sebi: we have to add some dummy parameters otherwise it fails on Android
+				CCSequence *readySequence = CCSequence::create(actionMove, NULL,
+                                                               NULL);
+				label->runAction(readySequence);
+                
+				//delete acid;
+				//break;
+				_code.pop();
+                
+				UIElements::createNewAminoAcid(this, MatrixHelper::getRandomAminoAcid());
+			}
+            
+			//this->code.pMatrixHelper::getRandomAminoAcid();
+			this->updateInfoUI();
+            
+		}
+        
+		// Destroy the Box2D body as well
+		_b2dWorld->DestroyBody(body);
+	}
+    
+	//    // If we've destroyed anything, play an amusing and malicious sound effect!  ;]
+	//    if (toDestroy.size() > 0)
+	//    {
+	//        CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect( "cat_ouch.wav", false );
+	//    }
+}
+
+void DeeWorld::EndContact(b2Contact* contact) {
+    //reset the default state of the contact in case it comes back for more
+    contact->SetEnabled(true);
+}
+
+/**
  * create a box2d body for a given sprite. 
  * 
  * This function send the vertice data to Box2D. Also, if you pass iNumVerts==0 and verts==NULL it simply creates a
@@ -515,7 +699,6 @@ b2Body* DeeWorld::CreateBox2DBodyForSprite(cocos2d::CCSprite *sprite,
  * set new score, set new amino-acid-code
  */
 void DeeWorld::updateInfoUI() {
-
 	//update score
 	string temp =
 			static_cast<ostringstream*>(&(ostringstream() << this->score))->str();
@@ -525,13 +708,10 @@ void DeeWorld::updateInfoUI() {
 }
 
 /**
- * updates game and implements game logic. 
+ * updates CCSprites to go along with the box2d bodies
  * method is invoked by scheduler every #n ms
- * TODO: implement game logic entirely, clean up
- * TODO: move everything that has something to do with the InfoUI to external Method, better external class. 
  */
 void DeeWorld::tick(float delta) {
-
 	_b2dWorld->Step(delta, 10, 10);
 	// Loop through all of the Box2D bodies in our Box2D world..
 	for (b2Body *b = _b2dWorld->GetBodyList(); b; b = b->GetNext()) {
@@ -552,139 +732,6 @@ void DeeWorld::tick(float delta) {
 			sprite->setRotation(-1 * CC_RADIANS_TO_DEGREES(b->GetAngle()));
 		}
 	}
-
-
-	// Loop through all of the box2d bodies that are currently colliding, that we have
-	// gathered with our custom contact listener...
-	std::vector<b2Body *> toDestroy; //list of targets that the player collided with
-	std::vector<ContactData>::iterator pos;
-	for (pos = _contactListener->_contacts.begin();
-			pos != _contactListener->_contacts.end(); ++pos) {
-		ContactData contact = *pos;
-		// Get the box2d bodies for each object
-		b2Body *bodyA = contact.fixtureA->GetBody();
-		b2Body *bodyB = contact.fixtureB->GetBody();
-		if (bodyA->GetUserData() != NULL && bodyB->GetUserData() != NULL) {
-			CCSprite *spriteA = (CCSprite *) bodyA->GetUserData();
-			CCSprite *spriteB = (CCSprite *) bodyB->GetUserData();
-			int iTagA = spriteA->getTag();
-			int iTagB = spriteB->getTag();
-
-			// Is sprite A a player and sprite B a target?  If so, push the target on a list to be destroyed...
-			if (iTagA == 0 && iTagB == 1) {
-				toDestroy.push_back(bodyB);
-				CCLog("Collision: Player on Target");
-				//this->manageCollision(acid);
-			}
-			// Is sprite A a target and sprite B a player?  If so, push the target on a list to be destroyed...
-			else if (iTagA == 1 && iTagB == 0) {
-				toDestroy.push_back(bodyA);
-				CCLog("Collision: Target on Player");
-				//this->manageCollision(acid);
-			}
-//            // Is sprite A a target and sprite B a wall
-//            else if(iTagA == 1 && iTagB == 3){
-//                CCLog("Collision: Target on Wall");
-//                int edge = getEdge(spriteB);
-//                moveTarget(dynamic_cast<AminoAcid*>(spriteA), edge);
-//            } else if (iTagA == 3 && iTagB == 1) {
-//                CCLog("Collision: Wall on Target");
-//                int edge = getEdge(spriteA);
-//                moveTarget(dynamic_cast<AminoAcid*>(spriteB), edge);
-//            }
-
-		}
-	}
-
-	// Loop through all of the box2d bodies we want to destroy...
-	std::vector<b2Body *>::iterator pos2;
-
-	for (pos2 = toDestroy.begin(); pos2 != toDestroy.end(); ++pos2) {
-		b2Body *body = *pos2;
-
-		// See if there's any user data attached to the Box2D body
-		// There should be, since we set it in addBoxBodyForSprite
-		if (body->GetUserData() != NULL) {
-
-			// We know that the user data is a sprite since we set
-			// it that way, so cast it...
-			CCSprite *sprite = (CCSprite *) body->GetUserData();
-
-			// Remove the sprite from the scene
-			//[_spriteSheet removeChild:sprite cleanup:YES];
-
-			//delete this sprite from the array after the sequence is finished
-			//_b2dWorld->DestroyBody(body);
-			CCLog("pos.x: %d", int(sprite->getPosition().x));
-			//this->removeChild(sprite);
-
-			//ATTETION we don't delete the sprite out of the array, this might cause memory leaks
-
-			// TODO only one scoring every five seconds - block it otherwise?
-
-			if (_code.size() > 0) {
-				BoardAcid * acid = this->_code.front();
-
-				char wantedAcid = acid->acid;
-				// TODO change this
-				char playerAcid = 'A';
-
-				// show score
-				int scoring = MatrixHelper::getScoreForAminoAcid(wantedAcid,
-						'A');
-
-				this->score = scoring;
-
-				std::string str = static_cast<ostringstream*>(&(ostringstream()
-						<< scoring))->str();
-				CCSize visibleSize =
-						CCDirector::sharedDirector()->getVisibleSize();
-				this->_scoreNumber = CCLabelTTF::create(str.c_str(),
-						"Helvetica", 200, visibleSize, kCCTextAlignmentCenter);
-				this->_scoreNumber->retain();
-				this->_scoreNumber->setPosition(
-						ccp(visibleSize.width / 2, visibleSize.height / 2));
-				this->_scoreNumber->setColor(ccc3(0, 255, 0));
-				this->addChild(_scoreNumber);
-
-				CCActionInterval * tintToNumber = CCTintTo::create(1.0, 255, 20,
-						50);
-				this->_scoreNumber->runAction(tintToNumber);
-				CCActionInterval * scaleTo = CCScaleTo::create(1.0, 0.01);
-				this->_scoreNumber->runAction(scaleTo);
-
-				cocos2d::CCLabelTTF* label = acid->_label;
-				//label->setString("y");
-
-				CCFiniteTimeAction* actionMove = CCMoveTo::create((float) 0.8,
-						ccp(visibleSize.height, visibleSize.width));
-
-				// Sebi: we have to add some dummy parameters otherwise it fails on Android
-				CCSequence *readySequence = CCSequence::create(actionMove, NULL,
-				NULL);
-				label->runAction(readySequence);
-
-				//delete acid;
-				//break;
-				_code.pop();
-
-				UIElements::createNewAminoAcid(this, MatrixHelper::getRandomAminoAcid());
-			}
-
-			//this->code.pMatrixHelper::getRandomAminoAcid();
-			this->updateInfoUI();
-
-		}
-
-		// Destroy the Box2D body as well
-		_b2dWorld->DestroyBody(body);
-	}
-
-	//    // If we've destroyed anything, play an amusing and malicious sound effect!  ;]
-	//    if (toDestroy.size() > 0)
-	//    {
-	//        CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect( "cat_ouch.wav", false );
-	//    }
 }
 
 void DeeWorld::manageCollision(AminoAcid* aa) {
@@ -695,23 +742,23 @@ void DeeWorld::manageCollision(AminoAcid* aa) {
 	return;
 }
 
-/**
- * Determines the edge-code by comparing the wall with which an object collided
- * to all the "walls". 
- * 
- * @param wall the CCSprite wall with which the object collided
- * @return 0=bottom, 1=left, 2=top, 3=right, -1 if wall is not a wall-sprite
- */
-int DeeWorld::getEdge(CCSprite* wall) {
-	if (wall == bottom) {
-		return 0;
-	} else if (wall == left) {
-		return 1;
-	} else if (wall == top) {
-		return 2;
-	} else if (wall == right) {
-		return 3;
-	} else {
-		return -1;
-	}
-}
+///**
+// * Determines the edge-code by comparing the wall with which an object collided
+// * to all the "walls". 
+// * 
+// * @param wall the CCSprite wall with which the object collided
+// * @return 0=bottom, 1=left, 2=top, 3=right, -1 if wall is not a wall-sprite
+// */
+//int DeeWorld::getEdge(CCSprite* wall) {
+//	if (wall == bottom) {
+//		return 0;
+//	} else if (wall == left) {
+//		return 1;
+//	} else if (wall == top) {
+//		return 2;
+//	} else if (wall == right) {
+//		return 3;
+//	} else {
+//		return -1;
+//	}
+//}
