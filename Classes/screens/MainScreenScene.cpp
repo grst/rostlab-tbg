@@ -35,7 +35,7 @@ bool MainScreenLayer::init() {
 
 		// enable Android back button
 		this->setKeypadEnabled(true);
-		 this->setTouchEnabled(true);
+		this->setTouchEnabled(true);
 
 		CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
@@ -78,14 +78,13 @@ bool MainScreenLayer::init() {
 			menuIcons->addObject(pCloseItem);
 		}
 
-
-		CCMenuItemImage *pCloseItem = CCMenuItemImage::create(
-				"settings.png", "settings.png", this,
+		CCMenuItemImage *pCloseItem = CCMenuItemImage::create("settings.png",
+				"settings.png", this,
 				menu_selector(MainScreenLayer::changeScene));
 
 		// some stupid rectangular order of the menu
 		pCloseItem->setPosition(
-				ccp(winSize.width- pCloseItem->getContentSize().width /2,
+				ccp(winSize.width - pCloseItem->getContentSize().width / 2,
 						origin.y + winSize.height
 								- pCloseItem->getContentSize().height * 2));
 		// maybe we should use the dedicated align method for this?
@@ -93,7 +92,6 @@ bool MainScreenLayer::init() {
 		pCloseItem->setTag(10);
 
 		menuIcons->addObject(pCloseItem);
-
 
 		// Create a menu with our menu items
 		levelMenu = CCMenu::createWithArray(menuIcons);
@@ -111,7 +109,6 @@ bool MainScreenLayer::init() {
 void MainScreenLayer::initBackground() {
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
-
 	CCSprite* pSpriteBackground = CCSprite::create("MainScreenBackground.jpg");
 
 	// position the sprite on the center of the screen
@@ -128,11 +125,10 @@ void MainScreenLayer::changeScene(CCObject* pSender) {
 
 	CCLOG("Changing to settings", tag);
 
-
-	 CCScene *pScene = SettingsScreenScene::create();
-	 //transition to next scene for one sec
-	 CCDirector::sharedDirector()->replaceScene(
-	 CCTransitionFade::create(1.0f, pScene));
+	CCScene *pScene = SettingsScreenScene::create();
+	//transition to next scene for one sec
+	CCDirector::sharedDirector()->replaceScene(
+			CCTransitionFade::create(1.0f, pScene));
 }
 
 void MainScreenLayer::menuStartGameCallback(CCObject* pSender) {
@@ -142,78 +138,75 @@ void MainScreenLayer::menuStartGameCallback(CCObject* pSender) {
 
 	CCLOG("Starting level %d", tag);
 
-
-
-	 CCScene *pScene = DeeWorld::scene();
-	 //transition to next scene for one sec
-	 CCDirector::sharedDirector()->replaceScene(
-	 CCTransitionFade::create(1.0f, pScene));
+	CCScene *pScene = DeeWorld::scene();
+	//transition to next scene for one sec
+	CCDirector::sharedDirector()->replaceScene(
+			CCTransitionFade::create(1.0f, pScene));
 }
 
 void MainScreenLayer::keyBackClicked(void) {
-    CCDirector::sharedDirector()->end();
+	CCDirector::sharedDirector()->end();
 
-    #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-        exit(0);
-    #endif
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+	exit(0);
+#endif
 
 }
 
 void MainScreenLayer::keyMenuClicked(void) {
 
-	 CCScene *pScene = SettingsScreenScene::create();
-	 //transition to next scene for one sec
-	 CCDirector::sharedDirector()->replaceScene(
-	 CCTransitionFade::create(1.0f, pScene));
+	CCScene *pScene = SettingsScreenScene::create();
+	//transition to next scene for one sec
+	CCDirector::sharedDirector()->replaceScene(
+			CCTransitionFade::create(1.0f, pScene));
 }
 
-void MainScreenLayer::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
-{
-    for (CCSetIterator it = pTouches->begin(); it != pTouches->end(); it++) {
-        CCTouch *touch = (CCTouch *)*it;
+void MainScreenLayer::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent) {
+	for (CCSetIterator it = pTouches->begin(); it != pTouches->end(); it++) {
+		CCTouch *touch = (CCTouch *) *it;
 		CCBlade *blade = CCBlade::create(kFileStreak, 4, 50);
-        _map[touch] = blade;
+		_map[touch] = blade;
 		addChild(blade);
 
-        blade->setColor(ccc3(255,0,0));
-        blade->setOpacity(100);
-        blade->setDrainInterval(1.0/40);
+		blade->setColor(ccc3(255, 0, 0));
+		blade->setOpacity(100);
+		blade->setDrainInterval(1.0 / 40);
 
-        CCPoint point = convertTouchToNodeSpace(touch);
+		CCPoint point = convertTouchToNodeSpace(touch);
 		blade->push(point);
 	}
 }
 
-void MainScreenLayer::ccTouchesMoved(CCSet *pTouches, CCEvent *pEvent)
-{
-    for (CCSetIterator it = pTouches->begin(); it != pTouches->end(); it++) {
-        CCTouch *touch = (CCTouch *)*it;
-        if (_map.find(touch) == _map.end()) continue;
+void MainScreenLayer::ccTouchesMoved(CCSet *pTouches, CCEvent *pEvent) {
+	for (CCSetIterator it = pTouches->begin(); it != pTouches->end(); it++) {
+		CCTouch *touch = (CCTouch *) *it;
+		if (_map.find(touch) == _map.end())
+			continue;
 
-        CCBlade *blade = _map[touch];
-        CCPoint point = convertTouchToNodeSpace(touch);
+		CCBlade *blade = _map[touch];
+		CCPoint point = convertTouchToNodeSpace(touch);
 
-        // TODO fix the blade position
-        float tempHeight = CCDirector::sharedDirector()->getWinSize().height;
-        CCPoint prevPoint = touch->getPreviousLocation();
-        CCPoint prevPoint2 = ccp(prevPoint.x,tempHeight - prevPoint.y );
-        CCPoint oldPlayerPoint = ccp(point.x,  tempHeight - point.y);
+		// TODO fix the blade position
+		float tempHeight = CCDirector::sharedDirector()->getWinSize().height;
+		CCPoint prevPoint = touch->getPreviousLocation();
+		CCPoint prevPoint2 = ccp(prevPoint.x, tempHeight - prevPoint.y);
+		CCPoint oldPlayerPoint = ccp(point.x, tempHeight - point.y);
 
-        point = ccpAdd(ccpMult(point, 0.5f), ccpMult(prevPoint, 0.5f));
+		point = ccpAdd(ccpMult(point, 0.5f), ccpMult(prevPoint, 0.5f));
 		blade->push(point);
-    }
+	}
 }
 
-void MainScreenLayer::ccTouchesEnded(CCSet *pTouches, CCEvent *pEvent)
-{
-    for (CCSetIterator it = pTouches->begin(); it != pTouches->end(); it++) {
-        CCTouch *touch = (CCTouch *)*it;
-        if (_map.find(touch) == _map.end()) continue;
+void MainScreenLayer::ccTouchesEnded(CCSet *pTouches, CCEvent *pEvent) {
+	for (CCSetIterator it = pTouches->begin(); it != pTouches->end(); it++) {
+		CCTouch *touch = (CCTouch *) *it;
+		if (_map.find(touch) == _map.end())
+			continue;
 
-        CCBlade *blade = _map[touch];
-        blade->autoCleanup();
-        _map.erase(touch);
-    }
+		CCBlade *blade = _map[touch];
+		blade->autoCleanup();
+		_map.erase(touch);
+	}
 }
 
 MainScreenLayer::~MainScreenLayer() {

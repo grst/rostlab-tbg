@@ -88,6 +88,8 @@ private:
     void initInfoUI();
     void initBackground();
     
+    void pauseAction(CCObject* pSender);
+
 	void manageCollision(AminoAcid* acid);
 	void countdown();
 	void updateInfoUI();

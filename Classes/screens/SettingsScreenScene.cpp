@@ -83,12 +83,7 @@ bool SettingsScreenLayer::init() {
 }
 
 void SettingsScreenLayer::keyBackClicked(void) {
-	CCDirector::sharedDirector()->end();
-
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-	exit(0);
-#endif
-
+	endScreen();
 }
 
 void SettingsScreenLayer::changeScene(CCObject* pSender) {
@@ -124,21 +119,15 @@ void SettingsScreenLayer::changeScene(CCObject* pSender) {
 	cocos2d::CCUserDefault::sharedUserDefault()->setStringForKey("matrix",
 			matrix);
 
-	CCScene *pScene = MainScreenScene::create();
-	//transition to next scene for one sec
-	CCDirector::sharedDirector()->replaceScene(
-			CCTransitionFade::create(1.0f, pScene));
+	endScreen();
 }
 
 void SettingsScreenLayer::endScreen() {
 
-	//WebOpNative::openLink("http://www.rostlab.org");
-	/*
-	 CCScene *pScene = DeeWorld::scene();
-	 //transition to next scene for one sec
-	 CCDirector::sharedDirector()->replaceScene(
-	 CCTransitionFade::create(1.0f, pScene));
-	 */
+	CCScene *pScene = MainScreenScene::create();
+		//transition to next scene for one sec
+		CCDirector::sharedDirector()->replaceScene(
+				CCTransitionFade::create(1.0f, pScene));
 }
 
 SettingsScreenLayer::~SettingsScreenLayer() {

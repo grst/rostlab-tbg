@@ -4,6 +4,7 @@
 #include "../helper/PositionHelper.h"
 #include "../helper/MatrixHelper.h"
 #include "../helper/UIElements.h"
+#include "MainScreenScene.h"
 #include <iostream>
 #include <string>
 
@@ -12,7 +13,7 @@ USING_NS_CC;
 #define PTM_RATIO 32.0
 #define NUMBER_START_TARGETS 8
 #define INTRO_TIME_SECONDS 1
-#define TOLERANCE_PLAYER 10
+#define TOLERANCE_PLAYER -20
 #define PLAYER_IMAGE "Player.png"
 #define kFileStreak "streak.png"
 
@@ -121,7 +122,6 @@ bool DeeWorld::init() {
 void DeeWorld::initBackground() {
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
-
 	CCSprite* pSpriteBackground = CCSprite::create("DeeWorldBackground.jpg");
 
 	// position the sprite on the center of the screen
@@ -132,24 +132,27 @@ void DeeWorld::initBackground() {
 }
 
 void DeeWorld::makeMenu() {
-	//close-item
-	CCMenuItemImage *pCloseItem = CCMenuItemImage::create("CloseNormal.png",
-			"CloseSelected.png", this,
-			menu_selector(DeeWorld::menuCloseCallback));
-	if (!pCloseItem) {
-		return;
-	}
-	// Place the menu item bottom-left corner.
+
+	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 	CCPoint origin = CCDirector::sharedDirector()->getVisibleOrigin();
 
-	pCloseItem->setPosition(
-			ccp(
+	CCMenuItemImage *pSettings = CCMenuItemImage::create("settings.png",
+			"settings.png", this, menu_selector(DeeWorld::pauseAction));
 
-			pCloseItem->getContentSize().width / 2,
-					origin.y + pCloseItem->getContentSize().height / 2));
+	// Place the menu item top-left corner.
+	pSettings->setPosition(
+			ccp(pSettings->getContentSize().width / 2,
+					origin.y + winSize.height
+							- pSettings->getContentSize().height * 2));
+
+	//	pCloseItem->setTag(10);
+
+	if (!pSettings) {
+		return;
+	}
 
 	// Create a menu with the "close" menu item, it's an auto release object.
-	CCMenu* pMenu = CCMenu::create(pCloseItem, NULL);
+	CCMenu* pMenu = CCMenu::create(pSettings, NULL);
 	pMenu->setPosition(CCPointZero);
 	if (!pMenu) {
 		return;
@@ -157,7 +160,6 @@ void DeeWorld::makeMenu() {
 
 	// Add the menu to DeeWorld layer as a child layer.
 	this->addChild(pMenu, 1);
-
 }
 
 void DeeWorld::menuCloseCallback(CCObject* pSender) {
@@ -522,12 +524,7 @@ void DeeWorld::ccTouchesEnded(cocos2d::CCSet* pTouches,
  * this function is called when the back button is pressed. only useful for android?
  */
 void DeeWorld::keyBackClicked(void) {
-	CCDirector::sharedDirector()->end();
-
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-	exit(0);
-#endif
-
+	pauseAction(NULL);
 }
 
 /**
@@ -838,3 +835,13 @@ void DeeWorld::manageCollision(AminoAcid* aa) {
 //		return -1;
 //	}
 //}
+
+// TODO blend layer with pause and pause the whole game
+void DeeWorld::pauseAction(CCObject* pSender) {
+	return;
+	// TODO this creates an error on android
+	CCScene *pScene = MainScreenScene::create();
+	//transition to next scene for one sec
+	CCDirector::sharedDirector()->replaceScene(
+			CCTransitionFade::create(1.0f, pScene));
+}
