@@ -21,7 +21,7 @@
 #include "SimpleAudioEngine.h"
 
 
-class DeeWorld: public cocos2d::CCLayerColor {
+class DeeWorld: public cocos2d::CCLayerColor, public b2ContactListener {
 public:
 	DeeWorld();
 	~DeeWorld();
@@ -52,13 +52,15 @@ public:
     
 	// The back key clicked
 	virtual void keyBackClicked();
-
+    
+    //collision detected
+    void BeginContact(b2Contact* contact);
+    void EndContact(b2Contact* contact);
 
     //box2d
     b2World *_b2dWorld;
     b2Body* CreateBox2DBodyForSprite(cocos2d::CCSprite *sprite, int iNumVerts, b2Vec2 verts[] );
     void tick(float delta);
-    CContactListener *_contactListener;
     GLESDebugDraw *_debugDraw;
     
 	std::queue<CCDrawNode*> movementLines;
@@ -68,6 +70,9 @@ public:
 protected:
     cocos2d::CCArray *_targets;
 	b2Body *player;
+    //the walls around the screen
+    b2Fixture *left, *top, *right, *bottom;
+    
 	std::string aminoAcidSeq;
 
 	void addTarget();
@@ -83,6 +88,7 @@ private:
 	void manageCollision(AminoAcid* acid);
 	void countdown();
 	void updateInfoUI();
+    void collisionHandler2(b2Fixture* fixtureA, b2Fixture* fixtureB); //temp method
 	int score;
 	int timer;
 
@@ -92,7 +98,6 @@ private:
 	bool validTouch;
 	int tempHeight;
 
-    CCSprite *bottom, *left, *top, *right; //Walls
 };
 
 #endif  // __DEEWORLD_SCENE_H__

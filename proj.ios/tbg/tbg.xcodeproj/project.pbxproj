@@ -144,6 +144,7 @@
 		2105D43F180A8EEA002C5B53 /* SplashScreenScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2105D42B180A8EEA002C5B53 /* SplashScreenScene.cpp */; };
 		2105D440180A8EEA002C5B53 /* AminoAcid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2105D42E180A8EEA002C5B53 /* AminoAcid.cpp */; };
 		2105D441180A8EEA002C5B53 /* BoardAcid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2105D430180A8EEA002C5B53 /* BoardAcid.cpp */; };
+		2144F44A180D530A0092230D /* UIElements.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2144F448180D530A0092230D /* UIElements.cpp */; };
 		A9BE060C1767446800DD9825 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9BE060B1767446800DD9825 /* QuartzCore.framework */; };
 		A9BE060E1767446800DD9825 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9BE060D1767446800DD9825 /* OpenGLES.framework */; };
 		A9BE06101767446800DD9825 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9BE060F1767446800DD9825 /* OpenAL.framework */; };
@@ -590,6 +591,8 @@
 		2105D42F180A8EEA002C5B53 /* AminoAcid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AminoAcid.h; sourceTree = "<group>"; };
 		2105D430180A8EEA002C5B53 /* BoardAcid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BoardAcid.cpp; sourceTree = "<group>"; };
 		2105D431180A8EEA002C5B53 /* BoardAcid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BoardAcid.h; sourceTree = "<group>"; };
+		2144F448180D530A0092230D /* UIElements.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UIElements.cpp; sourceTree = "<group>"; };
+		2144F449180D530A0092230D /* UIElements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIElements.h; sourceTree = "<group>"; };
 		A9BE06081767446800DD9825 /* tbg.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = tbg.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9BE060B1767446800DD9825 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		A9BE060D1767446800DD9825 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -1422,6 +1425,8 @@
 				2105D41F180A8EEA002C5B53 /* MatrixHelper.h */,
 				2105D420180A8EEA002C5B53 /* PositionHelper.cpp */,
 				2105D421180A8EEA002C5B53 /* PositionHelper.h */,
+				2144F448180D530A0092230D /* UIElements.cpp */,
+				2144F449180D530A0092230D /* UIElements.h */,
 				2105D422180A8EEA002C5B53 /* WebOpNative.cpp */,
 				2105D423180A8EEA002C5B53 /* WebOpNative.h */,
 			);
@@ -3032,6 +3037,7 @@
 				2105D43F180A8EEA002C5B53 /* SplashScreenScene.cpp in Sources */,
 				2105D440180A8EEA002C5B53 /* AminoAcid.cpp in Sources */,
 				2105D441180A8EEA002C5B53 /* BoardAcid.cpp in Sources */,
+				2144F44A180D530A0092230D /* UIElements.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
