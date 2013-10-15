@@ -2,7 +2,7 @@
 #include "../helper/WebOpNative.h"
 #include "SettingsScreenScene.h"
 #include "DeeWorldScene.h"
-#include "../TouchTrailLayer.h"
+#include "../ui_elements/TouchTrailLayer.h"
 
 using namespace cocos2d;
 
