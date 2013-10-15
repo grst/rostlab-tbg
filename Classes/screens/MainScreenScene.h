@@ -53,6 +53,7 @@ public:
 private:
     void menuStartGameCallback(CCObject* sender);
     void changeScene(CCObject* sender);
+    void initBackground();
     cocos2d::CCMenu* levelMenu;
     std::map< cocos2d::CCTouch *, CCBlade * >  _map;
 };

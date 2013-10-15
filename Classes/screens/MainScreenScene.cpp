@@ -14,8 +14,8 @@ bool MainScreenScene::init() {
 		this->_layer->retain();
 		this->addChild(_layer);
 
-	//	TouchTrailLayer * layer2 = TouchTrailLayer::create();
-	//	this->addChild(layer2);
+		//TouchTrailLayer * layer2 = TouchTrailLayer::create();
+		//this->addChild(layer2);
 
 		return true;
 	} else {
@@ -39,9 +39,11 @@ bool MainScreenLayer::init() {
 
 		CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
+		initBackground();
+
 		this->_label = CCLabelTTF::create("Select your level", "Artial", 32);
 		_label->retain();
-		_label->setColor(ccc3(20, 0, 0));
+		_label->setColor(ccc3(220, 220, 220));
 		_label->setPosition(ccp(winSize.width / 2, winSize.height - 50));
 		this->addChild(_label, 0);
 
@@ -104,6 +106,19 @@ bool MainScreenLayer::init() {
 	} else {
 		return false;
 	}
+}
+
+void MainScreenLayer::initBackground() {
+	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+
+
+	CCSprite* pSpriteBackground = CCSprite::create("MainScreenBackground.jpg");
+
+	// position the sprite on the center of the screen
+	pSpriteBackground->setPosition(ccp(winSize.width / 2, winSize.height / 2));
+
+	// add the sprite as a child to this layer
+	this->addChild(pSpriteBackground, 0);
 }
 
 void MainScreenLayer::changeScene(CCObject* pSender) {

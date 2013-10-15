@@ -86,6 +86,7 @@ private:
     void initWorld();
     void initPlayer();
     void initInfoUI();
+    void initBackground();
     
 	void manageCollision(AminoAcid* acid);
 	void countdown();

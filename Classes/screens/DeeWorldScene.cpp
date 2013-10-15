@@ -65,12 +65,13 @@ bool DeeWorld::init() {
 	if (!CCLayer::init()) {
 		return false;
 	}
-	if (!CCLayerColor::initWithColor(ccc4(128, 255, 255, 255))) {
+	if (!CCLayerColor::initWithColor(ccc4(255, 255, 255, 255))) {
 		return false;
 	}
 
 	cocos2d::CCLog("Hello World. App ist starting now");
 
+	initBackground();
 	makeMenu();
 	initBox2D();
 
@@ -117,6 +118,19 @@ bool DeeWorld::init() {
 	return true;
 }
 
+void DeeWorld::initBackground() {
+	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+
+
+	CCSprite* pSpriteBackground = CCSprite::create("DeeWorldBackground.jpg");
+
+	// position the sprite on the center of the screen
+	pSpriteBackground->setPosition(ccp(winSize.width / 2, winSize.height / 2));
+
+	// add the sprite as a child to this layer
+	this->addChild(pSpriteBackground, 0);
+}
+
 void DeeWorld::makeMenu() {
 	//close-item
 	CCMenuItemImage *pCloseItem = CCMenuItemImage::create("CloseNormal.png",
@@ -146,7 +160,6 @@ void DeeWorld::makeMenu() {
 
 }
 
-
 void DeeWorld::menuCloseCallback(CCObject* pSender) {
 	// "close" menu item clicked
 	CCDirector::sharedDirector()->end();
@@ -165,7 +178,7 @@ void DeeWorld::initBox2D() {
 	this->addChild(B2DebugDrawLayer::create(_b2dWorld, PTM_RATIO), 9999);
 
 	// Create contact listener
-    _b2dWorld->SetContactListener(this);
+	_b2dWorld->SetContactListener(this);
 }
 
 /**
@@ -204,36 +217,30 @@ void DeeWorld::initWorld() {
 void DeeWorld::initPlayer() {
 	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 	//player
-	CCSprite *sPlayer = CCSprite::create(PLAYER_IMAGE,
-			CCRectMake(0, 0, 27, 40));
-	sPlayer->setPosition(
-			ccp(visibleSize.width / 2, visibleSize.height  / 2));
+	CCSprite *sPlayer = CCSprite::create(PLAYER_IMAGE);
+	sPlayer->setPosition(ccp(visibleSize.width / 2, visibleSize.height / 2));
+	sPlayer->setScale(0.5f);
 
+	float x = 1 / PTM_RATIO / 8;
+	float y = 1 / PTM_RATIO / 8;
 
-    int num = 8;
-    b2Vec2 vertices[] = {
-        b2Vec2(-116.0f / PTM_RATIO, 67.0f / PTM_RATIO),
-        b2Vec2(-30.0f / PTM_RATIO, 127.0f / PTM_RATIO),
-        b2Vec2(65.0f / PTM_RATIO, 113.0f / PTM_RATIO),
-        b2Vec2(127.0f / PTM_RATIO, 33.0f / PTM_RATIO),
-        b2Vec2(112.0f / PTM_RATIO, -65.0f / PTM_RATIO),
-        b2Vec2(34.0f / PTM_RATIO, -124.0f / PTM_RATIO),
-        b2Vec2(-66.0f / PTM_RATIO, -114.0f / PTM_RATIO),
-        b2Vec2(-126.0f / PTM_RATIO, -34.0f / PTM_RATIO)
-    };
-
-
+	int num = 8;
+	b2Vec2 vertices[] = { b2Vec2(-126.0f * x, -34.0f * y), b2Vec2(-66.0f * x,
+			-114.0f * y), b2Vec2(34.0f * x, -124.0f * y), b2Vec2(112.0f * x,
+			-65.0f * y), b2Vec2(127.0f * x, 33.0f * y), b2Vec2(65.0f * x,
+			113.0f * y), b2Vec2(-30.0f * x, 127.0f * y), b2Vec2(-116.0f * x,
+			67.0f * y) };
 
 	//create the box for the player
 
-	//player = CreateBox2DBodyForSprite(sPlayer, num, vertices);
-    //only rectangle around the player (for testing)
-    player = CreateBox2DBodyForSprite(sPlayer, 0, NULL);
+	player = CreateBox2DBodyForSprite(sPlayer, num, vertices);
+	//only rectangle around the player (for testing)
+	// player = CreateBox2DBodyForSprite(sPlayer, 0, NULL);
 
 	//int * value;
 	//*value = 2;
-	player->SetUserData( sPlayer );
-    player->SetType(b2_kinematicBody);
+	player->SetUserData(sPlayer);
+	player->SetType(b2_kinematicBody);
 
 	//z-order 3, tag=0
 	this->addChild(sPlayer, 3, 0);
@@ -263,7 +270,8 @@ void DeeWorld::initInfoUI() {
 	//code
 	int i;
 	for (i = 0; i < 3; i++) {
-		UIElements::createNewAminoAcid(this,MatrixHelper::getRandomAminoAcid());
+		UIElements::createNewAminoAcid(this,
+				MatrixHelper::getRandomAminoAcid());
 	}
 
 	CCLog("setting timer");
@@ -341,31 +349,31 @@ void DeeWorld::addTarget() {
 	//target-dimensions
 	CCSize tSize = sTarget->getContentSize();
 	CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
-    b2Vec2 impulse;
+	b2Vec2 impulse;
 	switch (corner) {
 	case 0:
 		//left bottom
 		startX = 0 - tSize.width;
 		startY = 0 - tSize.height;
-        impulse = b2Vec2(300, 300);
+		impulse = b2Vec2(300, 300);
 		break;
 	case 1:
 		//left top
 		startY = winSize.height + tSize.height;
 		startX = 0 - tSize.width;
-            impulse = b2Vec2(300, -300);
+		impulse = b2Vec2(300, -300);
 		break;
 	case 2:
 		//right top
 		startX = winSize.width + tSize.width;
 		startY = winSize.height + tSize.height;
-            impulse = b2Vec2(-300, -300);
+		impulse = b2Vec2(-300, -300);
 		break;
 	case 3:
 		//right bottom
 		startX = winSize.width + tSize.width;
 		startY = 0 - tSize.height;
-            impulse = b2Vec2(-300, 300);
+		impulse = b2Vec2(-300, 300);
 		break;
 	}
 
@@ -423,19 +431,19 @@ void DeeWorld::ccTouchesBegan(cocos2d::CCSet* touches,
 	}
 
 	for (CCSetIterator it = touches->begin(); it != touches->end(); it++) {
-	        CCTouch *touch = (CCTouch *)*it;
-			CCBlade *blade = CCBlade::create(kFileStreak, 4, 50);
-	        _map[touch] = blade;
-			addChild(blade);
+		CCTouch *touch = (CCTouch *) *it;
+		CCBlade *blade = CCBlade::create(kFileStreak, 4, 50);
+		_map[touch] = blade;
+		addChild(blade);
 
-	        blade->setColor(ccc3(255,0,0));
-	        blade->setOpacity(100);
-	        blade->setDrainInterval(1.0/40);
-	        blade->setZOrder(2);
+		blade->setColor(ccc3(255, 0, 0));
+		blade->setOpacity(100);
+		blade->setDrainInterval(1.0 / 40);
+		blade->setZOrder(20);
 
-	        CCPoint point = convertTouchToNodeSpace(touch);
-			blade->push(point);
-		}
+		CCPoint point = convertTouchToNodeSpace(touch);
+		blade->push(point);
+	}
 }
 
 /**
@@ -461,27 +469,28 @@ void DeeWorld::ccTouchesMoved(cocos2d::CCSet* touches,
 	float y = tempHeight - pt.y;
 	player->SetTransform(b2Vec2(pt.x / PTM_RATIO, y / PTM_RATIO), 0);
 
-/*	b2Vec2 playerPoint = player->GetPosition();
+	/*	b2Vec2 playerPoint = player->GetPosition();
 
-	CCPoint oldPlayerPoint = ccp(pt.x, y);
-	//TODO real player position
-	CCPoint playerPointCC = ccp(pt.x-5, y-5);
-	// calling fancy movement track
-	UIElements::fancyMovement(oldPlayerPoint, playerPointCC, this); */
+	 CCPoint oldPlayerPoint = ccp(pt.x, y);
+	 //TODO real player position
+	 CCPoint playerPointCC = ccp(pt.x-5, y-5);
+	 // calling fancy movement track
+	 UIElements::fancyMovement(oldPlayerPoint, playerPointCC, this); */
 
-	 for (CCSetIterator it = touches->begin(); it != touches->end(); it++) {
-	        CCTouch *touch = (CCTouch *)*it;
-	        if (_map.find(touch) == _map.end()) continue;
+	for (CCSetIterator it = touches->begin(); it != touches->end(); it++) {
+		CCTouch *touch = (CCTouch *) *it;
+		if (_map.find(touch) == _map.end())
+			continue;
 
-	        CCBlade *blade = _map[touch];
-	        CCPoint point = convertTouchToNodeSpace(touch);
+		CCBlade *blade = _map[touch];
+		CCPoint point = convertTouchToNodeSpace(touch);
 
-	        cocos2d::CCLog("TouchTrail x:%d, y:%d", int(point.x), int(point.y));
+		cocos2d::CCLog("TouchTrail x:%d, y:%d", int(point.x), int(point.y));
 
-	        //point = ccpAdd(ccpMult(point, 0.5f), ccpMult(touch->getPreviousLocation(), 0.5f));
+		//point = ccpAdd(ccpMult(point, 0.5f), ccpMult(touch->getPreviousLocation(), 0.5f));
 
-	        blade->push(point);
-	    }
+		blade->push(point);
+	}
 
 	return;
 }
@@ -494,13 +503,14 @@ void DeeWorld::ccTouchesEnded(cocos2d::CCSet* pTouches,
 		cocos2d::CCEvent* event) {
 
 	for (CCSetIterator it = pTouches->begin(); it != pTouches->end(); it++) {
-	        CCTouch *touch = (CCTouch *)*it;
-	        if (_map.find(touch) == _map.end()) continue;
+		CCTouch *touch = (CCTouch *) *it;
+		if (_map.find(touch) == _map.end())
+			continue;
 
-	        CCBlade *blade = _map[touch];
-	        blade->autoCleanup();
-	        _map.erase(touch);
-	    }
+		CCBlade *blade = _map[touch];
+		blade->autoCleanup();
+		_map.erase(touch);
+	}
 
 	return;
 	//disabled temporarly - working!
@@ -524,56 +534,57 @@ void DeeWorld::keyBackClicked(void) {
  * contact listener for one-way walls
  */
 void DeeWorld::BeginContact(b2Contact *contact) {
-    CCLog("BeginContact");
-    b2Fixture* fixtureA = contact->GetFixtureA();
-    b2Fixture* fixtureB = contact->GetFixtureB();
+	CCLog("BeginContact");
+	b2Fixture* fixtureA = contact->GetFixtureA();
+	b2Fixture* fixtureB = contact->GetFixtureB();
 
-    this->collisionHandler2(fixtureA, fixtureB);
+	this->collisionHandler2(fixtureA, fixtureB);
 
-    //check if one of the fixtures is the platform
+	//check if one of the fixtures is the platform
 
-    b2Fixture* platformFixture = NULL;
-    b2Fixture* otherFixture = NULL;
-    if ( fixtureA == left || fixtureA == top || fixtureA == right || fixtureA == bottom ) {
-        platformFixture = fixtureA;
-        otherFixture = fixtureB;
-    }
-    else if ( fixtureB == left || fixtureB == top || fixtureB == right || fixtureB == bottom ) {
-        platformFixture = fixtureB;
-        otherFixture = fixtureA;
-    }
+	b2Fixture* platformFixture = NULL;
+	b2Fixture* otherFixture = NULL;
+	if (fixtureA == left || fixtureA == top || fixtureA == right
+			|| fixtureA == bottom) {
+		platformFixture = fixtureA;
+		otherFixture = fixtureB;
+	} else if (fixtureB == left || fixtureB == top || fixtureB == right
+			|| fixtureB == bottom) {
+		platformFixture = fixtureB;
+		otherFixture = fixtureA;
+	}
 
-    if ( !platformFixture )
-        return;
+	if (!platformFixture)
+		return;
 
-    b2Body* platformBody = platformFixture->GetBody();
-    b2Body* otherBody = otherFixture->GetBody();
+	b2Body* platformBody = platformFixture->GetBody();
+	b2Body* otherBody = otherFixture->GetBody();
 
-    int numPoints = contact->GetManifold()->pointCount;
-    b2WorldManifold worldManifold;
-    contact->GetWorldManifold( &worldManifold );
+	int numPoints = contact->GetManifold()->pointCount;
+	b2WorldManifold worldManifold;
+	contact->GetWorldManifold(&worldManifold);
 
-    //check if contact points are moving in the wrong direction
-    for (int i = 0; i < numPoints; i++) {
-        b2Vec2 pointVel =
-        otherBody->GetLinearVelocityFromWorldPoint( worldManifold.points[i] );
-        if ( platformFixture == left && pointVel.x < 0 ) {
-            return;
-            //point is moving left ==> remain solid
-        } else if (platformFixture == right && pointVel.x > 0) {
-            //point is moving right ==> remain solid
-            return;
-        } else if (platformFixture == top && pointVel.y > 0) {
-            //point is moving up ==> remain solid
-            return;
-        } else if (platformFixture == bottom && pointVel.y < 0) {
-            //point is moving down ==> remain solid
-            return;
-        }
-    }
+	//check if contact points are moving in the wrong direction
+	for (int i = 0; i < numPoints; i++) {
+		b2Vec2 pointVel = otherBody->GetLinearVelocityFromWorldPoint(
+				worldManifold.points[i]);
+		if (platformFixture == left && pointVel.x < 0) {
+			return;
+			//point is moving left ==> remain solid
+		} else if (platformFixture == right && pointVel.x > 0) {
+			//point is moving right ==> remain solid
+			return;
+		} else if (platformFixture == top && pointVel.y > 0) {
+			//point is moving up ==> remain solid
+			return;
+		} else if (platformFixture == bottom && pointVel.y < 0) {
+			//point is moving down ==> remain solid
+			return;
+		}
+	}
 
-    //no points are moving downward, contact should not be solid
-    contact->SetEnabled(false);
+	//no points are moving downward, contact should not be solid
+	contact->SetEnabled(false);
 }
 
 /**
@@ -586,29 +597,28 @@ void DeeWorld::collisionHandler2(b2Fixture* fixtureA, b2Fixture* fixtureB) {
 	// gathered with our custom contact listener...
 	std::vector<b2Body *> toDestroy; //list of targets that the player collided with
 
-    // Get the box2d bodies for each object
-    b2Body *bodyA = fixtureA->GetBody();
-    b2Body *bodyB = fixtureB->GetBody();
-    if (bodyA->GetUserData() != NULL && bodyB->GetUserData() != NULL) {
-        CCSprite *spriteA = (CCSprite *) bodyA->GetUserData();
-        CCSprite *spriteB = (CCSprite *) bodyB->GetUserData();
-        int iTagA = spriteA->getTag();
-        int iTagB = spriteB->getTag();
+	// Get the box2d bodies for each object
+	b2Body *bodyA = fixtureA->GetBody();
+	b2Body *bodyB = fixtureB->GetBody();
+	if (bodyA->GetUserData() != NULL && bodyB->GetUserData() != NULL) {
+		CCSprite *spriteA = (CCSprite *) bodyA->GetUserData();
+		CCSprite *spriteB = (CCSprite *) bodyB->GetUserData();
+		int iTagA = spriteA->getTag();
+		int iTagB = spriteB->getTag();
 
-        // Is sprite A a player and sprite B a target?  If so, push the target on a list to be destroyed...
-        if (iTagA == 0 && iTagB == 1) {
-            toDestroy.push_back(bodyB);
-            CCLog("Collision: Player on Target");
-            //this->manageCollision(acid);
-        }
-        // Is sprite A a target and sprite B a player?  If so, push the target on a list to be destroyed...
-        else if (iTagA == 1 && iTagB == 0) {
-            toDestroy.push_back(bodyA);
-            CCLog("Collision: Target on Player");
-            //this->manageCollision(acid);
-        }
-    }
-
+		// Is sprite A a player and sprite B a target?  If so, push the target on a list to be destroyed...
+		if (iTagA == 0 && iTagB == 1) {
+			toDestroy.push_back(bodyB);
+			CCLog("Collision: Player on Target");
+			//this->manageCollision(acid);
+		}
+		// Is sprite A a target and sprite B a player?  If so, push the target on a list to be destroyed...
+		else if (iTagA == 1 && iTagB == 0) {
+			toDestroy.push_back(bodyA);
+			CCLog("Collision: Target on Player");
+			//this->manageCollision(acid);
+		}
+	}
 
 	// Loop through all of the box2d bodies we want to destroy...
 	std::vector<b2Body *>::iterator pos2;
@@ -645,24 +655,24 @@ void DeeWorld::collisionHandler2(b2Fixture* fixtureA, b2Fixture* fixtureB) {
 
 				// show score
 				int scoring = MatrixHelper::getScoreForAminoAcid(wantedAcid,
-                                                                 'A');
+						'A');
 				// add to the current score
 				this->score = scoring + this->score;
 
 				std::string str = static_cast<ostringstream*>(&(ostringstream()
-                                                                << scoring))->str();
+						<< scoring))->str();
 				CCSize visibleSize =
-                CCDirector::sharedDirector()->getVisibleSize();
+						CCDirector::sharedDirector()->getVisibleSize();
 				this->_scoreNumber = CCLabelTTF::create(str.c_str(),
-                                                        "Helvetica", 200, visibleSize, kCCTextAlignmentCenter);
+						"Helvetica", 200, visibleSize, kCCTextAlignmentCenter);
 				this->_scoreNumber->retain();
 				this->_scoreNumber->setPosition(
-                                                ccp(visibleSize.width / 2, visibleSize.height / 2));
+						ccp(visibleSize.width / 2, visibleSize.height / 2));
 				this->_scoreNumber->setColor(ccc3(0, 255, 0));
 				this->addChild(_scoreNumber);
 
 				CCActionInterval * tintToNumber = CCTintTo::create(1.0, 255, 20,
-                                                                   50);
+						50);
 				this->_scoreNumber->runAction(tintToNumber);
 				CCActionInterval * scaleTo = CCScaleTo::create(1.0, 0.01);
 				this->_scoreNumber->runAction(scaleTo);
@@ -671,18 +681,19 @@ void DeeWorld::collisionHandler2(b2Fixture* fixtureA, b2Fixture* fixtureB) {
 				//label->setString("y");
 
 				CCFiniteTimeAction* actionMove = CCMoveTo::create((float) 0.8,
-                                                                  ccp(visibleSize.height, visibleSize.width));
+						ccp(visibleSize.height, visibleSize.width));
 
 				// Sebi: we have to add some dummy parameters otherwise it fails on Android
 				CCSequence *readySequence = CCSequence::create(actionMove, NULL,
-                                                               NULL);
+				NULL);
 				label->runAction(readySequence);
 
 				//delete acid;
 				//break;
 				_code.pop();
 
-				UIElements::createNewAminoAcid(this, MatrixHelper::getRandomAminoAcid());
+				UIElements::createNewAminoAcid(this,
+						MatrixHelper::getRandomAminoAcid());
 			}
 
 			//this->code.pMatrixHelper::getRandomAminoAcid();
@@ -692,7 +703,7 @@ void DeeWorld::collisionHandler2(b2Fixture* fixtureA, b2Fixture* fixtureB) {
 
 		// SEBI: not possible on Android -> error
 		// Destroy the Box2D body as well
-	//	_b2dWorld->DestroyBody(body);
+		//	_b2dWorld->DestroyBody(body);
 	}
 
 	//    // If we've destroyed anything, play an amusing and malicious sound effect!  ;]
@@ -703,8 +714,8 @@ void DeeWorld::collisionHandler2(b2Fixture* fixtureA, b2Fixture* fixtureB) {
 }
 
 void DeeWorld::EndContact(b2Contact* contact) {
-    //reset the default state of the contact in case it comes back for more
-    contact->SetEnabled(true);
+	//reset the default state of the contact in case it comes back for more
+	contact->SetEnabled(true);
 }
 
 /**
@@ -723,13 +734,12 @@ void DeeWorld::EndContact(b2Contact* contact) {
 b2Body* DeeWorld::CreateBox2DBodyForSprite(cocos2d::CCSprite *sprite,
 		int iNumVerts, b2Vec2 verts[]) {
 
-
 	if (_b2dWorld == NULL) {
 		return NULL;
 	}
-    if(iNumVerts > 8) {
-        CCLog("Number of vertices exceeds 8!");
-    }
+	if (iNumVerts > 8) {
+		CCLog("Number of vertices exceeds 8!");
+	}
 
 	CCPoint pos = sprite->getPosition();
 	CCSize size = sprite->getContentSize();
@@ -750,7 +760,7 @@ b2Body* DeeWorld::CreateBox2DBodyForSprite(cocos2d::CCSprite *sprite,
 
 	if (iNumVerts != 0) {
 		//Apparently it crashes somewhere here
-        spriteShape.Set(verts, iNumVerts);
+		spriteShape.Set(verts, iNumVerts);
 		spriteBody->CreateFixture(&spriteShapeDef);
 	} else {
 		spriteShape.SetAsBox(size.width / PTM_RATIO / 2,
@@ -790,11 +800,11 @@ void DeeWorld::tick(float delta) {
 			CCSprite *sprite = (CCSprite *) b->GetUserData();
 
 			//update sprites to match the simulation
-		sprite->setPosition(
+			sprite->setPosition(
 					ccp(b->GetPosition().x * PTM_RATIO,
 							b->GetPosition().y * PTM_RATIO));
 
-		// TODO: do we really want to rotate the player?
+			// TODO: do we really want to rotate the player?
 			sprite->setRotation(-1 * CC_RADIANS_TO_DEGREES(b->GetAngle()));
 		}
 	}
@@ -803,7 +813,7 @@ void DeeWorld::tick(float delta) {
 void DeeWorld::manageCollision(AminoAcid* aa) {
 	//TODO
 
-	CCLog("Collision with %c",aa->getType());
+	CCLog("Collision with %c", aa->getType());
 
 	return;
 }
