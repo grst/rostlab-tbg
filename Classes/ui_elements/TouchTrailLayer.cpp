@@ -54,6 +54,7 @@ void TouchTrailLayer::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
         blade->setColor(ccc3(255,0,0));
         blade->setOpacity(100);
         blade->setDrainInterval(1.0/40);
+        blade->setZOrder(2);
         
         CCPoint point = convertTouchToNodeSpace(touch);
 		blade->push(point);
@@ -68,8 +69,12 @@ void TouchTrailLayer::ccTouchesMoved(CCSet *pTouches, CCEvent *pEvent)
         
         CCBlade *blade = _map[touch];
         CCPoint point = convertTouchToNodeSpace(touch);
-        point = ccpAdd(ccpMult(point, 0.5f), ccpMult(touch->getPreviousLocation(), 0.5f));
-		blade->push(point);
+
+        cocos2d::CCLog("TouchTrail x:%d, y:%d", int(point.x), int(point.y));
+
+        //point = ccpAdd(ccpMult(point, 0.5f), ccpMult(touch->getPreviousLocation(), 0.5f));
+
+        blade->push(point);
     }
 }
 

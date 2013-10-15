@@ -186,7 +186,8 @@ void CCBlade::push(const CCPoint &point)
 {
     CGPoint p = cgp(point.x, point.y);
     if (CC_CONTENT_SCALE_FACTOR() != 1.0) {
-        p = cgpMult(p, CC_CONTENT_SCALE_FACTOR());
+    	// Sebi: this doesn't work on Android , maybe we will need it in future for iPhone
+        // p = cgpMult(p, CC_CONTENT_SCALE_FACTOR());
     }
     
     if (_path.size() == 0) {
@@ -194,6 +195,8 @@ void CCBlade::push(const CCPoint &point)
         return;
     }
     
+    //cocos2d::CCLog("CCBlade point x:%d, y:%d", int(p.x), int(p.y));
+
     CGPoint first = _path[0];
     float distance = cgpDistance(p, first);
     if (distance < DISTANCE_TO_INTERPOLATE) {
