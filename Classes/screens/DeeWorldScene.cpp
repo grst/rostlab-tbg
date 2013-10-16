@@ -13,7 +13,8 @@ USING_NS_CC;
 #define PTM_RATIO 32.0
 #define NUMBER_START_TARGETS 8
 #define INTRO_TIME_SECONDS 1
-#define TOLERANCE_PLAYER -20
+#define TOLERANCE_PLAYER -30
+#define MS_TIME_PLAYER_BLOCKED 3000
 #define PLAYER_IMAGE "Player.png"
 #define kFileStreak "streak.png"
 
@@ -116,6 +117,8 @@ bool DeeWorld::init() {
 
 	CCLog("init successful");
 
+	startTime = HelperFunctions::nowInSeconds();
+
 	return true;
 }
 
@@ -217,6 +220,10 @@ void DeeWorld::initWorld() {
  * initialiye Plazer box2d body and corresponding CCSprite
  */
 void DeeWorld::initPlayer() {
+
+	// set acid type of player
+	playerAcid = 'A';
+
 	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 	//player
 	CCSprite *sPlayer = CCSprite::create(PLAYER_IMAGE);
@@ -252,6 +259,10 @@ void DeeWorld::initPlayer() {
  * initialize Information UI-Elements like score, timer, and amino-acid-code
  */
 void DeeWorld::initInfoUI() {
+
+	//reset AminoHit
+	lastAminoHitTime = 0.0f;
+
 	this->score = 0;
 	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 
@@ -641,18 +652,17 @@ void DeeWorld::collisionHandler2(b2Fixture* fixtureA, b2Fixture* fixtureB) {
 
 			//ATTETION we don't delete the sprite out of the array, this might cause memory leaks
 
-			// TODO only one scoring every five seconds - block it otherwise?
+			// block our player for 1.5s
+			if (_code.size() > 0 && abs(HelperFunctions::nowInMilliSeconds() - lastAminoHitTime) > MS_TIME_PLAYER_BLOCKED) {
+				lastAminoHitTime = HelperFunctions::nowInMilliSeconds();
 
-			if (_code.size() > 0) {
 				BoardAcid * acid = this->_code.front();
 
 				char wantedAcid = acid->acid;
-				// TODO change this
-				char playerAcid = 'A';
 
 				// show score
 				int scoring = MatrixHelper::getScoreForAminoAcid(wantedAcid,
-						'A');
+						playerAcid);
 				// add to the current score
 				this->score = scoring + this->score;
 
@@ -665,17 +675,27 @@ void DeeWorld::collisionHandler2(b2Fixture* fixtureA, b2Fixture* fixtureB) {
 				this->_scoreNumber->retain();
 				this->_scoreNumber->setPosition(
 						ccp(visibleSize.width / 2, visibleSize.height / 2));
-				this->_scoreNumber->setColor(ccc3(0, 255, 0));
+
+				// generates a nice color according to the score
+				this->_scoreNumber->setColor(
+						UIElements::getColorForScore(scoring));
+
 				this->addChild(_scoreNumber);
 
-				CCActionInterval * tintToNumber = CCTintTo::create(1.0, 255, 20,
-						50);
+				CCActionInterval * tintToNumber;
+				if (scoring > 0) {
+					tintToNumber = CCTintTo::create(1.0, 0, 255, 0);
+				} else if (scoring < 0) {
+					tintToNumber = CCTintTo::create(1.0, 255, 0, 0);
+				} else {
+					tintToNumber = CCTintTo::create(1.5, 0, 0, 0);
+				}
+
 				this->_scoreNumber->runAction(tintToNumber);
 				CCActionInterval * scaleTo = CCScaleTo::create(1.0, 0.01);
 				this->_scoreNumber->runAction(scaleTo);
 
 				cocos2d::CCLabelTTF* label = acid->_label;
-				//label->setString("y");
 
 				CCFiniteTimeAction* actionMove = CCMoveTo::create((float) 0.8,
 						ccp(visibleSize.height, visibleSize.width));
@@ -685,8 +705,7 @@ void DeeWorld::collisionHandler2(b2Fixture* fixtureA, b2Fixture* fixtureB) {
 				NULL);
 				label->runAction(readySequence);
 
-				//delete acid;
-				//break;
+				// TODO delete acid;
 				_code.pop();
 
 				UIElements::createNewAminoAcid(this,

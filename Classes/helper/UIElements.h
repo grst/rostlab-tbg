@@ -19,6 +19,7 @@ public:
 
 	static void fancyMovement(cocos2d::CCPoint pt,cocos2d::CCPoint playerPoint, DeeWorld* scene);
 	static void createNewAminoAcid(DeeWorld* scene, char c);
+	static ccColor3B getColorForScore(int scoring);
 };
 
 #endif /* UIELEMENTS_H_ */

@@ -15,7 +15,9 @@
 #include <vector>
 #include <sstream>
 #include <stdio.h>
+#include <time.h>
 #include "math.h"
+#include "cocos2d.h"
 
 class HelperFunctions {
 public:
@@ -23,5 +25,7 @@ public:
     static float randomValueBetween(float low, float high);
     static double radian(double degrees);
     static std::vector<std::string> split(const std::string &s, char delim);
+    static long nowInSeconds();
+    static long nowInMilliSeconds();
 };
 #endif /* defined(__tbg__HelperFunctions__) */

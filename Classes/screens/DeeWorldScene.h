@@ -93,9 +93,15 @@ private:
 	void manageCollision(AminoAcid* acid);
 	void countdown();
 	void updateInfoUI();
+
+
+
     void collisionHandler2(b2Fixture* fixtureA, b2Fixture* fixtureB); //temp method
 	int score;
 	int timer;
+	char playerAcid;
+	double startTime;
+	long lastAminoHitTime;
 
 	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _timerLabel, timerLabel);
 	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _scoreLabel, scoreLabel);

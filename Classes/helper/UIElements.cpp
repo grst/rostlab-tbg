@@ -124,3 +124,51 @@ void UIElements::createNewAminoAcid(DeeWorld* scene, char c) {
 	scene->_code.push(acid);
 }
 
+ccColor3B UIElements::getColorForScore(int scoring) {
+	ccColor3B colorScore = ccc3(0, 255, 0);
+	if (scoring > 5) {
+		colorScore = ccc3(0, 255, 0);
+	}
+
+	if (scoring < 5) {
+		colorScore = ccc3(0, 255, 0);
+	}
+
+	switch (scoring) {
+	case 5:
+		colorScore = ccc3(0, 255, 0);
+		break;
+	case 4:
+		colorScore = ccc3(0, 200, 0);
+		break;
+	case 3:
+		colorScore = ccc3(0, 160, 0);
+		break;
+	case 2:
+		colorScore = ccc3(0, 100, 0);
+		break;
+	case 1:
+		colorScore = ccc3(0, 50, 0);
+		break;
+	case 0:
+		colorScore = ccc3(0, 0, 255);
+		break;
+	case -1:
+		colorScore = ccc3(50, 0, 0);
+		break;
+	case -2:
+		colorScore = ccc3(100, 0, 0);
+		break;
+	case -3:
+		colorScore = ccc3(160, 0, 0);
+		break;
+	case -4:
+		colorScore = ccc3(200, 0, 0);
+		break;
+	case -5:
+		colorScore = ccc3(255, 0, 0);
+		break;
+	}
+	return colorScore;
+}
+
