@@ -99,7 +99,6 @@ private:
     void collisionHandler2(b2Fixture* fixtureA, b2Fixture* fixtureB); //temp method
 	int score;
 	int timer;
-	char playerAcid;
 	double startTime;
 	long lastAminoHitTime;
 

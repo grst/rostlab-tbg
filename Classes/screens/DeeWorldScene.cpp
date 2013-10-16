@@ -221,8 +221,6 @@ void DeeWorld::initWorld() {
  */
 void DeeWorld::initPlayer() {
 
-	// set acid type of player
-	playerAcid = 'A';
 
 	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 	//player
@@ -650,6 +648,8 @@ void DeeWorld::collisionHandler2(b2Fixture* fixtureA, b2Fixture* fixtureB) {
 			CCLog("pos.x: %d", int(sprite->getPosition().x));
 			//this->removeChild(sprite);
 
+
+
 			//ATTETION we don't delete the sprite out of the array, this might cause memory leaks
 
 			// block our player for 1.5s
@@ -659,10 +659,19 @@ void DeeWorld::collisionHandler2(b2Fixture* fixtureA, b2Fixture* fixtureB) {
 				BoardAcid * acid = this->_code.front();
 
 				char wantedAcid = acid->acid;
+				char hitAcid = 'A';
+
+				// trying to cast to AminoAcid
+				AminoAcid * pScoredAcid = (AminoAcid *) sprite;
+				if(pScoredAcid != NULL){
+					if(pScoredAcid->getType() != NULL){
+						hitAcid = pScoredAcid->getType();
+					}
+				}
 
 				// show score
 				int scoring = MatrixHelper::getScoreForAminoAcid(wantedAcid,
-						playerAcid);
+						hitAcid);
 				// add to the current score
 				this->score = scoring + this->score;
 
