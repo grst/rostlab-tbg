@@ -399,8 +399,23 @@ void DeeWorld::addTarget() {
 
 	this->addChild(sTarget);
 
+    //Temp: static polygon
+    //TODO: put in MatrixHelperClass or read from file
+    //row 1, col 1
+    int num = 8;
+    b2Vec2 verts[] = {
+        b2Vec2(6.0f / PTM_RATIO, 42.0f / PTM_RATIO),
+        b2Vec2(-24.0f / PTM_RATIO, 32.0f / PTM_RATIO),
+        b2Vec2(-38.5f / PTM_RATIO, -15.2f / PTM_RATIO),
+        b2Vec2(-29.5f / PTM_RATIO, -28.0f / PTM_RATIO),
+        b2Vec2(4.0f / PTM_RATIO, -39.0f / PTM_RATIO),
+        b2Vec2(39.7f / PTM_RATIO, -9.0f / PTM_RATIO),
+        b2Vec2(38.5f / PTM_RATIO, 23.2f / PTM_RATIO),
+        b2Vec2(19.7f / PTM_RATIO, 31.5f / PTM_RATIO)
+    };
+    
 	//Move Target
-	b2Body* target = CreateBox2DBodyForSprite(sTarget, 0, NULL);
+	b2Body* target = CreateBox2DBodyForSprite(sTarget, num, verts);
 	target->ApplyLinearImpulse(impulse, target->GetPosition());
 
 }
