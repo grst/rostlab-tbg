@@ -21,6 +21,38 @@ float HelperFunctions::randomValueBetween(float low, float high) {
 	return (((float) arc4random() / 0xFFFFFFFFu) * (high - low)) + low;
 }
 
+/**
+ * scale CCSprite to a fixed width and/or height
+ * 
+ * if width == 0, the sprite will be scale proportionally according to the height, 
+ * if height == 0, vice versa
+ */
+void HelperFunctions::resizseSprite(cocos2d::CCSprite* sprite, float width, float height) {
+    float contentHeight = sprite->getContentSize().height;
+    float contentWidth = sprite->getContentSize().width;
+    if(width == 0.0f && height == 0.0f) {
+        return;
+    } else if(width == 0.0f) {
+        //scale proportionally according to height
+        if(contentHeight == 0.0f) {
+            return;
+        }
+        sprite->setScale(height/contentHeight);
+    } else if(height == 0.0f) {
+        //scale proportionally according to width
+        if(contentWidth == 0.0f) {
+            return;
+        }
+        sprite->setScale(width/contentWidth);
+    } else {
+        if(contentWidth == 0.0f || contentHeight == 0.0f){
+            return;
+        }
+        sprite->setScaleX(width/contentWidth);
+        sprite->setScaleY(height/contentHeight);
+    }
+}
+
 /*
  * UNTESTED
  */

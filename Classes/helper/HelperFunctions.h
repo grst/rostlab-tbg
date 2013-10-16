@@ -27,5 +27,6 @@ public:
     static std::vector<std::string> split(const std::string &s, char delim);
     static long nowInSeconds();
     static long nowInMilliSeconds();
+    static void resizseSprite(cocos2d::CCSprite* sprite, float width, float height);
 };
 #endif /* defined(__tbg__HelperFunctions__) */

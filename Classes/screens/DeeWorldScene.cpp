@@ -208,24 +208,21 @@ void DeeWorld::initWorld() {
 	groundBodyDef.position.Set(0, 0);
 
 	b2Body* groundBody = _b2dWorld->CreateBody(&groundBodyDef);
-	b2EdgeShape groundEdge;
+	b2PolygonShape groundEdge;
 	b2FixtureDef boxShapeDef;
 	boxShapeDef.shape = &groundEdge;
 
-	//wall definitions
-	groundEdge.Set(b2Vec2(0, 0), b2Vec2(visibleSize.width / PTM_RATIO, 0));
+    //wall definitions
+	groundEdge.SetAsBox(visibleSize.width / PTM_RATIO, 20 / PTM_RATIO, b2Vec2(visibleSize.width / PTM_RATIO / 2, 0), 0);
 	bottom = groundBody->CreateFixture(&boxShapeDef);
-	groundEdge.Set(b2Vec2(0, 0), b2Vec2(0, visibleSize.height / PTM_RATIO));
+	groundEdge.SetAsBox(20/PTM_RATIO, visibleSize.height/PTM_RATIO, b2Vec2(0, visibleSize.height / PTM_RATIO /2), 0);
 	left = groundBody->CreateFixture(&boxShapeDef);
-	groundEdge.Set(b2Vec2(0, visibleSize.height / PTM_RATIO),
-			b2Vec2(visibleSize.width / PTM_RATIO,
-					visibleSize.height / PTM_RATIO));
+	groundEdge.SetAsBox(visibleSize.width / PTM_RATIO, 20/PTM_RATIO, b2Vec2(visibleSize.width / PTM_RATIO / 2, visibleSize.height / PTM_RATIO), 0);
 	top = groundBody->CreateFixture(&boxShapeDef);
-	groundEdge.Set(
-			b2Vec2(visibleSize.width / PTM_RATIO,
-					visibleSize.height / PTM_RATIO),
-			b2Vec2(visibleSize.width / PTM_RATIO, 0));
+	groundEdge.SetAsBox(20/PTM_RATIO, visibleSize.height/PTM_RATIO,
+                        b2Vec2(visibleSize.width /PTM_RATIO, visibleSize.height / PTM_RATIO/2), 0);
 	right = groundBody->CreateFixture(&boxShapeDef);
+
 }
 
 /**
@@ -237,7 +234,7 @@ void DeeWorld::initPlayer() {
 	//player
 	CCSprite *sPlayer = CCSprite::create(PLAYER_IMAGE);
 	sPlayer->setPosition(ccp(visibleSize.width / 2, visibleSize.height / 2));
-	sPlayer->setScale(0.5f);
+    HelperFunctions::resizseSprite(sPlayer, 32, 0);
 
 	float x = 1 / PTM_RATIO / 8;
 	float y = 1 / PTM_RATIO / 8;
@@ -356,7 +353,7 @@ void DeeWorld::createTargets() {
  */
 void DeeWorld::addTarget() {
 	AminoAcid *sTarget = AminoAcid::create();
-
+    HelperFunctions::resizseSprite(sTarget, 64, 0);
 	//Place target in a randomly picked corner.
 	int startX, startY;
 	int corner = arc4random() % 4;
@@ -402,16 +399,17 @@ void DeeWorld::addTarget() {
     //Temp: static polygon
     //TODO: put in MatrixHelperClass or read from file
     //row 1, col 1
+    float scaleRatio = 1/PTM_RATIO/2;
     int num = 8;
     b2Vec2 verts[] = {
-        b2Vec2(6.0f / PTM_RATIO, 42.0f / PTM_RATIO),
-        b2Vec2(-24.0f / PTM_RATIO, 32.0f / PTM_RATIO),
-        b2Vec2(-38.5f / PTM_RATIO, -15.2f / PTM_RATIO),
-        b2Vec2(-29.5f / PTM_RATIO, -28.0f / PTM_RATIO),
-        b2Vec2(4.0f / PTM_RATIO, -39.0f / PTM_RATIO),
-        b2Vec2(39.7f / PTM_RATIO, -9.0f / PTM_RATIO),
-        b2Vec2(38.5f / PTM_RATIO, 23.2f / PTM_RATIO),
-        b2Vec2(19.7f / PTM_RATIO, 31.5f / PTM_RATIO)
+        b2Vec2(6.0f * scaleRatio, 42.0f * scaleRatio),
+        b2Vec2(-24.0f * scaleRatio, 32.0f * scaleRatio),
+        b2Vec2(-38.5f * scaleRatio, -15.2f * scaleRatio),
+        b2Vec2(-29.5f * scaleRatio, -28.0f * scaleRatio),
+        b2Vec2(4.0f * scaleRatio, -39.0f * scaleRatio),
+        b2Vec2(39.7f * scaleRatio, -9.0f * scaleRatio),
+        b2Vec2(38.5f * scaleRatio, 23.2f * scaleRatio),
+        b2Vec2(19.7f * scaleRatio, 31.5f * scaleRatio)
     };
     
 	//Move Target
@@ -563,6 +561,7 @@ void DeeWorld::BeginContact(b2Contact *contact) {
 	b2Fixture* fixtureB = contact->GetFixtureB();
 
 	this->collisionHandler2(fixtureA, fixtureB);
+    //return;
 
 	//check if one of the fixtures is the platform
 
@@ -590,22 +589,42 @@ void DeeWorld::BeginContact(b2Contact *contact) {
 
 	//check if contact points are moving in the wrong direction
 	for (int i = 0; i < numPoints; i++) {
-		b2Vec2 pointVel = otherBody->GetLinearVelocityFromWorldPoint(
-				worldManifold.points[i]);
-		if (platformFixture == left && pointVel.x < 0) {
-			return;
-			//point is moving left ==> remain solid
-		} else if (platformFixture == right && pointVel.x > 0) {
-			//point is moving right ==> remain solid
-			return;
-		} else if (platformFixture == top && pointVel.y > 0) {
-			//point is moving up ==> remain solid
-			return;
-		} else if (platformFixture == bottom && pointVel.y < 0) {
-			//point is moving down ==> remain solid
-			return;
+		b2Vec2 pointVelPlatform =
+        platformBody->GetLinearVelocityFromWorldPoint( worldManifold.points[i] );
+        b2Vec2 pointVelOther =
+        otherBody->GetLinearVelocityFromWorldPoint( worldManifold.points[i] );
+        b2Vec2 relativeVel = platformBody->GetLocalVector( pointVelOther - pointVelPlatform );
+        
+        //borderline case, moving only slightly out of platform
+        b2Vec2 relativePoint = platformBody->GetLocalPoint( worldManifold.points[i] );
+        float platformFaceY = 0.5f;//front of platform, from fixture definition :(
+        
+        float velocity = 0.0f;
+        float point = 0.0f;
+        //adapt velocity depending on with which wall the item collides
+        if (platformFixture == left) {
+			velocity = relativeVel.x;
+            point = relativePoint.x;
+		} else if (platformFixture == right) {
+			velocity = -relativeVel.x;
+            point = -relativePoint.x;
+		} else if (platformFixture == top) {
+			velocity = -relativeVel.y;
+            point = -relativePoint.y;
+		} else if (platformFixture == bottom) {
+			velocity = relativeVel.y;
+            point = relativePoint.y;
 		}
-	}
+        
+		if ( velocity < -1 ) { //if moving down faster than 1 m/s, handle as before
+            return;//point is moving into platform, leave contact solid and exit
+        } else if ( velocity < 1 ) { //if moving slower than 1 m/s
+            if ( point > 20/PTM_RATIO - 0.05 )
+                return;//contact point is less than 5cm inside front face of platfrom
+        } else {
+            ;//moving up faster than 1 m/s
+        }
+    }
 
 	//no points are moving downward, contact should not be solid
 	contact->SetEnabled(false);
