@@ -28,44 +28,44 @@
 
 USING_NS_CC;
 
-static inline CGPoint cgpSub(const CGPoint& v1, const CGPoint& v2)
+static inline CBPoint cgpSub(const CBPoint& v1, const CBPoint& v2)
 {
     return cgp(v1.x - v2.x, v1.y - v2.y);
 }
 
-static inline float cgpDot(const CGPoint& v1, const CGPoint& v2)
+static inline float cgpDot(const CBPoint& v1, const CBPoint& v2)
 {
     return v1.x*v2.x + v1.y*v2.y;
 }
 
-static inline float cgpLengthSQ(const CGPoint& v)
+static inline float cgpLengthSQ(const CBPoint& v)
 {
     return cgpDot(v, v);
 }
 
-static inline float cgpLength(const CGPoint& v)
+static inline float cgpLength(const CBPoint& v)
 {
     return sqrtf(cgpLengthSQ(v));
 }
 
-static inline float cgpDistance(const CGPoint& v1, const CGPoint& v2)
+static inline float cgpDistance(const CBPoint& v1, const CBPoint& v2)
 {
     return cgpLength(cgpSub(v1, v2));
 }
 
-static inline CGPoint cgpMult(const CGPoint& v, const float s)
+static inline CBPoint cgpMult(const CBPoint& v, const float s)
 {
     return cgp(v.x*s, v.y*s);
 }
 
-static inline CGPoint cgpAdd(const CGPoint& v1, const CGPoint& v2)
+static inline CBPoint cgpAdd(const CBPoint& v1, const CBPoint& v2)
 {
     return cgp(v1.x + v2.x, v1.y + v2.y);
 }
 
-static inline CGPoint cgpRotateByAngle(const CGPoint& v, const CGPoint& pivot, float angle)
+static inline CBPoint cgpRotateByAngle(const CBPoint& v, const CBPoint& pivot, float angle)
 {
-    CGPoint r = cgpSub(v, pivot);
+    CBPoint r = cgpSub(v, pivot);
     float cosa = cosf(angle), sina = sinf(angle);
     float t = r.x;
     r.x = t*cosa - r.y*sina + pivot.x;
@@ -73,7 +73,7 @@ static inline CGPoint cgpRotateByAngle(const CGPoint& v, const CGPoint& pivot, f
     return r;
 }
 
-static inline float angle(const CGPoint &vect)
+static inline float angle(const CBPoint &vect)
 {
     if (vect.x == 0.0 && vect.y == 0.0) {
         return 0;
@@ -89,7 +89,7 @@ static inline float angle(const CGPoint &vect)
     return vect.x < 0 ? angle + M_PI : angle;
 }
 
-static inline void populateBorderVertices(const CGPoint &p1, const CGPoint &p2, float d, CGPoint *o1, CGPoint *o2)
+static inline void populateBorderVertices(const CBPoint &p1, const CBPoint &p2, float d, CBPoint *o1, CBPoint *o2)
 {
     float l = cgpDistance(p1, p2);
     float a = angle(cgpSub(p2, p1));
@@ -97,7 +97,7 @@ static inline void populateBorderVertices(const CGPoint &p1, const CGPoint &p2, 
     *o2 = cgpRotateByAngle(cgp(p1.x+l, p1.y-d), p1, a);
 }
 
-static inline void CGPointSet(CGPoint *p, float x, float y)
+static inline void CBPointSet(CBPoint *p, float x, float y)
 {
     p->x = x;
     p->y = y;
@@ -134,8 +134,8 @@ CCBlade::CCBlade(const char *filePath, float stroke, int pointLimit)
     
     // head point => 1 vertex, body point => 2 vertices, tail point => 1 vertex
     int vertexCount = 2*pointLimit-2;
-    _vertices = (CGPoint *)calloc(vertexCount, sizeof(CGPoint));
-    _texCoords = (CGPoint *)calloc(vertexCount, sizeof(CGPoint));
+    _vertices = (CBPoint *)calloc(vertexCount, sizeof(CBPoint));
+    _texCoords = (CBPoint *)calloc(vertexCount, sizeof(CBPoint));
     _autoCleanup = false;
     
     // shader stuff
@@ -155,36 +155,36 @@ void CCBlade::populateVertices()
     // head
     int i = 0;
     _vertices[0] = _path[i];
-    CGPointSet(&_texCoords[0], 0.0, 0.5);
+    CBPointSet(&_texCoords[0], 0.0, 0.5);
     i++;
     
     // body
     float strokeFactor = _stroke / _path.size();
-    CGPoint previous = _vertices[0];
+    CBPoint previous = _vertices[0];
     while (i < _path.size()-1) {
-        CGPoint current = _path[i];
+        CBPoint current = _path[i];
         populateBorderVertices(previous, current, _stroke-i*strokeFactor, &_vertices[2*i-1], &_vertices[2*i]);
-        CGPointSet(&_texCoords[2*i-1], 0.5, 1.0);
-        CGPointSet(&_texCoords[2*i], 0.5, 0.0);
+        CBPointSet(&_texCoords[2*i-1], 0.5, 1.0);
+        CBPointSet(&_texCoords[2*i], 0.5, 0.0);
         
         previous = current;
         i++;
     }
     
     // modified for head
-    CGPointSet(&_texCoords[1], 0.25, 1.0);
-    CGPointSet(&_texCoords[2], 0.25, 0.0);
+    CBPointSet(&_texCoords[1], 0.25, 1.0);
+    CBPointSet(&_texCoords[2], 0.25, 0.0);
     
     // tail
     _vertices[2*i-1] = _path[i];
-    CGPointSet(&_texCoords[2*i-1], 0.75, 0.5);
+    CBPointSet(&_texCoords[2*i-1], 0.75, 0.5);
 }
 
 #define DISTANCE_TO_INTERPOLATE 10
 
 void CCBlade::push(const CCPoint &point)
 {
-    CGPoint p = cgp(point.x, point.y);
+    CBPoint p = cgp(point.x, point.y);
     if (CC_CONTENT_SCALE_FACTOR() != 1.0) {
     	// Sebi: this doesn't work on Android , maybe we will need it in future for iPhone
         // p = cgpMult(p, CC_CONTENT_SCALE_FACTOR());
@@ -197,13 +197,13 @@ void CCBlade::push(const CCPoint &point)
     
     //cocos2d::CCLog("CCBlade point x:%d, y:%d", int(p.x), int(p.y));
 
-    CGPoint first = _path[0];
+    CBPoint first = _path[0];
     float distance = cgpDistance(p, first);
     if (distance < DISTANCE_TO_INTERPOLATE) {
         _path.insert(_path.begin(), p);
     } else {
         int count = distance / DISTANCE_TO_INTERPOLATE + 1;
-        const CGPoint &interval = cgpMult(cgpSub(p, first), 1.0/count);
+        const CBPoint &interval = cgpMult(cgpSub(p, first), 1.0/count);
         for (int i = 1; i <= count; i++) {
             _path.insert(_path.begin(), cgpAdd(first, cgpMult(interval, i)));
         }

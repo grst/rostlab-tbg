@@ -29,16 +29,16 @@
 
 #include "cocos2d.h"
 
-typedef cocos2d::ccVertex2F CGPoint;
+typedef cocos2d::ccVertex2F CBPoint;
 #define cgp(__X__, __Y__) vertex2(__X__, __Y__)
 
 class CCBlade : public cocos2d::CCNodeRGBA {
 private:
     CC_SYNTHESIZE_RETAIN(cocos2d::CCTexture2D *, _texture, Texture);
     int _pointLimit;
-    std::vector<CGPoint> _path;
-    CGPoint *_vertices;
-    CGPoint *_texCoords;
+    std::vector<CBPoint> _path;
+    CBPoint *_vertices;
+    CBPoint *_texCoords;
     bool _autoCleanup;
     // shader stuff
     GLint _uniformColor;

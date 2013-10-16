@@ -49,10 +49,7 @@ AminoAcid* AminoAcid::create() {
  */
 AminoAcid* AminoAcid::create(char type){
     AminoAcid *pobSprite = new AminoAcid();
-    if (pobSprite && pobSprite->initWithFile(
-                                        MatrixHelper::getImagePathForAcid(type),
-                                        CCRectMake(0, 0, 50, 50)))
-    {
+    if (pobSprite && pobSprite->initWithFile(MatrixHelper::getImagePathForAcid(type))) {
         pobSprite->type = type;
         pobSprite->direction = -1; //negative default value.
         pobSprite->setTag(1);
@@ -60,7 +57,9 @@ AminoAcid* AminoAcid::create(char type){
         pobSprite->autorelease();
         
         return pobSprite;
-    }
-    CC_SAFE_DELETE(pobSprite);
+    } else {
+        CC_SAFE_DELETE(pobSprite);
+        return NULL;
+    }    
 }
 
