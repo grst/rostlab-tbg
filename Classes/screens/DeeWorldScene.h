@@ -33,6 +33,10 @@ public:
 
 	// there's no 'id' in cpp, so we recommand to return the exactly class pointer
 	static cocos2d::CCScene* scene();
+	static cocos2d::CCScene* scene(std::string sequence);
+
+
+	void setSequence(std::string seq);
 
 	// a selector callback
 	virtual void menuCloseCallback(cocos2d::CCObject* pSender);
@@ -43,6 +47,8 @@ public:
 	void createTargets();
 
 	void gameLogic(float dt);
+    char getNextAminoAcid();
+    void gameEnd();
     
     int getEdge(CCSprite* wall);
 
@@ -66,6 +72,8 @@ public:
     
     // delete this property
 	std::queue<CCDrawNode*> movementLines;
+
+
 	std::queue<BoardAcid*> _code;
 
 
@@ -75,7 +83,6 @@ protected:
     //the walls around the screen
     b2Fixture *left, *top, *right, *bottom;
 
-	std::string aminoAcidSeq;
 
 	void addTarget();
 
@@ -87,6 +94,7 @@ private:
     void initPlayer();
     void initInfoUI();
     void initBackground();
+
     
     void pauseAction(CCObject* pSender);
 
@@ -101,6 +109,7 @@ private:
 	int timer;
 	double startTime;
 	long lastAminoHitTime;
+	std::string aminoSequence;
 
 	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _timerLabel, timerLabel);
 	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _scoreLabel, scoreLabel);

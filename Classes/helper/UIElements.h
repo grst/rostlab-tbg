@@ -18,7 +18,7 @@ public:
 	virtual ~UIElements();
 
 	static void fancyMovement(cocos2d::CCPoint pt,cocos2d::CCPoint playerPoint, DeeWorld* scene);
-	static void createNewAminoAcid(DeeWorld* scene, char c);
+	static void createNewAminoAcid(DeeWorld* scene);
 	static ccColor3B getColorForScore(int scoring);
 };
 

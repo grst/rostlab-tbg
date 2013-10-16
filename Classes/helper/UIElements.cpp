@@ -76,28 +76,39 @@ void UIElements::fancyMovement(cocos2d::CCPoint pt,
 	node->runAction(move);
 }
 
-void UIElements::createNewAminoAcid(DeeWorld* scene, char c) {
+void UIElements::createNewAminoAcid(DeeWorld* scene) {
+
+	char nextAcid = scene->getNextAminoAcid();
 	BoardAcid * acid = new BoardAcid();
-	acid->setAcid(c);
 
-	char tt[] = "t";
-	tt[0] = c;
+	if (nextAcid == '0') {
+		// TODO
 
-	std::string str = string(tt);
+	} else {
 
-	CCLog("adding Acid %c", c);
+		acid->setAcid(nextAcid);
 
-	// Create the actions
-	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
+		char tt[] = "t";
+		tt[0] = nextAcid;
 
-	CCLabelTTF * label = CCLabelTTF::create(str.c_str(), "Helvetica", 30,
-			CCSizeMake(30, visibleSize.height * 1 / 6), kCCTextAlignmentRight);
-	acid->_label = label;
+		std::string str = string(tt);
 
-	acid->_label->setPosition(
-			ccp(visibleSize.width - 20, visibleSize.height * 1 / 7));
-	acid->_label->setColor(ccc3(20, 20, 255));
-	scene->addChild(acid->_label);
+		CCLog("adding Acid %c", nextAcid);
+
+		// Create the actions
+		CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
+
+		CCLabelTTF * label = CCLabelTTF::create(str.c_str(), "Helvetica", 30,
+				CCSizeMake(30, visibleSize.height * 1 / 6),
+				kCCTextAlignmentRight);
+		acid->_label = label;
+
+		acid->_label->setPosition(
+				ccp(visibleSize.width - 20, visibleSize.height * 1 / 7));
+		acid->_label->setColor(ccc3(20, 20, 255));
+		scene->addChild(acid->_label);
+
+	}
 
 	CCLog("moving AAs");
 
@@ -121,7 +132,14 @@ void UIElements::createNewAminoAcid(DeeWorld* scene, char c) {
 
 	scene->_code = tmpQueue;
 
-	scene->_code.push(acid);
+	if (nextAcid != '0') {
+		scene->_code.push(acid);
+	}
+
+	if (scene->_code.empty()) {
+		scene->gameEnd();
+		return;
+	}
 }
 
 ccColor3B UIElements::getColorForScore(int scoring) {

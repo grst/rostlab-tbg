@@ -42,7 +42,17 @@ DeeWorld::DeeWorld() {
 	//_targets(NULL);
 }
 
+/*
+ * deprecated
+ */
 CCScene* DeeWorld::scene() {
+	return DeeWorld::scene("ACCDDCCCAAA");
+}
+
+/*
+ * pass the sequence on construction
+ */
+CCScene* DeeWorld::scene(std::string sequence) {
 	CCScene * scene = NULL;
 	do {
 		// 'scene' is an autorelease object
@@ -52,6 +62,8 @@ CCScene* DeeWorld::scene() {
 		// 'layer' is an autorelease object
 		DeeWorld *layer = DeeWorld::create();
 		CC_BREAK_IF(!layer);
+
+		layer->setSequence(sequence);
 
 		// add layer as a child to scene
 		scene->addChild(layer);
@@ -221,7 +233,6 @@ void DeeWorld::initWorld() {
  */
 void DeeWorld::initPlayer() {
 
-
 	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 	//player
 	CCSprite *sPlayer = CCSprite::create(PLAYER_IMAGE);
@@ -276,14 +287,6 @@ void DeeWorld::initInfoUI() {
 			ccp(visibleSize.width - 30, visibleSize.height + 10));
 	this->_scoreLabel->setColor(ccc3(20, 20, 255));
 	this->addChild(_scoreLabel);
-
-	CCLog("setting code");
-	//code
-	int i;
-	for (i = 0; i < 3; i++) {
-		UIElements::createNewAminoAcid(this,
-				MatrixHelper::getRandomAminoAcid());
-	}
 
 	CCLog("setting timer");
 	//timer
@@ -648,12 +651,11 @@ void DeeWorld::collisionHandler2(b2Fixture* fixtureA, b2Fixture* fixtureB) {
 			CCLog("pos.x: %d", int(sprite->getPosition().x));
 			//this->removeChild(sprite);
 
-
-
 			//ATTETION we don't delete the sprite out of the array, this might cause memory leaks
 
 			// block our player for 1.5s
-			if (_code.size() > 0 && abs(HelperFunctions::nowInMilliSeconds() - lastAminoHitTime) > MS_TIME_PLAYER_BLOCKED) {
+			if (_code.size()
+					> 0&& abs(HelperFunctions::nowInMilliSeconds() - lastAminoHitTime) > MS_TIME_PLAYER_BLOCKED) {
 				lastAminoHitTime = HelperFunctions::nowInMilliSeconds();
 
 				BoardAcid * acid = this->_code.front();
@@ -663,8 +665,8 @@ void DeeWorld::collisionHandler2(b2Fixture* fixtureA, b2Fixture* fixtureB) {
 
 				// trying to cast to AminoAcid
 				AminoAcid * pScoredAcid = (AminoAcid *) sprite;
-				if(pScoredAcid != NULL){
-					if(pScoredAcid->getType() != NULL){
+				if (pScoredAcid != NULL) {
+					if (pScoredAcid->getType() != NULL) {
 						hitAcid = pScoredAcid->getType();
 					}
 				}
@@ -717,8 +719,8 @@ void DeeWorld::collisionHandler2(b2Fixture* fixtureA, b2Fixture* fixtureB) {
 				// TODO delete acid;
 				_code.pop();
 
-				UIElements::createNewAminoAcid(this,
-						MatrixHelper::getRandomAminoAcid());
+				UIElements::createNewAminoAcid(this);
+
 			}
 
 			//this->code.pMatrixHelper::getRandomAminoAcid();
@@ -726,6 +728,7 @@ void DeeWorld::collisionHandler2(b2Fixture* fixtureA, b2Fixture* fixtureB) {
 
 		}
 
+		// TODO destroy the body?
 		// SEBI: not possible on Android -> error
 		// Destroy the Box2D body as well
 		//	_b2dWorld->DestroyBody(body);
@@ -872,4 +875,35 @@ void DeeWorld::pauseAction(CCObject* pSender) {
 	//transition to next scene for one sec
 	CCDirector::sharedDirector()->replaceScene(
 			CCTransitionFade::create(1.0f, pScene));
+}
+
+/*
+ * this function is called when all sequences have been processed
+ */
+void DeeWorld::gameEnd() {
+	// TODO
+	CCLog("GAME OVER");
+}
+
+char DeeWorld::getNextAminoAcid() {
+
+	char end = '0';
+	if (this->aminoSequence.size() > 0) {
+		end = this->aminoSequence[0];
+		this->aminoSequence = this->aminoSequence.erase(0, 1);
+	}
+	CCLog("Next Acid is %c", end);
+	return end;
+}
+
+void DeeWorld::setSequence(std::string seq) {
+	// copy string
+	char * c = new char[seq.size() + 1];
+	std::copy(seq.begin(), seq.end(), c);
+	c[seq.size()] = '\0';
+	this->aminoSequence = c;
+	CCLog("Transmitted AcidSeq %s", aminoSequence.c_str());
+	for (int i = 0; i < 3; i++) {
+		UIElements::createNewAminoAcid(this);
+	}
 }

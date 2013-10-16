@@ -138,7 +138,12 @@ void MainScreenLayer::menuStartGameCallback(CCObject* pSender) {
 
 	CCLOG("Starting level %d", tag);
 
-	CCScene *pScene = DeeWorld::scene();
+	// Crystal structure of human class II alcohol dehydrogenase (ADH4) in complex with NAD and Zn
+	std::string seq= "SMGTKGKVIKCKAAIAWE";
+
+	CCScene *pScene = DeeWorld::scene(seq);
+
+
 	//transition to next scene for one sec
 	CCDirector::sharedDirector()->replaceScene(
 			CCTransitionFade::create(1.0f, pScene));
