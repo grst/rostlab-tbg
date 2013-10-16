@@ -450,7 +450,7 @@ void DeeWorld::ccTouchesBegan(cocos2d::CCSet* touches,
 		addChild(blade);
 
 		blade->setColor(ccc3(255, 0, 0));
-		blade->setOpacity(100);
+		blade->setOpacity(255);
 		blade->setDrainInterval(1.0 / 40);
 		blade->setZOrder(20);
 
