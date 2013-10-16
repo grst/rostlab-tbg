@@ -11,7 +11,7 @@
 USING_NS_CC;
 
 #define PTM_RATIO 32.0
-#define NUMBER_START_TARGETS 8
+#define NUMBER_START_TARGETS 2
 #define INTRO_TIME_SECONDS 1
 #define TOLERANCE_PLAYER -30
 #define MS_TIME_PLAYER_BLOCKED 3000
@@ -559,6 +559,7 @@ void DeeWorld::BeginContact(b2Contact *contact) {
 	CCLog("BeginContact");
 	b2Fixture* fixtureA = contact->GetFixtureA();
 	b2Fixture* fixtureB = contact->GetFixtureB();
+    CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 
 	this->collisionHandler2(fixtureA, fixtureB);
     //return;
@@ -597,29 +598,33 @@ void DeeWorld::BeginContact(b2Contact *contact) {
         
         //borderline case, moving only slightly out of platform
         b2Vec2 relativePoint = platformBody->GetLocalPoint( worldManifold.points[i] );
-        float platformFaceY = 0.5f;//front of platform, from fixture definition :(
         
+        float platformFace = 0.0f;//front of platform   
         float velocity = 0.0f;
         float point = 0.0f;
         //adapt velocity depending on with which wall the item collides
         if (platformFixture == left) {
 			velocity = relativeVel.x;
             point = relativePoint.x;
+            platformFace = 10;
 		} else if (platformFixture == right) {
 			velocity = -relativeVel.x;
             point = -relativePoint.x;
+            platformFace = visibleSize.width - 10;
 		} else if (platformFixture == top) {
 			velocity = -relativeVel.y;
             point = -relativePoint.y;
+            platformFace = visibleSize.height - 10;
 		} else if (platformFixture == bottom) {
 			velocity = relativeVel.y;
             point = relativePoint.y;
+            platformFace = 10;
 		}
         
 		if ( velocity < -1 ) { //if moving down faster than 1 m/s, handle as before
             return;//point is moving into platform, leave contact solid and exit
         } else if ( velocity < 1 ) { //if moving slower than 1 m/s
-            if ( point > 20/PTM_RATIO - 0.05 )
+            if ( point > platformFace/PTM_RATIO - 0.05 )
                 return;//contact point is less than 5cm inside front face of platfrom
         } else {
             ;//moving up faster than 1 m/s
