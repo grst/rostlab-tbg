@@ -18,6 +18,10 @@ UIElements::~UIElements() {
 	// TODO Auto-generated destructor stub
 }
 
+
+/**
+ * TODO: is this still necessary? If not --> remove!
+ */
 void UIElements::fancyMovement(cocos2d::CCPoint pt,
 		cocos2d::CCPoint playerPoint, DeeWorld* scene) {
 
@@ -99,12 +103,11 @@ void UIElements::createNewAminoAcid(DeeWorld* scene) {
 		CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 
 		CCLabelTTF * label = CCLabelTTF::create(str.c_str(), "Helvetica", 30,
-				CCSizeMake(30, visibleSize.height * 1 / 6),
+				CCSizeMake(60, 30),
 				kCCTextAlignmentRight);
 		acid->_label = label;
 
-		acid->_label->setPosition(
-				ccp(visibleSize.width - 20, visibleSize.height * 1 / 7));
+		acid->_label->setPosition(ccp(visibleSize.width - 30, 30));
 		acid->_label->setColor(ccc3(20, 20, 255));
 		scene->addChild(acid->_label);
 

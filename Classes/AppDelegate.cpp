@@ -40,7 +40,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     CCFileUtils::sharedFileUtils()->setSearchPaths(searchPaths);
     
-    CCEGLView::sharedOpenGLView()->setDesignResolutionSize(designSize.width, designSize.height, kResolutionNoBorder);
+    CCEGLView::sharedOpenGLView()->setDesignResolutionSize(designSize.width, designSize.height, kResolutionFixedHeight);
 
     // turn on display FPS
    // pDirector->setDisplayStats(true);

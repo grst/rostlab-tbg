@@ -263,6 +263,7 @@ void DeeWorld::initPlayer() {
 
 /**
  * initialize Information UI-Elements like score, timer, and amino-acid-code
+ * TODO: also move to UI-Elements-Class (?)
  */
 void DeeWorld::initInfoUI() {
 
@@ -270,18 +271,17 @@ void DeeWorld::initInfoUI() {
 	lastAminoHitTime = 0.0f;
 
 	this->score = 0;
-	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
+	CCSize layerSize = this->getContentSize();
 
 	CCLog("setting score");
 	//score
 	score = 0;
 	// int -> str
-	this->_scoreLabel = CCLabelTTF::create("0", "Helvetica",
-			visibleSize.height * 1 / 8,
-			CCSizeMake(60, visibleSize.height * 1 / 7), kCCTextAlignmentRight);
+	this->_scoreLabel = CCLabelTTF::create("0", "Helvetica", 30,
+                                           CCSizeMake(60, 30), kCCTextAlignmentRight);
 	this->_scoreLabel->retain();
 	this->_scoreLabel->setPosition(
-			ccp(visibleSize.width - 30, visibleSize.height + 10));
+                                   ccp(layerSize.width - 30, layerSize.height - 30));
 	this->_scoreLabel->setColor(ccc3(20, 20, 255));
 	this->addChild(_scoreLabel);
 
@@ -290,10 +290,10 @@ void DeeWorld::initInfoUI() {
 	this->timer = INTRO_TIME_SECONDS;
 
 	this->_timerLabel = CCLabelTTF::create("", "Helvetica",
-			visibleSize.height * 2 / 3, visibleSize, kCCTextAlignmentCenter);
+			layerSize.height * 2 / 3, layerSize, kCCTextAlignmentCenter);
 	this->_timerLabel->retain();
 	this->_timerLabel->setPosition(
-			ccp(visibleSize.width / 2, visibleSize.height / 2));
+			ccp(layerSize.width / 2, layerSize.height / 2));
 	this->_timerLabel->setColor(ccc3(0, 0, 0));
 	this->addChild(_timerLabel);
 
