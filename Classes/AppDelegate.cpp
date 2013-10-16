@@ -28,7 +28,6 @@ bool AppDelegate::applicationDidFinishLaunching() {
     if (screenSize.height > 320)
     {
         searchPaths.push_back("hd");
-        searchPaths.push_back("sd");
         pDirector->setContentScaleFactor(640.0f/designSize.height);
     }
     else

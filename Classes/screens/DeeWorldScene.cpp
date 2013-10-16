@@ -389,8 +389,8 @@ void DeeWorld::addTarget() {
 	}
 
 	// TODO temp fix to test scoring event
-//	startX = 100;
-//	startY = 100;
+	startX = 200;
+	startY = -200;
 	CCLog("Start-Position:x=%i,y=%i", startX, startY);
 	sTarget->setPosition(ccp(startX, startY));
 
