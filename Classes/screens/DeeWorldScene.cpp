@@ -211,16 +211,18 @@ void DeeWorld::initWorld() {
 	b2PolygonShape groundEdge;
 	b2FixtureDef boxShapeDef;
 	boxShapeDef.shape = &groundEdge;
+    int wallThickness = 40;
+    int wallOffset = wallThickness * 1;
 
     //wall definitions
-	groundEdge.SetAsBox(visibleSize.width / PTM_RATIO, 20 / PTM_RATIO, b2Vec2(visibleSize.width / PTM_RATIO / 2, 0), 0);
+	groundEdge.SetAsBox(visibleSize.width / PTM_RATIO, wallThickness / PTM_RATIO, b2Vec2(visibleSize.width / PTM_RATIO / 2, -wallOffset / PTM_RATIO), 0);
 	bottom = groundBody->CreateFixture(&boxShapeDef);
-	groundEdge.SetAsBox(20/PTM_RATIO, visibleSize.height/PTM_RATIO, b2Vec2(0, visibleSize.height / PTM_RATIO /2), 0);
+	groundEdge.SetAsBox(wallThickness/PTM_RATIO, visibleSize.height/PTM_RATIO, b2Vec2(-wallOffset /PTM_RATIO, visibleSize.height / PTM_RATIO /2), 0);
 	left = groundBody->CreateFixture(&boxShapeDef);
-	groundEdge.SetAsBox(visibleSize.width / PTM_RATIO, 20/PTM_RATIO, b2Vec2(visibleSize.width / PTM_RATIO / 2, visibleSize.height / PTM_RATIO), 0);
+	groundEdge.SetAsBox(visibleSize.width / PTM_RATIO, wallThickness/PTM_RATIO, b2Vec2(visibleSize.width / PTM_RATIO / 2, (visibleSize.height + wallOffset) / PTM_RATIO), 0);
 	top = groundBody->CreateFixture(&boxShapeDef);
-	groundEdge.SetAsBox(20/PTM_RATIO, visibleSize.height/PTM_RATIO,
-                        b2Vec2(visibleSize.width /PTM_RATIO, visibleSize.height / PTM_RATIO/2), 0);
+	groundEdge.SetAsBox(wallThickness/PTM_RATIO, visibleSize.height/PTM_RATIO,
+                        b2Vec2((visibleSize.width + wallOffset) /PTM_RATIO, visibleSize.height / PTM_RATIO/2), 0);
 	right = groundBody->CreateFixture(&boxShapeDef);
 
 }
@@ -390,7 +392,7 @@ void DeeWorld::addTarget() {
 
 	// TODO temp fix to test scoring event
 	startX = 200;
-	startY = -200;
+	startY = 200;
 	CCLog("Start-Position:x=%i,y=%i", startX, startY);
 	sTarget->setPosition(ccp(startX, startY));
 
@@ -562,7 +564,7 @@ void DeeWorld::BeginContact(b2Contact *contact) {
     CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 
 	this->collisionHandler2(fixtureA, fixtureB);
-    //return;
+    return;
 
 	//check if one of the fixtures is the platform
 
