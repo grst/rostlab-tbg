@@ -786,9 +786,6 @@ void DeeWorld::manageCollision(b2Body* target) {
         return;
     }
     AminoAcid* aTarget = (AminoAcid*) target->GetUserData();
-    if(aTarget->isFlaggedForDelete()) {
-        return;
-    }
     
 	CCLog("Collision with %c", aTarget->getType());
 
