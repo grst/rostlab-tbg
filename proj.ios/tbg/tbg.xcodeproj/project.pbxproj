@@ -59,7 +59,6 @@
 		2105D437180A8EEA002C5B53 /* DebugDraw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2105D41A180A8EEA002C5B53 /* DebugDraw.cpp */; };
 		2105D438180A8EEA002C5B53 /* HelperFunctions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2105D41C180A8EEA002C5B53 /* HelperFunctions.cpp */; };
 		2105D439180A8EEA002C5B53 /* MatrixHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2105D41E180A8EEA002C5B53 /* MatrixHelper.cpp */; };
-		2105D43A180A8EEA002C5B53 /* PositionHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2105D420180A8EEA002C5B53 /* PositionHelper.cpp */; };
 		2105D43B180A8EEA002C5B53 /* WebOpNative.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2105D422180A8EEA002C5B53 /* WebOpNative.cpp */; };
 		2105D43C180A8EEA002C5B53 /* DeeWorldScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2105D425180A8EEA002C5B53 /* DeeWorldScene.cpp */; };
 		2105D43D180A8EEA002C5B53 /* MainScreenScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2105D427180A8EEA002C5B53 /* MainScreenScene.cpp */; };
@@ -447,8 +446,6 @@
 		2105D41D180A8EEA002C5B53 /* HelperFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelperFunctions.h; sourceTree = "<group>"; };
 		2105D41E180A8EEA002C5B53 /* MatrixHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MatrixHelper.cpp; sourceTree = "<group>"; };
 		2105D41F180A8EEA002C5B53 /* MatrixHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MatrixHelper.h; sourceTree = "<group>"; };
-		2105D420180A8EEA002C5B53 /* PositionHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PositionHelper.cpp; sourceTree = "<group>"; };
-		2105D421180A8EEA002C5B53 /* PositionHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PositionHelper.h; sourceTree = "<group>"; };
 		2105D422180A8EEA002C5B53 /* WebOpNative.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WebOpNative.cpp; sourceTree = "<group>"; };
 		2105D423180A8EEA002C5B53 /* WebOpNative.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebOpNative.h; sourceTree = "<group>"; };
 		2105D425180A8EEA002C5B53 /* DeeWorldScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DeeWorldScene.cpp; sourceTree = "<group>"; };
@@ -1231,8 +1228,6 @@
 				2105D41D180A8EEA002C5B53 /* HelperFunctions.h */,
 				2105D41E180A8EEA002C5B53 /* MatrixHelper.cpp */,
 				2105D41F180A8EEA002C5B53 /* MatrixHelper.h */,
-				2105D420180A8EEA002C5B53 /* PositionHelper.cpp */,
-				2105D421180A8EEA002C5B53 /* PositionHelper.h */,
 				2144F448180D530A0092230D /* UIElements.cpp */,
 				2144F449180D530A0092230D /* UIElements.h */,
 				2105D422180A8EEA002C5B53 /* WebOpNative.cpp */,
@@ -2791,7 +2786,6 @@
 				2105D437180A8EEA002C5B53 /* DebugDraw.cpp in Sources */,
 				2105D438180A8EEA002C5B53 /* HelperFunctions.cpp in Sources */,
 				2105D439180A8EEA002C5B53 /* MatrixHelper.cpp in Sources */,
-				2105D43A180A8EEA002C5B53 /* PositionHelper.cpp in Sources */,
 				2105D43B180A8EEA002C5B53 /* WebOpNative.cpp in Sources */,
 				2105D43C180A8EEA002C5B53 /* DeeWorldScene.cpp in Sources */,
 				2105D43D180A8EEA002C5B53 /* MainScreenScene.cpp in Sources */,

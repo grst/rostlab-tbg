@@ -62,7 +62,6 @@ public:
 
     //collision detected
     void BeginContact(b2Contact* contact);
-    void EndContact(b2Contact* contact);
 
     //box2d
     b2World *_b2dWorld;
@@ -98,13 +97,13 @@ private:
     
     void pauseAction(CCObject* pSender);
 
-	void manageCollision(AminoAcid* acid);
+	void manageCollision(b2Body* target);
+    void scoreAminoAcid(AminoAcid* sTarget);
 	void countdown();
 	void updateInfoUI();
 
     int detectCorner();
 
-    void collisionHandler2(b2Fixture* fixtureA, b2Fixture* fixtureB); //temp method
 	int score;
 	int timer;
 	double startTime;
@@ -116,6 +115,7 @@ private:
 	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _scoreNumber, scoreNumber);
 	bool validTouch;
 	int tempHeight;
+    int AAcounter;
 
 	std::map< cocos2d::CCTouch *, CCBlade * >  _map;
 

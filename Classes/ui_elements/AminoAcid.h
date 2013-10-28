@@ -12,17 +12,14 @@
 
 class AminoAcid: public cocos2d::CCSprite {
 private:
-    //default value: negative
-	int direction;
+    bool toDelete = false;
     char type;
 public:
-    void setDirection(int d);
-    int getDirection();
-//    void setType(char t);
     char getType();
     static AminoAcid* create();
     static AminoAcid* create(char type);
-    int getScore(AminoAcid* other);
+    void flagForDelete();
+    bool isFlaggedForDelete();
 };
 
 
