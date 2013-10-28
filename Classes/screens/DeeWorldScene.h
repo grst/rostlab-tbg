@@ -44,8 +44,6 @@ public:
 	// implement the "static node()" method manually
 	CREATE_FUNC (DeeWorld);
 
-	void createTargets();
-
 	void gameLogic(float dt);
     char getNextAminoAcid();
     void gameEnd();

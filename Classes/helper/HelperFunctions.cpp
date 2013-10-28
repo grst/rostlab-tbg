@@ -8,13 +8,11 @@
 
 #include "HelperFunctions.h"
 
+USING_NS_CC;
+
 //real modulo with positive result
 int HelperFunctions::mod(int a, int b) {
 	return ((a % b) + b) % b;
-}
-
-double HelperFunctions::radian(double degrees) {
-	return degrees * (M_PI / 180);
 }
 
 float HelperFunctions::randomValueBetween(float low, float high) {
@@ -52,6 +50,15 @@ void HelperFunctions::resizseSprite(cocos2d::CCSprite* sprite, float width, floa
         sprite->setScaleY(height/contentHeight);
     }
 }
+//
+///**
+// * returns the scaled size of a sprite.
+// */
+//cocos2d::CCSize HelperFunctions::getCurrentSpriteSize(cocos2d::CCSprite* sprite) {
+//    float width = sprite->getContentSize().width * sprite->getScaleX();
+//    float height = sprite->getContentSize().height * sprite->getScaleY();
+//    return CCSizeMake(width, height);
+//}
 
 /*
  * UNTESTED

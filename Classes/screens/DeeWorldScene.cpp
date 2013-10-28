@@ -17,6 +17,10 @@ USING_NS_CC;
 #define kFileStreak "streak.png"
 #define MIN_AMINO_ACIDS 4
 #define MAX_AMINO_ACIDS 8
+#define MIN_SPEED 4
+#define MAX_SPEED 6
+#define AA_ADD_PROBABILITY 300 //Every n calls of tick, one additional amino acid is added (if withing MIN and MAX)
+#define AA_REMOVE_PROBABILITY 15 //Every n wall collisions, remove one amino acid.
 
 using namespace cocos2d;
 
@@ -78,6 +82,7 @@ bool DeeWorld::init() {
 	}
 
 	cocos2d::CCLog("Hello World. App ist starting now");
+    AAcounter = 0;
 
 	initBackground();
 	makeMenu();
@@ -151,8 +156,6 @@ void DeeWorld::makeMenu() {
 			ccp(pSettings->getContentSize().width / 2,
 					origin.y + winSize.height
 							- pSettings->getContentSize().height * 2));
-
-	//	pCloseItem->setTag(10);
 
 	if (!pSettings) {
 		return;
@@ -325,20 +328,10 @@ void DeeWorld::countdown() {
 			this->_timerLabel->release();
 			this->_timerLabel = NULL;
 		}
-		this->createTargets();
 	}
 }
 
-/**
- * adds the targets to the game. 
- */
-void DeeWorld::createTargets() {
-	int i;
-    int nAAs = HelperFunctions::randomValueBetween(MIN_AMINO_ACIDS, MAX_AMINO_ACIDS);
-	for (i = 0; i < nAAs; i++) {
-		this->addTarget();
-	}
-}
+
 
 /**
  * detects, depending on the player's position,
@@ -353,7 +346,7 @@ int DeeWorld::detectCorner() {
     // if the player is found in one of the areas,
     // the amino acid must not appear in that area
     CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
-    float areaWidth = visibleSize.width / 2;
+    float areaWidth = (visibleSize.width / 2) - ((CCSprite *) player->GetUserData())->getContentSize().width;
     float areaHeight = (visibleSize.height / 2) * 1.2;
     CCSprite* sPlayer = (CCSprite *) player->GetUserData();
     CCPoint playerPosition = sPlayer->getPosition();
@@ -391,38 +384,36 @@ void DeeWorld::addTarget() {
 	//Place target in a randomly picked corner.
 	int startX, startY;
 	int corner = detectCorner();
-	//target-dimensions
-	CCSize tSize = sTarget->getContentSize();
 	CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
 	b2Vec2 impulse;
+    int minDeg = 10;
+    int maxDeg = 80;
     //position of the amino acids:
     //inside the board, but directly at the border!
 	switch (corner) {
         case 0:
             //left bottom
-            startX = 0 + tSize.width;
-            startY = 0 + tSize.height;
-            impulse = b2Vec2(300, 300);
+            startX = 0;
+            startY = 0;
             break;
         case 1:
             //left top
-            startY = winSize.height - tSize.height;
-            startX = 0 + tSize.width;
-            impulse = b2Vec2(300, -300);
+            startY = winSize.height;
+            startX = 0;
             break;
         case 2:
             //right top
-            startX = winSize.width - tSize.width;
-            startY = winSize.height - tSize.height;
-            impulse = b2Vec2(-300, -300);
+            startX = winSize.width;
+            startY = winSize.height;
             break;
         case 3:
             //right bottom
-            startX = winSize.width - tSize.width;
-            startY = 0 + tSize.height;
-            impulse = b2Vec2(-300, 300);
+            startX = winSize.width;
+            startY = 0;
             break;
 	}
+    
+    
 
 	// TODO temp fix to test scoring event
 //	startX = 200;
@@ -450,8 +441,15 @@ void DeeWorld::addTarget() {
     };
     
 	//Move Target
+    //random direction, random velocity.
+    minDeg -= 90*corner;
+    maxDeg -= 90*corner;
+    float deg = HelperFunctions::randomValueBetween(minDeg, maxDeg);
+    float scale = HelperFunctions::randomValueBetween(MIN_SPEED, MAX_SPEED);
+    b2Vec2 vel = b2Vec2(sin(CC_DEGREES_TO_RADIANS(deg)), cos(CC_DEGREES_TO_RADIANS(deg)));
+    vel.operator*=(scale);
 	b2Body* target = CreateBox2DBodyForSprite(sTarget, num, verts);
-	target->ApplyLinearImpulse(impulse, target->GetPosition());
+    target->SetLinearVelocity(vel);
 
 }
 
@@ -476,20 +474,20 @@ void DeeWorld::ccTouchesBegan(cocos2d::CCSet* touches,
 	if (std::abs(pt.x - sPlayer->getPositionX()) - TOLERANCE_PLAYER
 			> sPlayer->getContentSize().width) {
 		//non valid
-		cocos2d::CCLog(
-				"ccTouchesCanceled id:%i x:%i,y:%in -- player x:%i, y:%in",
-				touch->getID(), (int) pt.x, (int) pt.y,
-				(int) sPlayer->getPositionX(), (int) sPlayer - getPositionY());
+//		cocos2d::CCLog(
+//				"ccTouchesCanceled id:%i x:%i,y:%in -- player x:%i, y:%in",
+//				touch->getID(), (int) pt.x, (int) pt.y,
+//				(int) sPlayer->getPositionX(), (int) sPlayer - getPositionY());
 		validTouch = false;
 		return;
 	}
 	if (std::abs(y - sPlayer->getPositionY()) - TOLERANCE_PLAYER
 			> sPlayer->getContentSize().height) {
 		//non valid
-		cocos2d::CCLog(
-				"ccTouchesCanceled id:%i x:%i,y:%in -- player x:%i, y:%in",
-				touch->getID(), (int) pt.x, (int) pt.y,
-				(int) sPlayer->getPositionX(), (int) sPlayer - getPositionY());
+//		cocos2d::CCLog(
+//				"ccTouchesCanceled id:%i x:%i,y:%in -- player x:%i, y:%in",
+//				touch->getID(), (int) pt.x, (int) pt.y,
+//				(int) sPlayer->getPositionX(), (int) sPlayer - getPositionY());
 		validTouch = false;
 		return;
 	}
@@ -601,6 +599,7 @@ void DeeWorld::BeginContact(b2Contact *contact) {
 	CCLog("BeginContact");
 	b2Fixture* fixtureA = contact->GetFixtureA();
 	b2Fixture* fixtureB = contact->GetFixtureB();
+    AminoAcid* toRemove;
 
 	b2Body* target;
     
@@ -613,18 +612,33 @@ void DeeWorld::BeginContact(b2Contact *contact) {
 		int iTagA = spriteA->getTag();
 		int iTagB = spriteB->getTag();
         
-		// Is sprite A a player and sprite B a target?  If so, push the target on a list to be destroyed...
+		// Is sprite A a player and sprite B a target? 
 		if (iTagA == 0 && iTagB == 1) {
 			target = bodyB;
 			CCLog("Collision: Player on Target");
 			this->manageCollision(target);
 		}
-		// Is sprite A a target and sprite B a player?  If so, push the target on a list to be destroyed...
+		// Is sprite A a target and sprite B a player?
 		else if (iTagA == 1 && iTagB == 0) {
 			target = bodyA;
 			CCLog("Collision: Target on Player");
 			this->manageCollision(target);
 		}
+        // Is sprite A a target and sprite B a wall?
+        else if(iTagA == 1 && iTagB == 3) {
+            toRemove = (AminoAcid*) spriteA;
+        }
+        // Is sprite A a wall and sprite B a target?
+        else if(iTagA == 3 && iTagB == 1) {
+            toRemove = (AminoAcid*) spriteB;
+        }
+        
+        // if a target collides with a wall, we want to remove it with a certain probability
+        if(toRemove != NULL) {
+            if(HelperFunctions::randomValueBetween(0, AA_REMOVE_PROBABILITY) < 1) {
+                toRemove->flagForDelete();
+            }
+        }
 	}
 }
 
@@ -660,6 +674,7 @@ b2Body* DeeWorld::CreateBox2DBodyForSprite(cocos2d::CCSprite *sprite,
 	spriteBodyDef.type = b2_dynamicBody;
 	spriteBodyDef.position.Set(pos.x / PTM_RATIO, pos.y / PTM_RATIO);
 	spriteBodyDef.userData = sprite;
+    spriteBodyDef.angularDamping = 0.9f; //slow down fast rotations quickly
 	b2Body *spriteBody = _b2dWorld->CreateBody(&spriteBodyDef);
 
 	b2PolygonShape spriteShape;
@@ -696,6 +711,8 @@ void DeeWorld::updateInfoUI() {
 
 /**
  * updates CCSprites to go along with the box2d bodies
+ * removes flagged sprites
+ * updates velocity of moving items. 
  * method is invoked by scheduler every #n ms
  */
 void DeeWorld::tick(float delta) {
@@ -710,14 +727,31 @@ void DeeWorld::tick(float delta) {
 			// it that way, so cast it...
 			CCSprite *sprite = (CCSprite *) b->GetUserData();
             
-            //delete flagged amino acids
+            //amino-Acid-specific-actions
             AminoAcid* aSprite = dynamic_cast<AminoAcid*>(sprite);
-            if(aSprite != 0 && aSprite->isFlaggedForDelete()) {
-                _b2dWorld->DestroyBody(b);
-                this->removeChild(aSprite, true);
-                continue;
+            if(aSprite != 0) {
+                if(aSprite->isFlaggedForDelete()) {
+                    AAcounter--;
+                    _b2dWorld->DestroyBody(b);
+                    this->removeChild(aSprite, true);
+                    continue;
+                }
+                
+                //update velocity to be within MIN_SPEED and MAX_SPEED
+                //TODO: accelearte gradually (?)
+                // --> tutorial www.iforce2d.net/b2dtut/constant-speed
+                b2Vec2 vel = b->GetLinearVelocity();
+                //CCLog("Speed: %f, x: %f, y: %f", vel.Length(), vel.x, vel.y);
+                if(vel.Length() > MAX_SPEED || vel.Length() < MIN_SPEED) {
+                    float desiredVelocity = HelperFunctions::randomValueBetween(MIN_SPEED, MAX_SPEED);
+                    vel.Normalize();
+                  //  CCLog("Normalized: %f, x: %f, y: %f", vel.Length(), vel.x, vel.y);
+                    vel.operator*=(desiredVelocity);
+                   // CCLog("New Speed: %f, x: %f, y: %f", vel.Length(), vel.x, vel.y);
+                    b->SetLinearVelocity(vel);
+                }
             }
-
+                        
 			//update sprites to match the simulation
 			sprite->setPosition(
 					ccp(b->GetPosition().x * PTM_RATIO,
@@ -727,6 +761,15 @@ void DeeWorld::tick(float delta) {
 			sprite->setRotation(-1 * CC_RADIANS_TO_DEGREES(b->GetAngle()));
 		}
 	}
+    //add aminoAcids, if neccessary
+    while(AAcounter < MIN_AMINO_ACIDS) {
+        this->addTarget();
+    }
+    if(AAcounter < MAX_AMINO_ACIDS) {
+        if(HelperFunctions::randomValueBetween(0, AA_ADD_PROBABILITY) < 1) {
+            this->addTarget();
+        }
+    }
 }
 
 
@@ -743,6 +786,9 @@ void DeeWorld::manageCollision(b2Body* target) {
         return;
     }
     AminoAcid* aTarget = (AminoAcid*) target->GetUserData();
+    if(aTarget->isFlaggedForDelete()) {
+        return;
+    }
     
 	CCLog("Collision with %c", aTarget->getType());
 
@@ -750,7 +796,6 @@ void DeeWorld::manageCollision(b2Body* target) {
 
     //remove amino acid
     aTarget->flagForDelete();
-    AAcounter--;
     
     //this->code.pMatrixHelper::getRandomAminoAcid();
     this->updateInfoUI();	
@@ -770,6 +815,7 @@ void DeeWorld::manageCollision(b2Body* target) {
 void DeeWorld::scoreAminoAcid(AminoAcid* sTarget) {
     //scoring-event
     BoardAcid * acid = this->_code.front();
+
     char hitAcid = sTarget->getType();
     char wantedAcid = acid->acid;
     
