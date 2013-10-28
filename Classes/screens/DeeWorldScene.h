@@ -102,7 +102,7 @@ private:
 	void countdown();
 	void updateInfoUI();
 
-
+    int detectCorner();
 
     void collisionHandler2(b2Fixture* fixtureA, b2Fixture* fixtureB); //temp method
 	int score;

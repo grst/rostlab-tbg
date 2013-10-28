@@ -349,6 +349,46 @@ void DeeWorld::createTargets() {
 }
 
 /**
+ * detects, depending on the player's position,
+ * in which corner the next amino acid should appear.
+ */
+int DeeWorld::detectCorner() {
+    //split board into 4 areas:
+    // A1 | B2
+    // -----
+    // C0 | D3
+    // A and C overlap partly, B and D do likewise
+    // if the player is found in one of the areas,
+    // the amino acid must not appear in that area
+    CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
+    float areaWidth = visibleSize.width / 2;
+    float areaHeight = (visibleSize.height / 2) * 1.2;
+    CCSprite* sPlayer = (CCSprite *) player->GetUserData();
+    CCPoint playerPosition = sPlayer->getPosition();
+    vector<int> validCorners;
+    
+    //player in C
+    if(!(playerPosition.x < areaWidth && playerPosition.y < areaHeight)) {
+        validCorners.push_back(0);
+    }
+    //player in A
+    if(!(playerPosition.x < areaWidth && playerPosition.y > visibleSize.height - areaHeight)) {
+        validCorners.push_back(1);
+    }
+    //player in B
+    if(!(playerPosition.x > visibleSize.width - areaWidth && playerPosition.y > visibleSize.height - areaHeight)) {
+        validCorners.push_back(2);
+    }
+    //player in C
+    if(!(playerPosition.x > visibleSize.width - areaWidth && playerPosition.y < areaHeight)) {
+        validCorners.push_back(3);
+    }
+    
+    int length = validCorners.size();
+    return validCorners.at(arc4random() % length);
+}
+
+/**
  * adds a target to the game. 
  * creates the box2d body and the corresponding sprite
  * TODO: let the target drop into the screen from a random corner and start movement
@@ -358,41 +398,43 @@ void DeeWorld::addTarget() {
     HelperFunctions::resizseSprite(sTarget, 64, 0);
 	//Place target in a randomly picked corner.
 	int startX, startY;
-	int corner = arc4random() % 4;
+	int corner = detectCorner();
 	//target-dimensions
 	CCSize tSize = sTarget->getContentSize();
 	CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
 	b2Vec2 impulse;
+    //position of the amino acids:
+    //inside the board, but directly at the border!
 	switch (corner) {
-	case 0:
-		//left bottom
-		startX = 0 - tSize.width;
-		startY = 0 - tSize.height;
-		impulse = b2Vec2(300, 300);
-		break;
-	case 1:
-		//left top
-		startY = winSize.height + tSize.height;
-		startX = 0 - tSize.width;
-		impulse = b2Vec2(300, -300);
-		break;
-	case 2:
-		//right top
-		startX = winSize.width + tSize.width;
-		startY = winSize.height + tSize.height;
-		impulse = b2Vec2(-300, -300);
-		break;
-	case 3:
-		//right bottom
-		startX = winSize.width + tSize.width;
-		startY = 0 - tSize.height;
-		impulse = b2Vec2(-300, 300);
-		break;
+        case 0:
+            //left bottom
+            startX = 0 + tSize.width;
+            startY = 0 + tSize.height;
+            impulse = b2Vec2(300, 300);
+            break;
+        case 1:
+            //left top
+            startY = winSize.height - tSize.height;
+            startX = 0 + tSize.width;
+            impulse = b2Vec2(300, -300);
+            break;
+        case 2:
+            //right top
+            startX = winSize.width - tSize.width;
+            startY = winSize.height - tSize.height;
+            impulse = b2Vec2(-300, -300);
+            break;
+        case 3:
+            //right bottom
+            startX = winSize.width - tSize.width;
+            startY = 0 + tSize.height;
+            impulse = b2Vec2(-300, 300);
+            break;
 	}
 
 	// TODO temp fix to test scoring event
-	startX = 200;
-	startY = 200;
+//	startX = 200;
+//	startY = 200;
 	CCLog("Start-Position:x=%i,y=%i", startX, startY);
 	sTarget->setPosition(ccp(startX, startY));
 
