@@ -1,4 +1,4 @@
-#include "DeeWorldScene.h"
+	#include "DeeWorldScene.h"
 #include "SplashScreenScene.h"
 #include "SimpleAudioEngine.h"
 #include "../helper/MatrixHelper.h"
@@ -427,19 +427,9 @@ void DeeWorld::addTarget() {
     //Temp: static polygon
     //TODO: put in MatrixHelperClass or read from file
     //row 1, col 1
-    float scaleRatio = 1/PTM_RATIO/2;
-    int num = 8;
-    b2Vec2 verts[] = {
-        b2Vec2(6.0f * scaleRatio, 42.0f * scaleRatio),
-        b2Vec2(-24.0f * scaleRatio, 32.0f * scaleRatio),
-        b2Vec2(-38.5f * scaleRatio, -15.2f * scaleRatio),
-        b2Vec2(-29.5f * scaleRatio, -28.0f * scaleRatio),
-        b2Vec2(4.0f * scaleRatio, -39.0f * scaleRatio),
-        b2Vec2(39.7f * scaleRatio, -9.0f * scaleRatio),
-        b2Vec2(38.5f * scaleRatio, 23.2f * scaleRatio),
-        b2Vec2(19.7f * scaleRatio, 31.5f * scaleRatio)
-    };
     
+    b2Vec2 *verts = MatrixHelper::getVerticeData(sTarget->getType(), 1/PTM_RATIO/4);
+    int n = MatrixHelper::getVerticeNum(sTarget->getType());
 	//Move Target
     //random direction, random velocity.
     minDeg -= 90*corner;
@@ -448,7 +438,7 @@ void DeeWorld::addTarget() {
     float scale = HelperFunctions::randomValueBetween(MIN_SPEED, MAX_SPEED);
     b2Vec2 vel = b2Vec2(sin(CC_DEGREES_TO_RADIANS(deg)), cos(CC_DEGREES_TO_RADIANS(deg)));
     vel.operator*=(scale);
-	b2Body* target = CreateBox2DBodyForSprite(sTarget, num, verts);
+	b2Body* target = CreateBox2DBodyForSprite(sTarget, n, verts);
     target->SetLinearVelocity(vel);
 
 }

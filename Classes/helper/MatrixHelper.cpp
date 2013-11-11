@@ -30,66 +30,66 @@ const char * MatrixHelper::getImagePathForAcid(char c) {
 	c = 'A';
 
 	switch (c) {
-	case 'A':
-		url = "DAlanine.png";
-		break;
-	case 'C':
-		url = "LArginine.png";
-		break;
-	case 'D':
-		url = "LAsparagine.png";
-		break;
-	case 'E':
-		url = "LAsparticAcid.png";
-		break;
-	case 'F':
-		url = "LCysteine.png";
-		break;
-	case 'G':
-		url = "LGlutamicAcid.png";
-		break;
-	case 'H':
-		url = "LGlutamine.png";
-		break;
-	case 'I':
-		url = "Glycine.png";
-		break;
-	case 'K':
-		url = "DHistidine.png";
-		break;
-	case 'L':
-		url = "LIsoleucine.png";
-		break;
-	case 'M':
-		url = "LLeucine.png";
-		break;
-	case 'N':
-		url = "LLysine.png";
-		break;
-	case 'P':
-		url = "LMethione.png";
-		break;
-	case 'Q':
-		url = "LPhenylalanine.png";
-		break;
-	case 'R':
-		url = "DProline.png";
-		break;
-	case 'S':
-		url = "LSerine.png";
-		break;
-	case 'T':
-		url = "LThreonine.png";
-		break;
-	case 'V':
-		url = "LTryptophan.png";
-		break;
-	case 'W':
-		url = "LTyrosine.png";
-		break;
-	case 'Y':
-		url = "LValine.png";
-		break;
+        case 'A':
+            url = "DAlanine.png";
+            break;
+        case 'C':
+            url = "LArginine.png";
+            break;
+        case 'D':
+            url = "LAsparagine.png";
+            break;
+        case 'E':
+            url = "LAsparticAcid.png";
+            break;
+        case 'F':
+            url = "LCysteine.png";
+            break;
+        case 'G':
+            url = "LGlutamicAcid.png";
+            break;
+        case 'H':
+            url = "LGlutamine.png";
+            break;
+        case 'I':
+            url = "Glycine.png";
+            break;
+        case 'K':
+            url = "DHistidine.png";
+            break;
+        case 'L':
+            url = "LIsoleucine.png";
+            break;
+        case 'M':
+            url = "LLeucine.png";
+            break;
+        case 'N':
+            url = "LLysine.png";
+            break;
+        case 'P':
+            url = "LMethione.png";
+            break;
+        case 'Q':
+            url = "LPhenylalanine.png";
+            break;
+        case 'R':
+            url = "DProline.png";
+            break;
+        case 'S':
+            url = "LSerine.png";
+            break;
+        case 'T':
+            url = "LThreonine.png";
+            break;
+        case 'V':
+            url = "LTryptophan.png";
+            break;
+        case 'W':
+            url = "LTyrosine.png";
+            break;
+        case 'Y':
+            url = "LValine.png";
+            break;
 	}
 
 	//add subfolder - NOT possible
@@ -99,6 +99,109 @@ const char * MatrixHelper::getImagePathForAcid(char c) {
 	//cocos2d::CCLog("Path: %s", url);
 
 	return url;
+}
+
+/**
+ * returns the vertice data for the box2d body 
+ * for the specified amino acid.
+ *
+ * Remember that the vertices need to be counterclockwise and not more than 8!
+ * the vertices are drawn on the 256px images. Adjust the scale-ratio appropriately.
+ * 
+ * @param c the amino acid one-letter-code
+ * @param scaleRatio every vector is multiplied with it (--> 1/PTM_RATIO)
+ */
+b2Vec2* MatrixHelper::getVerticeData(char c, float scaleRatio) {
+    const int n = MatrixHelper::getVerticeNum(c);
+    if(n < 0) {
+        return NULL;
+    }
+    b2Vec2 *verts = new b2Vec2[n];
+    switch(c) {
+        default:
+            verts[0].Set(-53.0f * scaleRatio, 55.0f * scaleRatio);
+            verts[1].Set(-79.0f * scaleRatio, -38.0f * scaleRatio);
+            verts[2].Set(-2.0f * scaleRatio, -76.0f * scaleRatio);
+            verts[3].Set(79.0f * scaleRatio, -15.0f * scaleRatio);
+            verts[4].Set(71.0f * scaleRatio, 52.0f * scaleRatio);
+            verts[5].Set(3.0f * scaleRatio, 87.0f * scaleRatio);
+            
+    }
+    return verts;
+    
+}
+
+/**
+ * returns the vertice number for the 
+ * specified amino acid. 
+ */
+int MatrixHelper::getVerticeNum(char c) {
+    int n = -1;
+    switch(c) {
+        case 'A':
+        default:
+            n = 6;
+            break;
+//        case 'C':
+//            url = "LArginine.png";
+//            break;
+//        case 'D':
+//            url = "LAsparagine.png";
+//            break;
+//        case 'E':
+//            url = "LAsparticAcid.png";
+//            break;
+//        case 'F':
+//            url = "LCysteine.png";
+//            break;
+//        case 'G':
+//            url = "LGlutamicAcid.png";
+//            break;
+//        case 'H':
+//            url = "LGlutamine.png";
+//            break;
+//        case 'I':
+//            url = "Glycine.png";
+//            break;
+//        case 'K':
+//            url = "DHistidine.png";
+//            break;
+//        case 'L':
+//            url = "LIsoleucine.png";
+//            break;
+//        case 'M':
+//            url = "LLeucine.png";
+//            break;
+//        case 'N':
+//            url = "LLysine.png";
+//            break;
+//        case 'P':
+//            url = "LMethione.png";
+//            break;
+//        case 'Q':
+//            url = "LPhenylalanine.png";
+//            break;
+//        case 'R':
+//            url = "DProline.png";
+//            break;
+//        case 'S':
+//            url = "LSerine.png";
+//            break;
+//        case 'T':
+//            url = "LThreonine.png";
+//            break;
+//        case 'V':
+//            url = "LTryptophan.png";
+//            break;
+//        case 'W':
+//            url = "LTyrosine.png";
+//            break;
+//        case 'Y':
+//            url = "LValine.png";
+//            break;
+        
+    }
+    return n;
 }
 
 char MatrixHelper::getRandomAminoAcid() {
