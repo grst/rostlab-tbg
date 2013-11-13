@@ -16,6 +16,7 @@
 #include <sstream>
 #include <ctype.h>
 #include "cocos2d.h"
+#include "Box2D.h"
 
 
 class MatrixHelper {
@@ -26,6 +27,8 @@ public:
 	static char getRandomAminoAcid();
 	static int getScoreForAminoAcid(char c, char d);
 	static int getAcidInt(char c);
+    static b2Vec2* getVerticeData(char c, float scaleRatio);
+    static int getVerticeNum(char c);
 	static void loadMatrix(std::string name);
 private:
 	static int** scoringMatrix;
