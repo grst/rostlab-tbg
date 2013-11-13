@@ -380,6 +380,7 @@ int DeeWorld::detectCorner() {
  */
 void DeeWorld::addTarget() {
 	AminoAcid *sTarget = AminoAcid::create();
+    //CCLog("Create AA: %s", sTarget->getType());
     HelperFunctions::resizseSprite(sTarget, 64, 0);
 	//Place target in a randomly picked corner.
 	int startX, startY;
