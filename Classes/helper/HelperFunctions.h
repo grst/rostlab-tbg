@@ -27,6 +27,7 @@ public:
     static long nowInSeconds();
     static long nowInMilliSeconds();
     static void resizseSprite(cocos2d::CCSprite* sprite, float width, float height);
+    static void toggleMusic();
 //    static cocos2d::CCSize getCurrentSpriteSize(cocos2d::CCSprite* sprite);
 };
 #endif /* defined(__tbg__HelperFunctions__) */

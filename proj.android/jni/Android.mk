@@ -16,6 +16,7 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/ui_elements/AminoAcid.cpp \
                    ../../Classes/ui_elements/BoardAcid.cpp \
                    ../../Classes/ui_elements/CCBlade.cpp \
+                   ../../Classes/ui_elements/PauseLayer.cpp \
                    ../../Classes/ui_elements/TouchTrailLayer.cpp \
                    ../../Classes/helper/DebugDraw.cpp  \
                    ../../Classes/helper/MatrixHelper.cpp  \

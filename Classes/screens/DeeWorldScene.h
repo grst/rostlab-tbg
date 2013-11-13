@@ -32,7 +32,6 @@ public:
 	virtual bool init();
 
 	// there's no 'id' in cpp, so we recommand to return the exactly class pointer
-	static cocos2d::CCScene* scene();
 	static cocos2d::CCScene* scene(std::string sequence);
 
 
@@ -73,6 +72,11 @@ public:
 
 	std::queue<BoardAcid*> _code;
 
+	//sound
+	void startBackgroundSound();
+	void stopBackgroundSound();
+
+
 
 protected:
     cocos2d::CCArray *_targets;
@@ -99,6 +103,9 @@ private:
     void scoreAminoAcid(AminoAcid* sTarget);
 	void countdown();
 	void updateInfoUI();
+	bool isGamePaused();
+	bool isSoundEnabled();
+	void resumeGame();
 
     int detectCorner();
 
@@ -107,6 +114,8 @@ private:
 	double startTime;
 	long lastAminoHitTime;
 	std::string aminoSequence;
+	bool pausedGame;
+
 
 	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _timerLabel, timerLabel);
 	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _scoreLabel, scoreLabel);

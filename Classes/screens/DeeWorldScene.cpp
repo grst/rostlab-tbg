@@ -1,9 +1,10 @@
-	#include "DeeWorldScene.h"
+#include "DeeWorldScene.h"
 #include "SplashScreenScene.h"
 #include "SimpleAudioEngine.h"
 #include "../helper/MatrixHelper.h"
 #include "../helper/UIElements.h"
 #include "MainScreenScene.h"
+#include "../ui_elements/PauseLayer.h"
 #include <iostream>
 #include <string>
 
@@ -14,13 +15,15 @@ USING_NS_CC;
 #define TOLERANCE_PLAYER -30
 #define MS_TIME_PLAYER_BLOCKED 0
 #define PLAYER_IMAGE "Player.png"
-#define kFileStreak "streak.png"
+#define BLADE_FILE "streak.png"
 #define MIN_AMINO_ACIDS 4
 #define MAX_AMINO_ACIDS 8
 #define MIN_SPEED 4
 #define MAX_SPEED 6
 #define AA_ADD_PROBABILITY 300 //Every n calls of tick, one additional amino acid is added (if withing MIN and MAX)
 #define AA_REMOVE_PROBABILITY 15 //Every n wall collisions, remove one amino acid.
+#define SOUND_DISABLED 0 // just for debugging purpose;  1 -> no sound
+#define TAG_PAUSE_LAYER 567 // arbitrary tag for pause menu - DO NOT MODIFY
 
 using namespace cocos2d;
 
@@ -40,12 +43,6 @@ DeeWorld::DeeWorld() {
 
 }
 
-/*
- * deprecated
- */
-CCScene* DeeWorld::scene() {
-	return DeeWorld::scene("ACCDDCCCAAA");
-}
 
 /*
  * pass the sequence on construction
@@ -53,6 +50,9 @@ CCScene* DeeWorld::scene() {
 CCScene* DeeWorld::scene(std::string sequence) {
 	CCScene * scene = NULL;
 	do {
+
+		// TODO Those aren't autorelease objects
+
 		// 'scene' is an autorelease object
 		scene = CCScene::create();
 		CC_BREAK_IF(!scene);
@@ -81,6 +81,7 @@ bool DeeWorld::init() {
 		return false;
 	}
 
+	pausedGame = false;
 	cocos2d::CCLog("Hello World. App ist starting now");
     AAcounter = 0;
 
@@ -95,7 +96,7 @@ bool DeeWorld::init() {
 	initWorld();
 	initPlayer();
 
-	// load a user selected matrix
+	// load a user selected matrix - default is BLOSUM62.txt
 	std::string matrix =
 			cocos2d::CCUserDefault::sharedUserDefault()->getStringForKey(
 					"matrix", "BLOSUM62.txt");
@@ -118,8 +119,8 @@ bool DeeWorld::init() {
 
 	updateInfoUI();
 
-	// disabled temporarily  (annoying!!)
-	// CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("background-music-aac.wav", true);
+	startBackgroundSound();
+
 
 	CCDirector::sharedDirector()->getTouchDispatcher()->addStandardDelegate(
 			this, 10);
@@ -153,9 +154,9 @@ void DeeWorld::makeMenu() {
 
 	// Place the menu item top-left corner.
 	pSettings->setPosition(
-			ccp(pSettings->getContentSize().width / 2,
+			ccp(pSettings->getContentSize().width /2 ,
 					origin.y + winSize.height
-							- pSettings->getContentSize().height * 2));
+							- pSettings->getContentSize().height /2));
 
 	if (!pSettings) {
 		return;
@@ -249,8 +250,7 @@ void DeeWorld::initPlayer() {
 	//only rectangle around the player (for testing)
 	// player = CreateBox2DBodyForSprite(sPlayer, 0, NULL);
 
-	//int * value;
-	//*value = 2;
+
 	player->SetUserData(sPlayer);
 	player->SetType(b2_kinematicBody);
 
@@ -279,7 +279,7 @@ void DeeWorld::initInfoUI() {
 	this->_scoreLabel->retain();
 	this->_scoreLabel->setPosition(
                                    ccp(layerSize.width - 30, layerSize.height - 30));
-	this->_scoreLabel->setColor(ccc3(20, 20, 255));
+	this->_scoreLabel->setColor(ccc3(20, 25, 255));
 	this->addChild(_scoreLabel);
 
 	CCLog("setting timer");
@@ -294,7 +294,7 @@ void DeeWorld::initInfoUI() {
 	this->_timerLabel->setColor(ccc3(0, 0, 0));
 	this->addChild(_timerLabel);
 
-	CCActionInterval * tintTo = CCTintTo::create(timer, 20, 20, 255);
+	CCActionInterval * tintTo = CCTintTo::create(timer, 20, 25, 255);
 	this->_timerLabel->runAction(tintTo);
 
 	this->countdown();
@@ -374,7 +374,7 @@ int DeeWorld::detectCorner() {
 }
 
 /**
- * adds a target to the game. 
+ * adds a target to the game (RANDIMLY chosen)
  * creates the box2d body and the corresponding sprite
  * TODO: let the target drop into the screen from a random corner and start movement
  */
@@ -414,10 +414,6 @@ void DeeWorld::addTarget() {
 	}
     
     
-
-	// TODO temp fix to test scoring event
-//	startX = 200;
-//	startY = 200;
 	CCLog("Start-Position:x=%i,y=%i", startX, startY);
 	sTarget->setPosition(ccp(startX, startY));
 
@@ -484,11 +480,12 @@ void DeeWorld::ccTouchesBegan(cocos2d::CCSet* touches,
 
 	for (CCSetIterator it = touches->begin(); it != touches->end(); it++) {
 		CCTouch *touch = (CCTouch *) *it;
-		CCBlade *blade = CCBlade::create(kFileStreak, 4, 50);
+		CCBlade *blade = CCBlade::create(BLADE_FILE, 4, 50);
 		_map[touch] = blade;
 		addChild(blade);
 
-		blade->setColor(ccc3(255, 0, 0));
+		// TODO set the color of the blade
+		blade->setColor(ccc3(100, 255, 0));
 		blade->setOpacity(255);
 		blade->setDrainInterval(1.0 / 40);
 		blade->setZOrder(20);
@@ -501,7 +498,6 @@ void DeeWorld::ccTouchesBegan(cocos2d::CCSet* touches,
 /**
  * callback for touch-move event
  * makes the player follow the finger. 
- * TODO: move the fancy 'movement track' to own method, better own class
  */
 void DeeWorld::ccTouchesMoved(cocos2d::CCSet* touches,
 		cocos2d::CCEvent* event) {
@@ -521,13 +517,7 @@ void DeeWorld::ccTouchesMoved(cocos2d::CCSet* touches,
 	float y = tempHeight - pt.y;
 	player->SetTransform(b2Vec2(pt.x / PTM_RATIO, y / PTM_RATIO), 0);
 
-	/*	b2Vec2 playerPoint = player->GetPosition();
 
-	 CCPoint oldPlayerPoint = ccp(pt.x, y);
-	 //TODO real player position
-	 CCPoint playerPointCC = ccp(pt.x-5, y-5);
-	 // calling fancy movement track
-	 UIElements::fancyMovement(oldPlayerPoint, playerPointCC, this); */
 
 	for (CCSetIterator it = touches->begin(); it != touches->end(); it++) {
 		CCTouch *touch = (CCTouch *) *it;
@@ -537,7 +527,7 @@ void DeeWorld::ccTouchesMoved(cocos2d::CCSet* touches,
 		CCBlade *blade = _map[touch];
 		CCPoint point = convertTouchToNodeSpace(touch);
 
-		cocos2d::CCLog("TouchTrail x:%d, y:%d", int(point.x), int(point.y));
+	//	cocos2d::CCLog("TouchTrail x:%d, y:%d", int(point.x), int(point.y));
 
 		//point = ccpAdd(ccpMult(point, 0.5f), ccpMult(touch->getPreviousLocation(), 0.5f));
 
@@ -563,11 +553,6 @@ void DeeWorld::ccTouchesEnded(cocos2d::CCSet* pTouches,
 		blade->autoCleanup();
 		_map.erase(touch);
 	}
-
-	return;
-	//disabled temporarly - working!
-	CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect(
-			"pew-pew-lei.wav");
 }
 
 /**
@@ -586,49 +571,51 @@ void DeeWorld::keyBackClicked(void) {
  * TODO: integeate into BeginContact Handler or move parts to seperate method
  */
 void DeeWorld::BeginContact(b2Contact *contact) {
-	CCLog("BeginContact");
-	b2Fixture* fixtureA = contact->GetFixtureA();
-	b2Fixture* fixtureB = contact->GetFixtureB();
-    AminoAcid* toRemove;
+	if(!isGamePaused()){
+		CCLog("BeginContact");
+		b2Fixture* fixtureA = contact->GetFixtureA();
+		b2Fixture* fixtureB = contact->GetFixtureB();
+		AminoAcid* toRemove;
 
-	b2Body* target;
-    
-	// Get the box2d bodies for each object
-	b2Body *bodyA = fixtureA->GetBody();
-	b2Body *bodyB = fixtureB->GetBody();
-	if (bodyA->GetUserData() != NULL && bodyB->GetUserData() != NULL) {
-		CCSprite *spriteA = (CCSprite *) bodyA->GetUserData();
-		CCSprite *spriteB = (CCSprite *) bodyB->GetUserData();
-		int iTagA = spriteA->getTag();
-		int iTagB = spriteB->getTag();
-        
-		// Is sprite A a player and sprite B a target? 
-		if (iTagA == 0 && iTagB == 1) {
-			target = bodyB;
-			CCLog("Collision: Player on Target");
-			this->manageCollision(target);
+		b2Body* target;
+
+		// Get the box2d bodies for each object
+		b2Body *bodyA = fixtureA->GetBody();
+		b2Body *bodyB = fixtureB->GetBody();
+		if (bodyA->GetUserData() != NULL && bodyB->GetUserData() != NULL) {
+			CCSprite *spriteA = (CCSprite *) bodyA->GetUserData();
+			CCSprite *spriteB = (CCSprite *) bodyB->GetUserData();
+			int iTagA = spriteA->getTag();
+			int iTagB = spriteB->getTag();
+
+			// Is sprite A a player and sprite B a target?
+			if (iTagA == 0 && iTagB == 1) {
+				target = bodyB;
+				CCLog("Collision: Player on Target");
+				this->manageCollision(target);
+			}
+			// Is sprite A a target and sprite B a player?
+			else if (iTagA == 1 && iTagB == 0) {
+				target = bodyA;
+				CCLog("Collision: Target on Player");
+				this->manageCollision(target);
+			}
+			// Is sprite A a target and sprite B a wall?
+			else if(iTagA == 1 && iTagB == 3) {
+				toRemove = (AminoAcid*) spriteA;
+			}
+			// Is sprite A a wall and sprite B a target?
+			else if(iTagA == 3 && iTagB == 1) {
+				toRemove = (AminoAcid*) spriteB;
+			}
+
+			// if a target collides with a wall, we want to remove it with a certain probability
+			if(toRemove != NULL) {
+				if(HelperFunctions::randomValueBetween(0, AA_REMOVE_PROBABILITY) < 1) {
+					toRemove->flagForDelete();
+				}
+			}
 		}
-		// Is sprite A a target and sprite B a player?
-		else if (iTagA == 1 && iTagB == 0) {
-			target = bodyA;
-			CCLog("Collision: Target on Player");
-			this->manageCollision(target);
-		}
-        // Is sprite A a target and sprite B a wall?
-        else if(iTagA == 1 && iTagB == 3) {
-            toRemove = (AminoAcid*) spriteA;
-        }
-        // Is sprite A a wall and sprite B a target?
-        else if(iTagA == 3 && iTagB == 1) {
-            toRemove = (AminoAcid*) spriteB;
-        }
-        
-        // if a target collides with a wall, we want to remove it with a certain probability
-        if(toRemove != NULL) {
-            if(HelperFunctions::randomValueBetween(0, AA_REMOVE_PROBABILITY) < 1) {
-                toRemove->flagForDelete();
-            }
-        }
 	}
 }
 
@@ -706,60 +693,64 @@ void DeeWorld::updateInfoUI() {
  * method is invoked by scheduler every #n ms
  */
 void DeeWorld::tick(float delta) {
-	_b2dWorld->Step(delta, 10, 10);
-	// Loop through all of the Box2D bodies in our Box2D world..
-	for (b2Body *b = _b2dWorld->GetBodyList(); b; b = b->GetNext()) {
-		// See if there's any user data attached to the Box2D body
-		// There should be, since we set it in addBoxBodyForSprite
 
-		if (b->GetUserData() != NULL) {
-			// We know that the user data is a sprite since we set
-			// it that way, so cast it...
-			CCSprite *sprite = (CCSprite *) b->GetUserData();
-            
-            //amino-Acid-specific-actions
-            AminoAcid* aSprite = dynamic_cast<AminoAcid*>(sprite);
-            if(aSprite != 0) {
-                if(aSprite->isFlaggedForDelete()) {
-                    AAcounter--;
-                    _b2dWorld->DestroyBody(b);
-                    this->removeChild(aSprite, true);
-                    continue;
-                }
-                
-                //update velocity to be within MIN_SPEED and MAX_SPEED
-                //TODO: accelearte gradually (?)
-                // --> tutorial www.iforce2d.net/b2dtut/constant-speed
-                b2Vec2 vel = b->GetLinearVelocity();
-                //CCLog("Speed: %f, x: %f, y: %f", vel.Length(), vel.x, vel.y);
-                if(vel.Length() > MAX_SPEED || vel.Length() < MIN_SPEED) {
-                    float desiredVelocity = HelperFunctions::randomValueBetween(MIN_SPEED, MAX_SPEED);
-                    vel.Normalize();
-                  //  CCLog("Normalized: %f, x: %f, y: %f", vel.Length(), vel.x, vel.y);
-                    vel.operator*=(desiredVelocity);
-                   // CCLog("New Speed: %f, x: %f, y: %f", vel.Length(), vel.x, vel.y);
-                    b->SetLinearVelocity(vel);
-                }
-            }
-                        
-			//update sprites to match the simulation
-			sprite->setPosition(
-					ccp(b->GetPosition().x * PTM_RATIO,
-							b->GetPosition().y * PTM_RATIO));
+	if(!isGamePaused()){
 
-			// TODO: do we really want to rotate the player?
-			sprite->setRotation(-1 * CC_RADIANS_TO_DEGREES(b->GetAngle()));
+		_b2dWorld->Step(delta, 10, 10);
+		// Loop through all of the Box2D bodies in our Box2D world..
+		for (b2Body *b = _b2dWorld->GetBodyList(); b; b = b->GetNext()) {
+			// See if there's any user data attached to the Box2D body
+			// There should be, since we set it in addBoxBodyForSprite
+
+			if (b->GetUserData() != NULL) {
+				// We know that the user data is a sprite since we set
+				// it that way, so cast it...
+				CCSprite *sprite = (CCSprite *) b->GetUserData();
+
+				//amino-Acid-specific-actions
+				AminoAcid* aSprite = dynamic_cast<AminoAcid*>(sprite);
+				if(aSprite != 0) {
+					if(aSprite->isFlaggedForDelete()) {
+						AAcounter--;
+						_b2dWorld->DestroyBody(b);
+						this->removeChild(aSprite, true);
+						continue;
+					}
+
+					//update velocity to be within MIN_SPEED and MAX_SPEED
+					//TODO: accelearte gradually (?)
+					// --> tutorial www.iforce2d.net/b2dtut/constant-speed
+					b2Vec2 vel = b->GetLinearVelocity();
+					//CCLog("Speed: %f, x: %f, y: %f", vel.Length(), vel.x, vel.y);
+					if(vel.Length() > MAX_SPEED || vel.Length() < MIN_SPEED) {
+						float desiredVelocity = HelperFunctions::randomValueBetween(MIN_SPEED, MAX_SPEED);
+						vel.Normalize();
+					  //  CCLog("Normalized: %f, x: %f, y: %f", vel.Length(), vel.x, vel.y);
+						vel.operator*=(desiredVelocity);
+					   // CCLog("New Speed: %f, x: %f, y: %f", vel.Length(), vel.x, vel.y);
+						b->SetLinearVelocity(vel);
+					}
+				}
+
+				//update sprites to match the simulation
+				sprite->setPosition(
+						ccp(b->GetPosition().x * PTM_RATIO,
+								b->GetPosition().y * PTM_RATIO));
+
+				// TODO: do we really want to rotate the player?
+				sprite->setRotation(-1 * CC_RADIANS_TO_DEGREES(b->GetAngle()));
+			}
+		}
+		//add aminoAcids, if neccessary
+		while(AAcounter < MIN_AMINO_ACIDS) {
+			this->addTarget();
+		}
+		if(AAcounter < MAX_AMINO_ACIDS) {
+			if(HelperFunctions::randomValueBetween(0, AA_ADD_PROBABILITY) < 1) {
+				this->addTarget();
+			}
 		}
 	}
-    //add aminoAcids, if neccessary
-    while(AAcounter < MIN_AMINO_ACIDS) {
-        this->addTarget();
-    }
-    if(AAcounter < MAX_AMINO_ACIDS) {
-        if(HelperFunctions::randomValueBetween(0, AA_ADD_PROBABILITY) < 1) {
-            this->addTarget();
-        }
-    }
 }
 
 
@@ -787,8 +778,6 @@ void DeeWorld::manageCollision(b2Body* target) {
     //this->code.pMatrixHelper::getRandomAminoAcid();
     this->updateInfoUI();	
     
-    //TODO play sound-effect. 
-	//CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect( "cat_ouch.wav", false );
 }
 
 /**
@@ -831,12 +820,17 @@ void DeeWorld::scoreAminoAcid(AminoAcid* sTarget) {
     CCActionInterval * tintToNumber;
     if (scoring > 0) {
         tintToNumber = CCTintTo::create(1.0, 0, 255, 0);
+
     } else if (scoring < 0) {
         tintToNumber = CCTintTo::create(1.0, 255, 0, 0);
+
     } else {
         tintToNumber = CCTintTo::create(1.5, 0, 0, 0);
     }
     
+
+
+
     this->_scoreNumber->runAction(tintToNumber);
     CCActionInterval * scaleTo = CCScaleTo::create(1.0, 0.01);
     this->_scoreNumber->runAction(scaleTo);
@@ -851,6 +845,18 @@ void DeeWorld::scoreAminoAcid(AminoAcid* sTarget) {
                                                    NULL);
     label->runAction(readySequence);
     
+
+    // play a nice sound
+    if(isSoundEnabled()){
+		if (scoring > 0) {
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect( "cat_ouch.wav", false );
+		}else{
+		   CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect(
+								"pew-pew-lei.wav");
+		}
+    }
+
+
     // TODO delete acid;
     _code.pop();
     
@@ -859,20 +865,60 @@ void DeeWorld::scoreAminoAcid(AminoAcid* sTarget) {
 
 // TODO blend layer with pause and pause the whole game
 void DeeWorld::pauseAction(CCObject* pSender) {
+
+	if(!pausedGame){
+		stopBackgroundSound();
+		//PauseMenu * pauseMenu = PauseMenu::createWithGame( this );
+		//this -> addChild( pauseMenu);
+		pausedGame = true;
+		this->setTouchEnabled(false);
+
+		CCArray* childs = this->getChildren();
+		CCObject* child;
+		CCARRAY_FOREACH(childs, child)
+		{
+		   CCSprite *sprite = (CCSprite *)child;
+		   sprite->pauseSchedulerAndActions();
+		}
+		PauseLayer *layer = PauseLayer::create();
+		this->addChild(layer, 10, TAG_PAUSE_LAYER);
+
+	}else{
+		resumeGame();
+	}
+
 	return;
-	// TODO this creates an error on android
-	CCScene *pScene = MainScreenScene::create();
-	//transition to next scene for one sec
-	CCDirector::sharedDirector()->replaceScene(
-			CCTransitionFade::create(1.0f, pScene));
+
+}
+
+void DeeWorld::resumeGame(){
+
+	this->removeChildByTag(TAG_PAUSE_LAYER, true);
+
+	pausedGame = false;
+	startBackgroundSound();
+	this->setTouchEnabled(true);
+
+	CCArray* childs = this->getChildren();
+			CCObject* child;
+			CCARRAY_FOREACH(childs, child)
+			{
+			   CCSprite *sprite = (CCSprite *)child;
+			   sprite->resumeSchedulerAndActions();
+			}
 }
 
 /*
  * this function is called when all sequences have been processed
  */
 void DeeWorld::gameEnd() {
-	// TODO
 	CCLog("GAME OVER");
+
+	// TODO this creates an error on android
+	CCScene *pScene = MainScreenScene::create();
+	//transition to next scene for one sec
+	CCDirector::sharedDirector()->replaceScene(
+				CCTransitionFade::create(1.0f, pScene));
 }
 
 char DeeWorld::getNextAminoAcid() {
@@ -895,5 +941,33 @@ void DeeWorld::setSequence(std::string seq) {
 	CCLog("Transmitted AcidSeq %s", aminoSequence.c_str());
 	for (int i = 0; i < 3; i++) {
 		UIElements::createNewAminoAcid(this);
+	}
+}
+
+// http://www.cocos2d-x.org/reference/native-cpp/V2.2/de/d8f/class_cocos_denshion_1_1_simple_audio_engine.html#a91013ef8ca9544db243e255161e15c1c
+void DeeWorld::startBackgroundSound(){
+	if(DeeWorld::isSoundEnabled()){
+	CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("background-music-aac.wav", true);
+	}
+}
+
+void DeeWorld::stopBackgroundSound(){
+	if(CocosDenshion::SimpleAudioEngine::sharedEngine()->isBackgroundMusicPlaying()){
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->stopBackgroundMusic(true);
+	}
+}
+
+bool DeeWorld::isGamePaused(){
+	bool ret = this->pausedGame || CCDirector::sharedDirector()->isPaused();
+	return ret;
+}
+
+bool DeeWorld::isSoundEnabled(){
+	// TODO add call to user defaults
+	if(SOUND_DISABLED == 1 ||!	cocos2d::CCUserDefault::sharedUserDefault()->getBoolForKey(
+			"music_enable", true)){
+		return false;
+	}else{
+		return true;
 	}
 }
