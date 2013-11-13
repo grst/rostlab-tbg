@@ -12,7 +12,8 @@
 
 class AminoAcid: public cocos2d::CCSprite {
 private:
-    bool toDelete = false;
+	// ISO C++ forbids in-class initialization of non-static member
+    bool toDelete;
     char type;
 public:
     char getType();
