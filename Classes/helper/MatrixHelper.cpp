@@ -59,7 +59,7 @@ const char * MatrixHelper::getImagePathForAcid(char c) {
             url = "LLeucine.png";
             break;
         case 'M':
-            url = "LMethione.png";
+            url = "LMethionine.png";
             break;
         case 'N':
             url = "LAsparagine.png";

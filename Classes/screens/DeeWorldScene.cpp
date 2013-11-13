@@ -16,14 +16,15 @@ USING_NS_CC;
 #define MS_TIME_PLAYER_BLOCKED 0
 #define PLAYER_IMAGE "Player.png"
 #define BLADE_FILE "streak.png"
-#define MIN_AMINO_ACIDS 4
-#define MAX_AMINO_ACIDS 8
+#define MIN_AMINO_ACIDS 6
+#define MAX_AMINO_ACIDS 9
 #define MIN_SPEED 4
 #define MAX_SPEED 6
-#define AA_ADD_PROBABILITY 300 //Every n calls of tick, one additional amino acid is added (if withing MIN and MAX)
+#define AA_ADD_PROBABILITY 230 //Every n calls of tick, one additional amino acid is added (if withing MIN and MAX)
 #define AA_REMOVE_PROBABILITY 15 //Every n wall collisions, remove one amino acid.
 #define SOUND_DISABLED 0 // just for debugging purpose;  1 -> no sound
 #define TAG_PAUSE_LAYER 567 // arbitrary tag for pause menu - DO NOT MODIFY
+#define DEBUG_DRAW 0 // 1 enable debug draw, 0 disable
 
 using namespace cocos2d;
 
@@ -188,7 +189,9 @@ void DeeWorld::initBox2D() {
 	this->schedule(schedule_selector(DeeWorld::tick));
 
 	//debug draw made easy with helper class
-	this->addChild(B2DebugDrawLayer::create(_b2dWorld, PTM_RATIO), 9999);
+    if(DEBUG_DRAW > 0) {
+        this->addChild(B2DebugDrawLayer::create(_b2dWorld, PTM_RATIO), 9999);
+    }	
 
 	// Create contact listener
 	_b2dWorld->SetContactListener(this);
@@ -379,8 +382,7 @@ int DeeWorld::detectCorner() {
  * TODO: let the target drop into the screen from a random corner and start movement
  */
 void DeeWorld::addTarget() {
-	AminoAcid *sTarget = AminoAcid::create();
-    //CCLog("Create AA: %s", sTarget->getType());
+	AminoAcid *sTarget = AminoAcid::create();    
     HelperFunctions::resizseSprite(sTarget, 64, 0);
 	//Place target in a randomly picked corner.
 	int startX, startY;
@@ -573,7 +575,7 @@ void DeeWorld::keyBackClicked(void) {
  */
 void DeeWorld::BeginContact(b2Contact *contact) {
 	if(!isGamePaused()){
-		CCLog("BeginContact");
+		//CCLog("BeginContact");
 		b2Fixture* fixtureA = contact->GetFixtureA();
 		b2Fixture* fixtureB = contact->GetFixtureB();
 		AminoAcid* toRemove;

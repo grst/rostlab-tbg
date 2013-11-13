@@ -71,9 +71,6 @@
 		2144F452180D90060092230D /* TouchTrailLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2144F44F180D90050092230D /* TouchTrailLayer.cpp */; };
 		2144F47D180EC2BB0092230D /* app.config.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2144F465180EC2BA0092230D /* app.config.txt */; };
 		2144F47E180EC2BB0092230D /* app.icf in Resources */ = {isa = PBXBuildFile; fileRef = 2144F466180EC2BA0092230D /* app.icf */; };
-		2144F47F180EC2BB0092230D /* background-music-aac.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2144F467180EC2BA0092230D /* background-music-aac.wav */; };
-		2144F480180EC2BB0092230D /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = 2144F468180EC2BA0092230D /* background.png */; };
-		2144F481180EC2BB0092230D /* blocks.png in Resources */ = {isa = PBXBuildFile; fileRef = 2144F469180EC2BA0092230D /* blocks.png */; };
 		2144F482180EC2BB0092230D /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2144F46A180EC2BA0092230D /* Default-568h@2x.png */; };
 		2144F483180EC2BB0092230D /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 2144F46B180EC2BA0092230D /* Default.png */; };
 		2144F484180EC2BB0092230D /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2144F46C180EC2BA0092230D /* Default@2x.png */; };
@@ -86,13 +83,10 @@
 		2144F48B180EC2BB0092230D /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2144F473180EC2BA0092230D /* Icon-Small@2x.png */; };
 		2144F48C180EC2BB0092230D /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 2144F474180EC2BA0092230D /* Icon.png */; };
 		2144F48D180EC2BB0092230D /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2144F475180EC2BA0092230D /* Icon@2x.png */; };
-		2144F48E180EC2BB0092230D /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 2144F476180EC2BA0092230D /* logo.png */; };
 		2144F48F180EC2BB0092230D /* matrices in Resources */ = {isa = PBXBuildFile; fileRef = 2144F477180EC2BA0092230D /* matrices */; };
-		2144F490180EC2BB0092230D /* pew-pew-lei.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2144F478180EC2BB0092230D /* pew-pew-lei.wav */; };
 		2144F491180EC2BB0092230D /* sd in Resources */ = {isa = PBXBuildFile; fileRef = 2144F479180EC2BB0092230D /* sd */; };
-		2144F492180EC2BB0092230D /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 2144F47A180EC2BB0092230D /* settings.png */; };
-		2144F493180EC2BB0092230D /* streak.png in Resources */ = {isa = PBXBuildFile; fileRef = 2144F47B180EC2BB0092230D /* streak.png */; };
-		2144F494180EC2BB0092230D /* stripes.png in Resources */ = {isa = PBXBuildFile; fileRef = 2144F47C180EC2BB0092230D /* stripes.png */; };
+		2144F4971833DD6D0092230D /* PauseLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2144F4951833DD6C0092230D /* PauseLayer.cpp */; };
+		2144F4991833DDAE0092230D /* music in Resources */ = {isa = PBXBuildFile; fileRef = 2144F4981833DDAE0092230D /* music */; };
 		A9BE060C1767446800DD9825 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9BE060B1767446800DD9825 /* QuartzCore.framework */; };
 		A9BE060E1767446800DD9825 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9BE060D1767446800DD9825 /* OpenGLES.framework */; };
 		A9BE06101767446800DD9825 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9BE060F1767446800DD9825 /* OpenAL.framework */; };
@@ -468,9 +462,6 @@
 		2144F450180D90060092230D /* TouchTrailLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchTrailLayer.h; sourceTree = "<group>"; };
 		2144F465180EC2BA0092230D /* app.config.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = app.config.txt; path = ../../../Resources/app.config.txt; sourceTree = "<group>"; };
 		2144F466180EC2BA0092230D /* app.icf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = app.icf; path = ../../../Resources/app.icf; sourceTree = "<group>"; };
-		2144F467180EC2BA0092230D /* background-music-aac.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "background-music-aac.wav"; path = "../../../Resources/background-music-aac.wav"; sourceTree = "<group>"; };
-		2144F468180EC2BA0092230D /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = background.png; path = ../../../Resources/background.png; sourceTree = "<group>"; };
-		2144F469180EC2BA0092230D /* blocks.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = blocks.png; path = ../../../Resources/blocks.png; sourceTree = "<group>"; };
 		2144F46A180EC2BA0092230D /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../../../Resources/Default-568h@2x.png"; sourceTree = "<group>"; };
 		2144F46B180EC2BA0092230D /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = ../../../Resources/Default.png; sourceTree = "<group>"; };
 		2144F46C180EC2BA0092230D /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "../../../Resources/Default@2x.png"; sourceTree = "<group>"; };
@@ -483,13 +474,11 @@
 		2144F473180EC2BA0092230D /* Icon-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-Small@2x.png"; path = "../../../Resources/Icon-Small@2x.png"; sourceTree = "<group>"; };
 		2144F474180EC2BA0092230D /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = ../../../Resources/Icon.png; sourceTree = "<group>"; };
 		2144F475180EC2BA0092230D /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "../../../Resources/Icon@2x.png"; sourceTree = "<group>"; };
-		2144F476180EC2BA0092230D /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo.png; path = ../../../Resources/logo.png; sourceTree = "<group>"; };
 		2144F477180EC2BA0092230D /* matrices */ = {isa = PBXFileReference; lastKnownFileType = folder; name = matrices; path = ../../../Resources/matrices; sourceTree = "<group>"; };
-		2144F478180EC2BB0092230D /* pew-pew-lei.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = "pew-pew-lei.wav"; path = "../../../Resources/pew-pew-lei.wav"; sourceTree = "<group>"; };
 		2144F479180EC2BB0092230D /* sd */ = {isa = PBXFileReference; lastKnownFileType = folder; name = sd; path = ../../../Resources/sd; sourceTree = "<group>"; };
-		2144F47A180EC2BB0092230D /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = settings.png; path = ../../../Resources/settings.png; sourceTree = "<group>"; };
-		2144F47B180EC2BB0092230D /* streak.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = streak.png; path = ../../../Resources/streak.png; sourceTree = "<group>"; };
-		2144F47C180EC2BB0092230D /* stripes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = stripes.png; path = ../../../Resources/stripes.png; sourceTree = "<group>"; };
+		2144F4951833DD6C0092230D /* PauseLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PauseLayer.cpp; sourceTree = "<group>"; };
+		2144F4961833DD6C0092230D /* PauseLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PauseLayer.h; sourceTree = "<group>"; };
+		2144F4981833DDAE0092230D /* music */ = {isa = PBXFileReference; lastKnownFileType = folder; name = music; path = ../../../Resources/music; sourceTree = "<group>"; };
 		A9BE06081767446800DD9825 /* tbg.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = tbg.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9BE060B1767446800DD9825 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		A9BE060D1767446800DD9825 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -1256,6 +1245,8 @@
 		2105D42D180A8EEA002C5B53 /* ui_elements */ = {
 			isa = PBXGroup;
 			children = (
+				2144F4951833DD6C0092230D /* PauseLayer.cpp */,
+				2144F4961833DD6C0092230D /* PauseLayer.h */,
 				2144F44D180D90050092230D /* CCBlade.cpp */,
 				2144F44E180D90050092230D /* CCBlade.h */,
 				2144F44F180D90050092230D /* TouchTrailLayer.cpp */,
@@ -1330,11 +1321,9 @@
 		A9BE061C1767446800DD9825 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				2144F4981833DDAE0092230D /* music */,
 				2144F465180EC2BA0092230D /* app.config.txt */,
 				2144F466180EC2BA0092230D /* app.icf */,
-				2144F467180EC2BA0092230D /* background-music-aac.wav */,
-				2144F468180EC2BA0092230D /* background.png */,
-				2144F469180EC2BA0092230D /* blocks.png */,
 				2144F46A180EC2BA0092230D /* Default-568h@2x.png */,
 				2144F46B180EC2BA0092230D /* Default.png */,
 				2144F46C180EC2BA0092230D /* Default@2x.png */,
@@ -1347,13 +1336,8 @@
 				2144F473180EC2BA0092230D /* Icon-Small@2x.png */,
 				2144F474180EC2BA0092230D /* Icon.png */,
 				2144F475180EC2BA0092230D /* Icon@2x.png */,
-				2144F476180EC2BA0092230D /* logo.png */,
 				2144F477180EC2BA0092230D /* matrices */,
-				2144F478180EC2BB0092230D /* pew-pew-lei.wav */,
 				2144F479180EC2BB0092230D /* sd */,
-				2144F47A180EC2BB0092230D /* settings.png */,
-				2144F47B180EC2BB0092230D /* streak.png */,
-				2144F47C180EC2BB0092230D /* stripes.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -2469,9 +2453,6 @@
 				2105D436180A8EEA002C5B53 /* Classes.iml in Resources */,
 				2144F47D180EC2BB0092230D /* app.config.txt in Resources */,
 				2144F47E180EC2BB0092230D /* app.icf in Resources */,
-				2144F47F180EC2BB0092230D /* background-music-aac.wav in Resources */,
-				2144F480180EC2BB0092230D /* background.png in Resources */,
-				2144F481180EC2BB0092230D /* blocks.png in Resources */,
 				2144F482180EC2BB0092230D /* Default-568h@2x.png in Resources */,
 				2144F483180EC2BB0092230D /* Default.png in Resources */,
 				2144F484180EC2BB0092230D /* Default@2x.png in Resources */,
@@ -2484,13 +2465,9 @@
 				2144F48B180EC2BB0092230D /* Icon-Small@2x.png in Resources */,
 				2144F48C180EC2BB0092230D /* Icon.png in Resources */,
 				2144F48D180EC2BB0092230D /* Icon@2x.png in Resources */,
-				2144F48E180EC2BB0092230D /* logo.png in Resources */,
 				2144F48F180EC2BB0092230D /* matrices in Resources */,
-				2144F490180EC2BB0092230D /* pew-pew-lei.wav in Resources */,
 				2144F491180EC2BB0092230D /* sd in Resources */,
-				2144F492180EC2BB0092230D /* settings.png in Resources */,
-				2144F493180EC2BB0092230D /* streak.png in Resources */,
-				2144F494180EC2BB0092230D /* stripes.png in Resources */,
+				2144F4991833DDAE0092230D /* music in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2796,6 +2773,7 @@
 				2144F44A180D530A0092230D /* UIElements.cpp in Sources */,
 				2144F451180D90060092230D /* CCBlade.cpp in Sources */,
 				2144F452180D90060092230D /* TouchTrailLayer.cpp in Sources */,
+				2144F4971833DD6D0092230D /* PauseLayer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

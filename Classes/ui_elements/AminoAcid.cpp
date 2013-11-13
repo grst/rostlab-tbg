@@ -28,7 +28,9 @@ AminoAcid* AminoAcid::create() {
  */
 AminoAcid* AminoAcid::create(char type){
     AminoAcid *pobSprite = new AminoAcid();
-    if (pobSprite && pobSprite->initWithFile(MatrixHelper::getImagePathForAcid(type))) {
+    const char *path = MatrixHelper::getImagePathForAcid(type);
+    CCLog("Create AA: %s", path);
+    if (pobSprite && pobSprite->initWithFile(path)) {
         pobSprite->type = type;
         pobSprite->setTag(1);
         pobSprite->setZOrder(3);
