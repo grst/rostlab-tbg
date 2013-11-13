@@ -26,6 +26,9 @@ float HelperFunctions::randomValueBetween(float low, float high) {
  * if height == 0, vice versa
  */
 void HelperFunctions::resizseSprite(cocos2d::CCSprite* sprite, float width, float height) {
+    if(sprite == NULL) {
+        return;
+    }
     float contentHeight = sprite->getContentSize().height;
     float contentWidth = sprite->getContentSize().width;
     if(width == 0.0f && height == 0.0f) {
@@ -50,15 +53,7 @@ void HelperFunctions::resizseSprite(cocos2d::CCSprite* sprite, float width, floa
         sprite->setScaleY(height/contentHeight);
     }
 }
-//
-///**
-// * returns the scaled size of a sprite.
-// */
-//cocos2d::CCSize HelperFunctions::getCurrentSpriteSize(cocos2d::CCSprite* sprite) {
-//    float width = sprite->getContentSize().width * sprite->getScaleX();
-//    float height = sprite->getContentSize().height * sprite->getScaleY();
-//    return CCSizeMake(width, height);
-//}
+
 
 /*
  * UNTESTED

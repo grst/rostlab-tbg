@@ -32,46 +32,46 @@ const char * MatrixHelper::getImagePathForAcid(char c) {
             url = "DAlanine.png";
             break;
         case 'C':
-            url = "LArginine.png";
-            break;
-        case 'D':
-            url = "LAsparagine.png";
-            break;
-        case 'E':
-            url = "LAsparticAcid.png";
-            break;
-        case 'F':
             url = "LCysteine.png";
             break;
-        case 'G':
+        case 'D':
+            url = "LAsparticAcid.png";
+            break;
+        case 'E':
             url = "LGlutamicAcid.png";
             break;
-        case 'H':
-            url = "LGlutamine.png";
-            break;
-        case 'I':
-            url = "Glycine.png";
-            break;
-        case 'K':
-            url = "DHistidine.png";
-            break;
-        case 'L':
-            url = "LIsoleucine.png";
-            break;
-        case 'M':
-            url = "LLeucine.png";
-            break;
-        case 'N':
-            url = "LLysine.png";
-            break;
-        case 'P':
-            url = "LMethione.png";
-            break;
-        case 'Q':
+        case 'F':
             url = "LPhenylalanine.png";
             break;
-        case 'R':
+        case 'G':
+            url = "Glycine.png";
+            break;
+        case 'H':
+            url = "DHistidine.png";
+            break;
+        case 'I':
+            url = "LIsoleucine.png";
+            break;
+        case 'K':
+            url = "LLysine.png";
+            break;
+        case 'L':
+            url = "LLeucine.png";
+            break;
+        case 'M':
+            url = "LMethionine.png";
+            break;
+        case 'N':
+            url = "LAsparagine.png";
+            break;
+        case 'P':
             url = "DProline.png";
+            break;
+        case 'Q':
+            url = "LGlutamine.png";
+            break;
+        case 'R':
+            url = "LArginine.png";
             break;
         case 'S':
             url = "LSerine.png";
@@ -80,13 +80,13 @@ const char * MatrixHelper::getImagePathForAcid(char c) {
             url = "LThreonine.png";
             break;
         case 'V':
-            url = "LTryptophan.png";
+            url = "LValine.png";
             break;
         case 'W':
-            url = "LTyrosine.png";
+            url = "LTryptophan.png";
             break;
         case 'Y':
-            url = "LValine.png";
+            url = "LTyrosine.png";
             break;
         default:
         	url = "DAlanine.png";
@@ -122,13 +122,204 @@ b2Vec2* MatrixHelper::getVerticeData(char c, float scaleRatio) {
     // TODO add vertix data for other  AA
 
     switch(c) {
-        default:
+        case 'A':
             verts[0].Set(-53.0f * scaleRatio, 55.0f * scaleRatio);
             verts[1].Set(-79.0f * scaleRatio, -38.0f * scaleRatio);
             verts[2].Set(-2.0f * scaleRatio, -76.0f * scaleRatio);
             verts[3].Set(79.0f * scaleRatio, -15.0f * scaleRatio);
             verts[4].Set(71.0f * scaleRatio, 52.0f * scaleRatio);
             verts[5].Set(3.0f * scaleRatio, 87.0f * scaleRatio);
+            break;
+        case 'C':
+            verts[0].Set(-5.0f * scaleRatio, 48.0f * scaleRatio);
+            verts[1].Set(-66.0f * scaleRatio, 69.0f * scaleRatio);
+            verts[2].Set(-98.0f * scaleRatio, -20.0f * scaleRatio);
+            verts[3].Set(-31.0f * scaleRatio, -83.0f * scaleRatio);
+            verts[4].Set(28.0f * scaleRatio, -70.0f * scaleRatio);
+            verts[5].Set(42.0f * scaleRatio, -34.0f * scaleRatio);
+            verts[6].Set(86.0f * scaleRatio, 44.0f * scaleRatio);
+            verts[7].Set(52.0f * scaleRatio, 70.0f * scaleRatio);
+            break;
+        case 'D':
+            verts[0].Set(1.0f * scaleRatio, 81.0f * scaleRatio);
+            verts[1].Set(-100.0f * scaleRatio, -29.0f * scaleRatio);
+            verts[2].Set(-19.0f * scaleRatio, -87.0f * scaleRatio);
+            verts[3].Set(22.0f * scaleRatio, -45.0f * scaleRatio);
+            verts[4].Set(76.0f * scaleRatio, -65.0f * scaleRatio);
+            verts[5].Set(100.0f * scaleRatio, -33.0f * scaleRatio);
+            verts[6].Set(59.0f * scaleRatio, 25.0f * scaleRatio);
+            verts[7].Set(71.0f * scaleRatio, 57.0f * scaleRatio);
+            break;
+        case 'E':
+            verts[0].Set(-2.0f * scaleRatio, 93.0f * scaleRatio);
+            verts[1].Set(-30.0f * scaleRatio, 34.0f * scaleRatio);
+            verts[2].Set(-54.0f * scaleRatio, 23.0f * scaleRatio);
+            verts[3].Set(-55.0f * scaleRatio, -63.0f * scaleRatio);
+            verts[4].Set(-21.0f * scaleRatio, -68.0f * scaleRatio);
+            verts[5].Set(-4.0f * scaleRatio, -92.0f * scaleRatio);
+            verts[6].Set(41.0f * scaleRatio, -55.0f * scaleRatio);
+            verts[7].Set(42.0f * scaleRatio, 89.0f * scaleRatio);	
+            break;
+        case 'F':
+            verts[0].Set(-11.0f * scaleRatio, 52.0f * scaleRatio);
+            verts[1].Set(-94.0f * scaleRatio, 10.0f * scaleRatio);
+            verts[2].Set(-63.0f * scaleRatio, -27.0f * scaleRatio);
+            verts[3].Set(-29.0f * scaleRatio, -47.0f * scaleRatio);
+            verts[4].Set(50.0f * scaleRatio, -44.0f * scaleRatio);
+            verts[5].Set(95.0f * scaleRatio, -9.0f * scaleRatio);
+            verts[6].Set(77.0f * scaleRatio, 32.0f * scaleRatio);
+            verts[7].Set(11.0f * scaleRatio, 24.0f * scaleRatio);
+            break;
+        case 'G':
+            verts[0].Set(-31.0f * scaleRatio, 46.0f * scaleRatio);
+            verts[1].Set(-86.0f * scaleRatio, 7.0f * scaleRatio);
+            verts[2].Set(-36.0f * scaleRatio, -58.0f * scaleRatio);
+            verts[3].Set(-1.0f * scaleRatio, -47.0f * scaleRatio);
+            verts[4].Set(77.0f * scaleRatio, -41.0f * scaleRatio);
+            verts[5].Set(90.0f * scaleRatio, 9.0f * scaleRatio);
+            verts[6].Set(13.0f * scaleRatio, 37.0f * scaleRatio);
+            break;
+        case 'H':
+            verts[0].Set(-15.0f * scaleRatio, 29.0f * scaleRatio);
+            verts[1].Set(-49.0f * scaleRatio, 43.0f * scaleRatio);
+            verts[2].Set(-86.0f * scaleRatio, 29.0f * scaleRatio);
+            verts[3].Set(-83.0f * scaleRatio, -12.0f * scaleRatio);
+            verts[4].Set(6.0f * scaleRatio, -56.0f * scaleRatio);
+            verts[5].Set(81.0f * scaleRatio, -40.0f * scaleRatio);
+            verts[6].Set(94.0f * scaleRatio, -6.0f * scaleRatio);
+            verts[7].Set(21.0f * scaleRatio, 56.0f * scaleRatio);
+            break;
+        case 'I':
+            verts[0].Set(-15.0f * scaleRatio, 82.0f * scaleRatio);
+            verts[1].Set(-99.0f * scaleRatio, -24.0f * scaleRatio);
+            verts[2].Set(-87.0f * scaleRatio, -44.0f * scaleRatio);
+            verts[3].Set(7.0f * scaleRatio, -74.0f * scaleRatio);
+            verts[4].Set(39.0f * scaleRatio, -55.0f * scaleRatio);
+            verts[5].Set(92.0f * scaleRatio, 34.0f * scaleRatio);
+            verts[6].Set(71.0f * scaleRatio, 55.0f * scaleRatio);
+            verts[7].Set(27.0f * scaleRatio, 59.0f * scaleRatio);
+            break;
+        case 'K':
+            verts[0].Set(-87.0f * scaleRatio, 15.0f * scaleRatio);
+            verts[1].Set(-71.0f * scaleRatio, -78.0f * scaleRatio);
+            verts[2].Set(-45.0f * scaleRatio, -88.0f * scaleRatio);
+            verts[3].Set(-13.0f * scaleRatio, -44.0f * scaleRatio);
+            verts[4].Set(56.0f * scaleRatio, -15.0f * scaleRatio);
+            verts[5].Set(95.0f * scaleRatio, 31.0f * scaleRatio);
+            verts[6].Set(72.0f * scaleRatio, 65.0f * scaleRatio);
+            verts[7].Set(8.0f * scaleRatio, 64.0f * scaleRatio);
+            break;
+        case 'L':
+            verts[0].Set(-63.0f * scaleRatio, 70.0f * scaleRatio);
+            verts[1].Set(-79.0f * scaleRatio, 41.0f * scaleRatio);
+            verts[2].Set(-76.0f * scaleRatio, 2.0f * scaleRatio);
+            verts[3].Set(-2.0f * scaleRatio, -57.0f * scaleRatio);
+            verts[4].Set(66.0f * scaleRatio, -57.0f * scaleRatio);
+            verts[5].Set(74.0f * scaleRatio, -10.0f * scaleRatio);
+            verts[6].Set(37.0f * scaleRatio, 40.0f * scaleRatio);
+            verts[7].Set(-5.0f * scaleRatio, 68.0f * scaleRatio);
+            break;
+        case 'M':
+            verts[0].Set(-76.0f * scaleRatio, 35.0f * scaleRatio);
+            verts[1].Set(-72.0f * scaleRatio, -58.0f * scaleRatio);
+            verts[2].Set(-42.0f * scaleRatio, -68.0f * scaleRatio);
+            verts[3].Set(77.0f * scaleRatio, -30.0f * scaleRatio);
+            verts[4].Set(76.0f * scaleRatio, 29.0f * scaleRatio);
+            verts[5].Set(45.0f * scaleRatio, 45.0f * scaleRatio);
+            verts[6].Set(24.0f * scaleRatio, 81.0f * scaleRatio);
+            verts[7].Set(-45.0f * scaleRatio, 70.0f * scaleRatio);
+            break;
+        case 'N':
+            verts[0].Set(-24.0f * scaleRatio, 53.0f * scaleRatio);
+            verts[1].Set(-77.0f * scaleRatio, 34.0f * scaleRatio);
+            verts[2].Set(-82.0f * scaleRatio, -30.0f * scaleRatio);
+            verts[3].Set(-25.0f * scaleRatio, -74.0f * scaleRatio);
+            verts[4].Set(33.0f * scaleRatio, -70.0f * scaleRatio);
+            verts[5].Set(69.0f * scaleRatio, 22.0f * scaleRatio);
+            verts[6].Set(40.0f * scaleRatio, 90.0f * scaleRatio);
+            verts[7].Set(-21.0f * scaleRatio, 86.0f * scaleRatio);
+            break;
+        case 'P':
+            verts[0].Set(-79.0f * scaleRatio, 32.0f * scaleRatio);
+            verts[1].Set(-73.0f * scaleRatio, -12.0f * scaleRatio);
+            verts[2].Set(-14.0f * scaleRatio, -54.0f * scaleRatio);
+            verts[3].Set(49.0f * scaleRatio, -53.0f * scaleRatio);
+            verts[4].Set(90.0f * scaleRatio, 13.0f * scaleRatio);
+            verts[5].Set(29.0f * scaleRatio, 69.0f * scaleRatio);
+            verts[6].Set(-30.0f * scaleRatio, 61.0f * scaleRatio);
+            verts[7].Set(-70.0f * scaleRatio, 46.0f * scaleRatio);
+            break;
+        case 'Q':
+            verts[0].Set(-43.0f * scaleRatio, 72.0f * scaleRatio);
+            verts[1].Set(-80.0f * scaleRatio, 34.0f * scaleRatio);
+            verts[2].Set(-60.0f * scaleRatio, -45.0f * scaleRatio);
+            verts[3].Set(-10.0f * scaleRatio, -79.0f * scaleRatio);
+            verts[4].Set(19.0f * scaleRatio, -35.0f * scaleRatio);
+            verts[5].Set(57.0f * scaleRatio, -39.0f * scaleRatio);
+            verts[6].Set(87.0f * scaleRatio, 43.0f * scaleRatio);
+            verts[7].Set(38.0f * scaleRatio, 77.0f * scaleRatio);
+            break;
+        case 'R':
+            verts[0].Set(-3.0f * scaleRatio, 40.0f * scaleRatio);
+            verts[1].Set(-85.0f * scaleRatio, 32.0f * scaleRatio);
+            verts[2].Set(-94.0f * scaleRatio, -10.0f * scaleRatio);
+            verts[3].Set(32.0f * scaleRatio, -43.0f * scaleRatio);
+            verts[4].Set(60.0f * scaleRatio, -33.0f * scaleRatio);
+            verts[5].Set(86.0f * scaleRatio, -33.0f * scaleRatio);
+            verts[6].Set(94.0f * scaleRatio, -3.0f * scaleRatio);
+            verts[7].Set(45.0f * scaleRatio, 36.0f * scaleRatio);
+            break;
+        case 'S':
+            verts[0].Set(-75.0f * scaleRatio, 21.0f * scaleRatio);
+            verts[1].Set(-74.0f * scaleRatio, -37.0f * scaleRatio);
+            verts[2].Set(-12.0f * scaleRatio, -62.0f * scaleRatio);
+            verts[3].Set(87.0f * scaleRatio, -30.0f * scaleRatio);
+            verts[4].Set(93.0f * scaleRatio, 9.0f * scaleRatio);
+            verts[5].Set(55.0f * scaleRatio, 39.0f * scaleRatio);
+            verts[6].Set(-2.0f * scaleRatio, 61.0f * scaleRatio);
+            verts[7].Set(-59.0f * scaleRatio, 44.0f * scaleRatio);
+            break;
+        case 'T':
+            verts[0].Set(-87.0f * scaleRatio, 3.0f * scaleRatio);
+            verts[1].Set(-54.0f * scaleRatio, -36.0f * scaleRatio);
+            verts[2].Set(13.0f * scaleRatio, -73.0f * scaleRatio);
+            verts[3].Set(80.0f * scaleRatio, -35.0f * scaleRatio);
+            verts[4].Set(85.0f * scaleRatio, 0.0f * scaleRatio);
+            verts[5].Set(42.0f * scaleRatio, 50.0f * scaleRatio);
+            verts[6].Set(-26.0f * scaleRatio, 60.0f * scaleRatio);
+            verts[7].Set(-76.0f * scaleRatio, 29.0f * scaleRatio);
+            break;
+        case 'V':
+            verts[0].Set(-90.0f * scaleRatio, 36.0f * scaleRatio);
+            verts[1].Set(-33.0f * scaleRatio, -58.0f * scaleRatio);
+            verts[2].Set(16.0f * scaleRatio, -64.0f * scaleRatio);
+            verts[3].Set(57.0f * scaleRatio, -36.0f * scaleRatio);
+            verts[4].Set(79.0f * scaleRatio, 29.0f * scaleRatio);
+            verts[5].Set(1.0f * scaleRatio, 64.0f * scaleRatio);
+            verts[6].Set(-65.0f * scaleRatio, 60.0f * scaleRatio);
+            break;
+        case 'W':
+            verts[0].Set(-87.0f * scaleRatio, 32.0f * scaleRatio);
+            verts[1].Set(-37.0f * scaleRatio, -42.0f * scaleRatio);
+            verts[2].Set(48.0f * scaleRatio, -46.0f * scaleRatio);
+            verts[3].Set(88.0f * scaleRatio, -20.0f * scaleRatio);
+            verts[4].Set(89.0f * scaleRatio, 18.0f * scaleRatio);
+            verts[5].Set(41.0f * scaleRatio, 35.0f * scaleRatio);
+            verts[6].Set(-24.0f * scaleRatio, 30.0f * scaleRatio);
+            verts[7].Set(-70.0f * scaleRatio, 51.0f * scaleRatio);
+            break;
+        case 'Y':
+            verts[0].Set(-92.0f * scaleRatio, 34.0f * scaleRatio);
+            verts[1].Set(-27.0f * scaleRatio, -65.0f * scaleRatio);
+            verts[2].Set(16.0f * scaleRatio, -64.0f * scaleRatio);
+            verts[3].Set(54.0f * scaleRatio, -36.0f * scaleRatio);
+            verts[4].Set(80.0f * scaleRatio, 18.0f * scaleRatio);
+            verts[5].Set(54.0f * scaleRatio, 47.0f * scaleRatio);
+            verts[6].Set(-2.0f * scaleRatio, 62.0f * scaleRatio);
+            verts[7].Set(-77.0f * scaleRatio, 57.0f * scaleRatio);
+            break;
+
+            
             
     }
     return verts;
@@ -143,67 +334,65 @@ int MatrixHelper::getVerticeNum(char c) {
     int n = -1;
     switch(c) {
         case 'A':
-        default:
             n = 6;
             break;
-//        case 'C':
-//            url = "LArginine.png";
-//            break;
-//        case 'D':
-//            url = "LAsparagine.png";
-//            break;
-//        case 'E':
-//            url = "LAsparticAcid.png";
-//            break;
-//        case 'F':
-//            url = "LCysteine.png";
-//            break;
-//        case 'G':
-//            url = "LGlutamicAcid.png";
-//            break;
-//        case 'H':
-//            url = "LGlutamine.png";
-//            break;
-//        case 'I':
-//            url = "Glycine.png";
-//            break;
-//        case 'K':
-//            url = "DHistidine.png";
-//            break;
-//        case 'L':
-//            url = "LIsoleucine.png";
-//            break;
-//        case 'M':
-//            url = "LLeucine.png";
-//            break;
-//        case 'N':
-//            url = "LLysine.png";
-//            break;
-//        case 'P':
-//            url = "LMethione.png";
-//            break;
-//        case 'Q':
-//            url = "LPhenylalanine.png";
-//            break;
-//        case 'R':
-//            url = "DProline.png";
-//            break;
-//        case 'S':
-//            url = "LSerine.png";
-//            break;
-//        case 'T':
-//            url = "LThreonine.png";
-//            break;
-//        case 'V':
-//            url = "LTryptophan.png";
-//            break;
-//        case 'W':
-//            url = "LTyrosine.png";
-//            break;
-//        case 'Y':
-//            url = "LValine.png";
-//            break;
-        
+        case 'C':
+            n = 8;
+            break;
+        case 'D':
+            n = 8;
+            break;
+        case 'E':
+            n = 8;
+            break;
+        case 'F':
+            n = 8;
+            break;
+        case 'G':
+            n = 7;
+            break;
+        case 'H':
+            n = 8;
+            break;
+        case 'I':
+            n = 8;
+            break;
+        case 'K':
+            n = 8;
+            break;
+        case 'L':
+            n = 8;
+            break;
+        case 'M':
+            n = 8;
+            break;
+        case 'N':
+            n = 8;
+            break;
+        case 'P':
+            n = 8;
+            break;
+        case 'Q':
+            n = 8;
+            break;
+        case 'R':
+            n = 8;	
+            break;
+        case 'S':
+            n = 8;
+            break;
+        case 'T':
+            n = 8;
+            break;
+        case 'V':
+            n = 7;
+            break;
+        case 'W':
+            n = 8;	
+            break;
+        case 'Y':
+            n = 8;
+            break;
     }
     return n;
 }
@@ -272,6 +461,9 @@ char MatrixHelper::getRandomAminoAcid() {
 	case 19:
 		a = 'Y';
 		break;
+    default:
+        cocos2d::CCLog("Error creating AA");
+        a = 'A';
 	}
 
 	return a;

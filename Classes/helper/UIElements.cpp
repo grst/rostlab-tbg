@@ -152,7 +152,7 @@ ccColor3B UIElements::getColorForScore(int scoring) {
 	}
 
 	if (scoring < 5) {
-		colorScore = ccc3(0, 255, 0);
+		colorScore = ccc3(255, 0, 0);
 	}
 
 	switch (scoring) {
