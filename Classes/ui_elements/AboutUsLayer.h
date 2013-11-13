@@ -1,27 +1,27 @@
 /*
- * PauseLayer.h
+ * AboutUsLayer.h
  *
  *  Created on: Nov 13, 2013
  *      Author: "Sebastian Wilzbach <sebi@wilzbach.me>"
  */
 
-#ifndef PAUSELAYER_H_
-#define PAUSELAYER_H_
+#ifndef AboutUsLayer_H_
+#define AboutUsLayer_H_
 
 #include "cocos2d.h"
 #include "../helper/SoundEffectHelper.h"
 
 
-class PauseLayer : public cocos2d::CCLayer {
+class AboutUsLayer : public cocos2d::CCLayer {
 public:
-	PauseLayer();
-	virtual ~PauseLayer();
+	AboutUsLayer();
+	virtual ~AboutUsLayer();
 	virtual bool init();
 	void DrawHUD();
 	void OnMenu(CCObject* pSender);
-	CREATE_FUNC(PauseLayer);
+	CREATE_FUNC(AboutUsLayer);
 private:
 	cocos2d::CCMenu* levelMenu;
 };
 
-#endif /* PAUSELAYER_H_ */
+#endif /* AboutUsLayer_H_ */

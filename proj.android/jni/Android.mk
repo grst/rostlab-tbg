@@ -10,20 +10,26 @@ LOCAL_MODULE_FILENAME := libgame
 
 LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/AppDelegate.cpp \
+                   ../../Classes/Globals.cpp \
                    ../../Classes/box2d/B2DebugDrawLayer.cpp \
                    ../../Classes/box2d/ContactListener.cpp \
                    ../../Classes/box2d/GLES-Render.cpp \
                    ../../Classes/ui_elements/AminoAcid.cpp \
+             	   ../../Classes/ui_elements/AboutUsLayer.cpp \
                    ../../Classes/ui_elements/BoardAcid.cpp \
                    ../../Classes/ui_elements/CCBlade.cpp \
+                   ../../Classes/ui_elements/ImpressumLayer.cpp \
                    ../../Classes/ui_elements/PauseLayer.cpp \
                    ../../Classes/ui_elements/TouchTrailLayer.cpp \
                    ../../Classes/helper/DebugDraw.cpp  \
                    ../../Classes/helper/MatrixHelper.cpp  \
                    ../../Classes/helper/HelperFunctions.cpp  \
+                   ../../Classes/helper/SoundEffectHelper.cpp  \
                    ../../Classes/helper/UIElements.cpp \
                    ../../Classes/helper/WebOpNative.cpp \
                    ../../Classes/screens/DeeWorldScene.cpp \
+                   ../../Classes/screens/LevelLoadingScene.cpp \
+                   ../../Classes/screens/LevelEndScene.cpp \
                    ../../Classes/screens/MainScreenScene.cpp \
                    ../../Classes/screens/SettingsScreenScene.cpp \
                    ../../Classes/screens/SplashScreenScene.cpp 

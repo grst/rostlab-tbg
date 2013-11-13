@@ -18,7 +18,7 @@ char AminoAcid::getType() {
 /**
  * creates an AminoAcidSprite of a random AminoAcidType
  */
-AminoAcid* AminoAcid::create() {
+AminoAcid* AminoAcid::createRandom() {
     return AminoAcid::create(MatrixHelper::getRandomAminoAcid());
 }
 

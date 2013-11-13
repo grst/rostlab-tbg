@@ -1,27 +1,27 @@
 /*
- * PauseLayer.h
+ * ImpressumLayer.h
  *
  *  Created on: Nov 13, 2013
  *      Author: "Sebastian Wilzbach <sebi@wilzbach.me>"
  */
 
-#ifndef PAUSELAYER_H_
-#define PAUSELAYER_H_
+#ifndef ImpressumLayer_H_
+#define ImpressumLayer_H_
 
 #include "cocos2d.h"
 #include "../helper/SoundEffectHelper.h"
 
 
-class PauseLayer : public cocos2d::CCLayer {
+class ImpressumLayer : public cocos2d::CCLayer {
 public:
-	PauseLayer();
-	virtual ~PauseLayer();
+	ImpressumLayer();
+	virtual ~ImpressumLayer();
 	virtual bool init();
 	void DrawHUD();
 	void OnMenu(CCObject* pSender);
-	CREATE_FUNC(PauseLayer);
+	CREATE_FUNC(ImpressumLayer);
 private:
 	cocos2d::CCMenu* levelMenu;
 };
 
-#endif /* PAUSELAYER_H_ */
+#endif /* ImpressumLayer_H_ */

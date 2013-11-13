@@ -17,7 +17,7 @@ private:
     char type;
 public:
     char getType();
-    static AminoAcid* create();
+    static AminoAcid* createRandom();
     static AminoAcid* create(char type);
     void flagForDelete();
     bool isFlaggedForDelete();
