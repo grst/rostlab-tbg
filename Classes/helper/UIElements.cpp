@@ -86,8 +86,10 @@ void UIElements::createNewAminoAcid(DeeWorld* scene) {
 	BoardAcid * acid = new BoardAcid();
 
 	if (nextAcid == '0') {
-		// TODO
 
+		CCLOG("No AA more available");
+		//scene->gameEnd();
+		//return;
 	} else {
 
 		acid->setAcid(nextAcid);
