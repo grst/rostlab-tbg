@@ -1,12 +1,18 @@
 #include "MainScreenScene.h"
 #include "../helper/WebOpNative.h"
 #include "SettingsScreenScene.h"
+#include "SplashScreenScene.h"
 #include "DeeWorldScene.h"
+#include "LevelLoadingScene.h"
 #include "../ui_elements/TouchTrailLayer.h"
+#include "../ui_elements/ImpressumLayer.h"
+#include "../ui_elements/AboutUsLayer.h"
 
 using namespace cocos2d;
 
 #define kFileStreak "streak.png"
+#define TAG_IMPRESSUM_LAYER 789
+#define TAG_ABOUTUS_LAYER 796
 
 bool MainScreenScene::init() {
 	if (CCScene::init()) {
@@ -47,7 +53,7 @@ bool MainScreenLayer::init() {
 		_label->setPosition(ccp(winSize.width / 2, winSize.height - 50));
 		this->addChild(_label, 0);
 
-		// Place the menu item bottom-right conner.
+		// Place the menu item bottom-right corner.
 		CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 		CCPoint origin = CCDirector::sharedDirector()->getVisibleOrigin();
 
@@ -58,7 +64,7 @@ bool MainScreenLayer::init() {
 		for (int i = 0; i < levels; i++) {
 
 			CCMenuItemImage *pCloseItem = CCMenuItemImage::create(
-					"CloseNormal.png", "CloseSelected.png", this,
+					"levelitem.png", "levelitem.png", this,
 					menu_selector(MainScreenLayer::menuStartGameCallback));
 
 			// some stupid rectangular order of the menu
@@ -78,20 +84,41 @@ bool MainScreenLayer::init() {
 			menuIcons->addObject(pCloseItem);
 		}
 
-		CCMenuItemImage *pCloseItem = CCMenuItemImage::create("settings.png",
-				"settings.png", this,
-				menu_selector(MainScreenLayer::changeScene));
-
-		// some stupid rectangular order of the menu
-		pCloseItem->setPosition(
-				ccp(winSize.width - pCloseItem->getContentSize().width / 2,
+		// settings
+		CCMenuItemImage *pSettingsItem = CCMenuItemImage::create("settings.png","settings.png", this,menu_selector(MainScreenLayer::changeScene));
+		pSettingsItem->setPosition(
+				ccp(winSize.width - pSettingsItem->getContentSize().width / 2,
 						origin.y + winSize.height
-								- pCloseItem->getContentSize().height * 2));
-		// maybe we should use the dedicated align method for this?
+								- pSettingsItem->getContentSize().height * 2));
+		pSettingsItem->setTag(10);
+		menuIcons->addObject(pSettingsItem);
 
-		pCloseItem->setTag(10);
+		// about us
+		CCMenuItemImage *pAboutUs = CCMenuItemImage::create("aboutus.png","aboutus.png", this,menu_selector(MainScreenLayer::changeScene));
+		pAboutUs->setPosition(
+				ccp( pAboutUs->getContentSize().width / 2 + winSize.width * 1/4,
+						origin.y + winSize.height
+								- pAboutUs->getContentSize().height * 2));
+		pAboutUs->setTag(11);
+		menuIcons->addObject(pAboutUs);
 
-		menuIcons->addObject(pCloseItem);
+		// impressum
+		CCMenuItemImage *pImpressum = CCMenuItemImage::create("impressum.png","impressum.png", this,menu_selector(MainScreenLayer::changeScene));
+		pImpressum->setPosition(
+				ccp( pImpressum->getContentSize().width / 2 + winSize.width * 2/4,
+						origin.y + winSize.height
+								- pImpressum->getContentSize().height * 2));
+		pImpressum->setTag(12);
+		menuIcons->addObject(pImpressum);
+
+		// close app
+		CCMenuItemImage *pCloseApp = CCMenuItemImage::create("closeapp.png","closeapp.png", this,menu_selector(MainScreenLayer::changeScene));
+		pCloseApp->setPosition(
+				ccp(  pCloseApp->getContentSize().width / 2 + winSize.width * 3/4,
+						origin.y + winSize.height
+								- pCloseApp->getContentSize().height * 2));
+		pCloseApp->setTag(13);
+		menuIcons->addObject(pCloseApp);
 
 		// Create a menu with our menu items
 		levelMenu = CCMenu::createWithArray(menuIcons);
@@ -99,6 +126,8 @@ bool MainScreenLayer::init() {
 
 		// Add the menu to TestWorld layer as a child layer.
 		this->addChild(levelMenu, 1);
+
+		SoundEffectHelper::playMainMenuBackgroundMusic();
 
 		return true;
 	} else {
@@ -120,18 +149,48 @@ void MainScreenLayer::initBackground() {
 
 void MainScreenLayer::changeScene(CCObject* pSender) {
 
+	SoundEffectHelper::playClickSound();
+
+	CCScene *pScene1;
+
 	CCMenuItem* pMenuItem = (CCMenuItem *) (pSender);
 	int tag = (int) pMenuItem->getTag();
-
 	CCLOG("Changing to settings", tag);
 
-	CCScene *pScene = SettingsScreenScene::create();
-	//transition to next scene for one sec
-	CCDirector::sharedDirector()->replaceScene(
-			CCTransitionFade::create(1.0f, pScene));
+	CCLayer * layer2;
+
+	switch(tag){
+	case 10:
+		pScene1 = SettingsScreenScene::create();
+		//transition to next scene for one sec
+		CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(1.0f, pScene1));
+		break;
+	case 11:
+		if(this->getChildByTag(TAG_ABOUTUS_LAYER) != NULL){
+				this->removeChildByTag(TAG_ABOUTUS_LAYER, true);
+		}else{
+			layer2 = AboutUsLayer::create();
+			this->addChild(layer2, 10, TAG_ABOUTUS_LAYER);
+		}
+		break;
+	case 12:
+		if(this->getChildByTag(TAG_IMPRESSUM_LAYER) != NULL){
+			this->removeChildByTag(TAG_IMPRESSUM_LAYER, true);
+		}else{
+			layer2 = ImpressumLayer::create();
+			this->addChild(layer2, 10, TAG_IMPRESSUM_LAYER);
+		}
+		break;
+	case 13:
+		pScene1 = SplashScreenScene::create(false);
+		CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(1.0f, pScene1));
+		break;
+	}
 }
 
 void MainScreenLayer::menuStartGameCallback(CCObject* pSender) {
+
+	SoundEffectHelper::playClickSound();
 
 	CCMenuItem* pMenuItem = (CCMenuItem *) (pSender);
 	int tag = (int) pMenuItem->getTag();
@@ -143,13 +202,16 @@ void MainScreenLayer::menuStartGameCallback(CCObject* pSender) {
 
 	switch(tag){
 	//TODO
-	case 1:
+	case 7:
+		// just for short testing
+		seq= "SMGTK"; break;
 	default:
 		seq= "SMGTKGKVIKCKAAIAWE";
 	}
 
-	CCScene *pScene = DeeWorld::scene(seq);
+	CCScene *pScene = LevelLoadingScene::create(seq, tag);
 
+	SoundEffectHelper::stopBackgroundMusic();
 
 	//transition to next scene for one sec
 	CCDirector::sharedDirector()->replaceScene(

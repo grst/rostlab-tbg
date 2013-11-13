@@ -72,6 +72,8 @@ bool SettingsScreenLayer::init() {
 		levelMenu = CCMenu::createWithArray(menuIcons);
 		levelMenu->setPosition(CCPointZero);
 
+		SoundEffectHelper::playMainMenuBackgroundMusic();
+
 		// Add the menu to TestWorld layer as a child layer.
 		this->addChild(levelMenu, 1);
 
@@ -83,10 +85,13 @@ bool SettingsScreenLayer::init() {
 }
 
 void SettingsScreenLayer::keyBackClicked(void) {
+	SoundEffectHelper::playClickSound();
 	endScreen();
 }
 
 void SettingsScreenLayer::changeScene(CCObject* pSender) {
+
+	SoundEffectHelper::playClickSound();
 
 	CCMenuItem* pMenuItem = (CCMenuItem *) (pSender);
 	int tag = (int) pMenuItem->getTag();

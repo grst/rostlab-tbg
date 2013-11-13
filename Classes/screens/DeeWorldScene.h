@@ -19,8 +19,6 @@
 #include "../ui_elements/CCBlade.h"
 #include "../box2d/ContactListener.h"
 
-#include "SimpleAudioEngine.h"
-
 
 class DeeWorld: public cocos2d::CCLayerColor, public b2ContactListener {
 public:
@@ -32,7 +30,7 @@ public:
 	virtual bool init();
 
 	// there's no 'id' in cpp, so we recommand to return the exactly class pointer
-	static cocos2d::CCScene* scene(std::string sequence);
+	static cocos2d::CCScene* scene(std::string sequence, int level);
 
 
 	void setSequence(std::string seq);
@@ -72,11 +70,6 @@ public:
 
 	std::queue<BoardAcid*> _code;
 
-	//sound
-	void startBackgroundSound();
-	void stopBackgroundSound();
-
-
 
 protected:
     cocos2d::CCArray *_targets;
@@ -96,24 +89,29 @@ private:
     void initInfoUI();
     void initBackground();
 
+    void initListener();
+    void onApplicationStatusChanged(CCObject* obj);
+
     
     void pauseAction(CCObject* pSender);
+    void pauseGame();
 
 	void manageCollision(b2Body* target);
     void scoreAminoAcid(AminoAcid* sTarget);
 	void countdown();
+	void showCountdown(int time);
+
 	void updateInfoUI();
 	bool isGamePaused();
-	bool isSoundEnabled();
 	void resumeGame();
 
     int detectCorner();
 
-	int score;
 	int timer;
 	double startTime;
 	long lastAminoHitTime;
 	std::string aminoSequence;
+	bool isAminoAcidRemaining();
 	bool pausedGame;
 
 

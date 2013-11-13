@@ -23,51 +23,45 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#ifndef MainScreen_H_
-#define MainScreen_H_
+#ifndef LevelEnd_H_
+#define LevelEnd_H_
 
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <ctype.h>
 #include "cocos2d.h"
-#include "../ui_elements/CCBlade.h"
-#include "../helper/SoundEffectHelper.h"
 
-class MainScreenLayer : public cocos2d::CCLayerColor
+class LevelEndLayer : public cocos2d::CCLayerColor
 {
 public:
-	MainScreenLayer():_label(NULL) {};
-    virtual ~MainScreenLayer();
+	LevelEndLayer():_label(NULL) {};
+    virtual ~LevelEndLayer();
     bool init();
-    CREATE_FUNC(MainScreenLayer);
+    CREATE_FUNC(LevelEndLayer);
 
-
-    // The back key clicked
-    virtual void keyBackClicked();
-
-     // The menu key clicked. only on wophone & android
-     virtual void keyMenuClicked();
-
-     void ccTouchesBegan(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent);
-        void ccTouchesMoved(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent);
-        void ccTouchesEnded(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent);
-
-
+    void endScreen();
+    void addLabels();
     CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _label, Label);
+
+
+    int score;
+    int level;
 private:
-    void menuStartGameCallback(CCObject* sender);
-    void changeScene(CCObject* sender);
-    void initBackground();
-    cocos2d::CCMenu* levelMenu;
-    std::map< cocos2d::CCTouch *, CCBlade * >  _map;
+    cocos2d::CCLabelTTF* scoreLabel;
+    cocos2d::CCLabelTTF* levelLabel;
 };
 
-class MainScreenScene : public cocos2d::CCScene
+class LevelEndScene : public cocos2d::CCScene
 {
 public:
-	MainScreenScene():_layer(NULL) {};
-    ~MainScreenScene();
+	LevelEndScene():_layer(NULL) {};
+    ~LevelEndScene();
+    static CCScene* create(int score, int level);
     bool init();
-    CREATE_FUNC(MainScreenScene);
+    CREATE_FUNC(LevelEndScene);
   
-    CC_SYNTHESIZE_READONLY(MainScreenLayer*, _layer, Layer);
+    CC_SYNTHESIZE_READONLY(LevelEndLayer*, _layer, Layer);
 };
 
 #endif // _GAME_OVER_SCENE_H_

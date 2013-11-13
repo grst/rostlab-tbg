@@ -1,49 +1,52 @@
-#include "SplashScreenScene.h"
+#include "LevelEndScene.h"
 #include "../helper/WebOpNative.h"
 #include "MainScreenScene.h"
 
 using namespace cocos2d;
 
-CCScene* SplashScreenScene::create(bool start) {
+CCScene* LevelEndScene::create(int score, int level) {
 
-	SplashScreenScene * scene = NULL;
+	LevelEndScene * scene = NULL;
 	do {
 
 		// 'scene' is an autorelease object
-		scene = SplashScreenScene::create();
+		scene = LevelEndScene::create();
 		CC_BREAK_IF(!scene);
-		scene->_layer->start = start;
 		scene->_layer->addLabels();
+		scene->_layer->score = score;
+		scene->_layer->level = level;
+
 	}while(0);
 
 	return scene;
 }
 
-bool SplashScreenScene::init() {
+bool LevelEndScene::init() {
 	if (CCScene::init()) {
-			this->_layer = SplashScreenLayer::create();
+			this->_layer = LevelEndLayer::create();
 			this->_layer->retain();
 			this->addChild(_layer);
 
 			return true;
 		} else {
+			return false;
 		}
 }
 
-SplashScreenScene::~SplashScreenScene() {
+LevelEndScene::~LevelEndScene() {
 	if (_layer) {
 		_layer->release();
 		_layer = NULL;
 	}
 }
 
-bool SplashScreenLayer::init() {
+bool LevelEndLayer::init() {
 	if (CCLayerColor::initWithColor(ccc4(255, 255, 255, 255))) {
 
 		SoundEffectHelper::playLevelEndSound();
 		CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
-		// add "SplashScreen" splash screen"
+		// add "LevelEnd" splash screen"
 		CCSprite* pSpriteBackground = CCSprite::create("NotificationScreenBackground.jpg");
 
 		// position the sprite on the center of the screen
@@ -53,9 +56,13 @@ bool SplashScreenLayer::init() {
 		// add the sprite as a child to this layer
 		this->addChild(pSpriteBackground, 0);
 
+		this->_label = CCLabelTTF::create("Level Ended", "Artial", 32);
+		_label->retain();
+		_label->setColor(ccc3(0, 0, 0));
+		_label->setPosition(ccp(winSize.width / 2, winSize.height / 2));
+		this->addChild(_label);
 
-
-		// add "SplashScreen" splash screen"
+		// add "LevelEnd" splash screen"
 		CCSprite* pSpriteLogo = CCSprite::create("logo.png");
 
 		// position the sprite on the center of the screen
@@ -76,10 +83,10 @@ bool SplashScreenLayer::init() {
 
 		// set a delay for three seconds
 		this->runAction(
-				CCSequence::create(CCDelayTime::create(2),
+				CCSequence::create(CCDelayTime::create(3),
 						CCCallFunc::create(this,
 								callfunc_selector(
-										SplashScreenLayer::endScreen)),
+										LevelEndLayer::endScreen)),
 						NULL));
 
 
@@ -90,23 +97,27 @@ bool SplashScreenLayer::init() {
 	}
 }
 
-void SplashScreenLayer::addLabels(){
+void LevelEndLayer::addLabels(){
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
-	std::string seq = "";
-	if(start){
-		seq = "Starting game. Good Luck!";
-	}else{
-		seq = "Thank you for playing with us";
-	}
 
-	this->_label = CCLabelTTF::create(seq.c_str(), "Artial", 32);
-	_label->retain();
-	_label->setColor(ccc3(0, 0, 0));
-	_label->setPosition(ccp(winSize.width / 2, winSize.height / 2));
-	this->addChild(_label);
+	std::string strLevel = static_cast<std::ostringstream*>(&(std::ostringstream() << Globals::level))->str();
+	std::string seqLevel= "Level:" + strLevel;
+	this->levelLabel = CCLabelTTF::create(seqLevel.c_str(), "Artial", 32);
+	levelLabel->retain();
+	levelLabel->setColor(ccc3(0, 0, 0));
+	levelLabel->setPosition(ccp(winSize.width / 2 , winSize.height / 2 - 40));
+	this->addChild(levelLabel);
+
+	std::string strScore = static_cast<std::ostringstream*>(&(std::ostringstream() << Globals::score))->str();
+	std::string seqScore = "Score:"+ strScore;
+	this->scoreLabel = CCLabelTTF::create(seqScore.c_str(), "Artial", 32);
+	scoreLabel->retain();
+	scoreLabel->setColor(ccc3(0, 0, 0));
+	scoreLabel->setPosition(ccp(winSize.width / 2 , winSize.height / 2 -80));
+	this->addChild(scoreLabel);
 }
 
-void SplashScreenLayer::endScreen() {
+void LevelEndLayer::endScreen() {
 
 	//WebOpNative::openLink("http://www.rostlab.org");
 	/*
@@ -115,17 +126,11 @@ void SplashScreenLayer::endScreen() {
 	 CCDirector::sharedDirector()->replaceScene(
 	 CCTransitionFade::create(1.0f, pScene));
 	 */
-	if(start){
-		//start Game
-		CCScene *pScene = MainScreenScene::create();
-		CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.7f, pScene));
-	}else{
-		// end Game
-		CCDirector::sharedDirector()->end();
-	}
+	CCScene *pScene = MainScreenScene::create();
+	CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(2.0f, pScene));
 }
 
-SplashScreenLayer::~SplashScreenLayer() {
+LevelEndLayer::~LevelEndLayer() {
 	if (_label) {
 		_label->release();
 		_label = NULL;

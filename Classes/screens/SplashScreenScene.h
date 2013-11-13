@@ -37,8 +37,12 @@ public:
     CREATE_FUNC(SplashScreenLayer);
 
     void endScreen();
+    void addLabels();
 
-    CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _label, Label);
+    cocos2d::CCLabelTTF* _label;
+
+
+    bool start;
 };
 
 class SplashScreenScene : public cocos2d::CCScene
@@ -46,6 +50,7 @@ class SplashScreenScene : public cocos2d::CCScene
 public:
 	SplashScreenScene():_layer(NULL) {};
     ~SplashScreenScene();
+    static CCScene* create(bool start);
     bool init();
     CREATE_FUNC(SplashScreenScene);
   

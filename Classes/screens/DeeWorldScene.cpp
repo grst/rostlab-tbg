@@ -1,17 +1,18 @@
 #include "DeeWorldScene.h"
+#include "LevelEndScene.h"
 #include "SplashScreenScene.h"
 #include "SimpleAudioEngine.h"
 #include "../helper/MatrixHelper.h"
 #include "../helper/UIElements.h"
 #include "MainScreenScene.h"
 #include "../ui_elements/PauseLayer.h"
-#include <iostream>
-#include <string>
+#include "../helper/SoundEffectHelper.h"
+
 
 USING_NS_CC;
 
 #define PTM_RATIO 32.0
-#define INTRO_TIME_SECONDS 1
+#define INTRO_TIME_SECONDS 3
 #define TOLERANCE_PLAYER -30
 #define MS_TIME_PLAYER_BLOCKED 0
 #define PLAYER_IMAGE "Player.png"
@@ -22,7 +23,6 @@ USING_NS_CC;
 #define MAX_SPEED 6
 #define AA_ADD_PROBABILITY 230 //Every n calls of tick, one additional amino acid is added (if withing MIN and MAX)
 #define AA_REMOVE_PROBABILITY 15 //Every n wall collisions, remove one amino acid.
-#define SOUND_DISABLED 0 // just for debugging purpose;  1 -> no sound
 #define TAG_PAUSE_LAYER 567 // arbitrary tag for pause menu - DO NOT MODIFY
 #define DEBUG_DRAW 0 // 1 enable debug draw, 0 disable
 
@@ -48,7 +48,7 @@ DeeWorld::DeeWorld() {
 /*
  * pass the sequence on construction
  */
-CCScene* DeeWorld::scene(std::string sequence) {
+CCScene* DeeWorld::scene(std::string sequence, int level) {
 	CCScene * scene = NULL;
 	do {
 
@@ -63,9 +63,11 @@ CCScene* DeeWorld::scene(std::string sequence) {
 		CC_BREAK_IF(!layer);
 
 		layer->setSequence(sequence);
+		Globals::level = level;
 
 		// add layer as a child to scene
 		scene->addChild(layer);
+
 	} while (0);
 
 	// return the scene
@@ -117,10 +119,11 @@ bool DeeWorld::init() {
 	this->setTouchEnabled(true);
 
 	initInfoUI();
+	initListener();
 
 	updateInfoUI();
 
-	startBackgroundSound();
+	SoundEffectHelper::playLevelBackgroundMusic(Globals::level);
 
 
 	CCDirector::sharedDirector()->getTouchDispatcher()->addStandardDelegate(
@@ -143,6 +146,28 @@ void DeeWorld::initBackground() {
 
 	// add the sprite as a child to this layer
 	this->addChild(pSpriteBackground, 0);
+}
+
+//Listen event.
+void DeeWorld::initListener()
+{
+    CCNotificationCenter::sharedNotificationCenter()->addObserver(this, callfuncO_selector(DeeWorld::onApplicationStatusChanged), "APP_STATUS_CHANGED", NULL);
+}
+
+//Handling event
+void DeeWorld::onApplicationStatusChanged(CCObject* obj)
+{
+	CCBool* b = (CCBool*) obj;
+	if(b->getValue()){
+		CCLog("app resumed");
+		CCMessageBox("Application resumed", "Debug by us");
+		pauseAction(NULL);
+	}else{
+		CCLog("app went into background");
+		pauseAction(NULL);
+	}
+
+
 }
 
 void DeeWorld::makeMenu() {
@@ -270,12 +295,11 @@ void DeeWorld::initInfoUI() {
 	//reset AminoHit
 	lastAminoHitTime = 0.0f;
 
-	this->score = 0;
+	Globals::score = 0;
 	CCSize layerSize = this->getContentSize();
 
 	CCLog("setting score");
 	//score
-	score = 0;
 	// int -> str
 	this->_scoreLabel = CCLabelTTF::create("0", "Helvetica", 30,
                                            CCSizeMake(60, 30), kCCTextAlignmentRight);
@@ -287,10 +311,16 @@ void DeeWorld::initInfoUI() {
 
 	CCLog("setting timer");
 	//timer
-	this->timer = INTRO_TIME_SECONDS;
+	pauseGame();
+	showCountdown(INTRO_TIME_SECONDS);
+}
 
+void DeeWorld::showCountdown(int time){
+	timer =time;
+
+	CCSize layerSize = this->getContentSize();
 	this->_timerLabel = CCLabelTTF::create("", "Helvetica",
-			layerSize.height * 2 / 3, layerSize, kCCTextAlignmentCenter);
+				layerSize.height * 2 / 3, layerSize, kCCTextAlignmentCenter);
 	this->_timerLabel->retain();
 	this->_timerLabel->setPosition(
 			ccp(layerSize.width / 2, layerSize.height / 2));
@@ -299,7 +329,7 @@ void DeeWorld::initInfoUI() {
 
 	CCActionInterval * tintTo = CCTintTo::create(timer, 20, 25, 255);
 	this->_timerLabel->runAction(tintTo);
-
+	pauseGame();
 	this->countdown();
 }
 
@@ -313,6 +343,8 @@ void DeeWorld::countdown() {
 
 	}
 	if (this->timer >= 1) {
+		SoundEffectHelper::playTimerTickSound();
+
 		//convert int to string
 		string timeStr = static_cast<ostringstream*>(&(ostringstream()
 				<< this->timer))->str();
@@ -331,6 +363,7 @@ void DeeWorld::countdown() {
 			this->_timerLabel->release();
 			this->_timerLabel = NULL;
 		}
+		resumeGame();
 	}
 }
 
@@ -382,7 +415,7 @@ int DeeWorld::detectCorner() {
  * TODO: let the target drop into the screen from a random corner and start movement
  */
 void DeeWorld::addTarget() {
-	AminoAcid *sTarget = AminoAcid::create();    
+	AminoAcid *sTarget = AminoAcid::createRandom();
     HelperFunctions::resizseSprite(sTarget, 64, 0);
 	//Place target in a randomly picked corner.
 	int startX, startY;
@@ -439,7 +472,6 @@ void DeeWorld::addTarget() {
     vel.operator*=(scale);
 	b2Body* target = CreateBox2DBodyForSprite(sTarget, n, verts);
     target->SetLinearVelocity(vel);
-
 }
 
 /**
@@ -683,7 +715,7 @@ b2Body* DeeWorld::CreateBox2DBodyForSprite(cocos2d::CCSprite *sprite,
 void DeeWorld::updateInfoUI() {
 	//update score
 	string temp =
-			static_cast<ostringstream*>(&(ostringstream() << this->score))->str();
+			static_cast<ostringstream*>(&(ostringstream() << Globals::score))->str();
 	this->_scoreLabel->setString(temp.c_str());
 	this->_scoreLabel->draw();
 	this->_scoreLabel->update(0.5);
@@ -744,13 +776,15 @@ void DeeWorld::tick(float delta) {
 				sprite->setRotation(-1 * CC_RADIANS_TO_DEGREES(b->GetAngle()));
 			}
 		}
-		//add aminoAcids, if neccessary
-		while(AAcounter < MIN_AMINO_ACIDS) {
-			this->addTarget();
-		}
-		if(AAcounter < MAX_AMINO_ACIDS) {
-			if(HelperFunctions::randomValueBetween(0, AA_ADD_PROBABILITY) < 1) {
+		if(isAminoAcidRemaining()){
+			//add aminoAcids, if neccessary
+			while(AAcounter < MIN_AMINO_ACIDS) {
 				this->addTarget();
+			}
+			if(AAcounter < MAX_AMINO_ACIDS) {
+				if(HelperFunctions::randomValueBetween(0, AA_ADD_PROBABILITY) < 1) {
+					this->addTarget();
+				}
 			}
 		}
 	}
@@ -778,9 +812,7 @@ void DeeWorld::manageCollision(b2Body* target) {
     //remove amino acid
     aTarget->flagForDelete();
     
-    //this->code.pMatrixHelper::getRandomAminoAcid();
     this->updateInfoUI();	
-    
 }
 
 /**
@@ -802,7 +834,7 @@ void DeeWorld::scoreAminoAcid(AminoAcid* sTarget) {
     int scoring = MatrixHelper::getScoreForAminoAcid(wantedAcid,
                                                      hitAcid);
     // add to the current score
-    this->score = scoring + this->score;
+    Globals::score= scoring + Globals::score;
     
     std::string str = static_cast<ostringstream*>(&(ostringstream()
                                                     << scoring))->str();
@@ -850,12 +882,13 @@ void DeeWorld::scoreAminoAcid(AminoAcid* sTarget) {
     
 
     // play a nice sound
-    if(isSoundEnabled()){
+    if(SoundEffectHelper::isSoundEnabled()){
 		if (scoring > 0) {
-		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect( "cat_ouch.wav", false );
+			SoundEffectHelper::playPositiveCollisionSound();
+		}else if(scoring == 0){
+			SoundEffectHelper::playNeutralCollisionSound();
 		}else{
-		   CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect(
-								"pew-pew-lei.wav");
+			SoundEffectHelper::playNegativeCollisionSound();
 		}
     }
 
@@ -868,14 +901,26 @@ void DeeWorld::scoreAminoAcid(AminoAcid* sTarget) {
 
 // TODO blend layer with pause and pause the whole game
 void DeeWorld::pauseAction(CCObject* pSender) {
+	if(timer == 0){
+		if(!pausedGame){
+			pauseGame();
+			PauseLayer *layer = PauseLayer::create();
+			this->addChild(layer, 10, TAG_PAUSE_LAYER);
 
+		}else{
+			if(this->getChildByTag(TAG_PAUSE_LAYER) != NULL){
+				this->removeChildByTag(TAG_PAUSE_LAYER, true);
+			}
+			showCountdown(3);
+		}
+	}
+}
+
+void DeeWorld::pauseGame(){
 	if(!pausedGame){
-		stopBackgroundSound();
-		//PauseMenu * pauseMenu = PauseMenu::createWithGame( this );
-		//this -> addChild( pauseMenu);
+		SoundEffectHelper::pauseAllMusic();
 		pausedGame = true;
 		this->setTouchEnabled(false);
-
 		CCArray* childs = this->getChildren();
 		CCObject* child;
 		CCARRAY_FOREACH(childs, child)
@@ -883,45 +928,37 @@ void DeeWorld::pauseAction(CCObject* pSender) {
 		   CCSprite *sprite = (CCSprite *)child;
 		   sprite->pauseSchedulerAndActions();
 		}
-		PauseLayer *layer = PauseLayer::create();
-		this->addChild(layer, 10, TAG_PAUSE_LAYER);
-
-	}else{
-		resumeGame();
 	}
-
-	return;
-
 }
 
 void DeeWorld::resumeGame(){
 
-	this->removeChildByTag(TAG_PAUSE_LAYER, true);
 
 	pausedGame = false;
-	startBackgroundSound();
+	SoundEffectHelper::resumeAllMusic();
 	this->setTouchEnabled(true);
 
 	CCArray* childs = this->getChildren();
-			CCObject* child;
-			CCARRAY_FOREACH(childs, child)
-			{
-			   CCSprite *sprite = (CCSprite *)child;
-			   sprite->resumeSchedulerAndActions();
-			}
+	CCObject* child;
+	CCARRAY_FOREACH(childs, child)
+	{
+	   CCSprite *sprite = (CCSprite *)child;
+	   sprite->resumeSchedulerAndActions();
+	}
+	SoundEffectHelper::playLevelStartSound();
 }
 
 /*
  * this function is called when all sequences have been processed
  */
 void DeeWorld::gameEnd() {
-	CCLog("GAME OVER");
+	SoundEffectHelper::stopBackgroundMusic();
+	CCLog("LEVEL END");
 
-	// TODO this creates an error on android
-	CCScene *pScene = MainScreenScene::create();
+	CCScene *pScene = LevelEndScene::create(Globals::score, Globals::level);
 	//transition to next scene for one sec
 	CCDirector::sharedDirector()->replaceScene(
-				CCTransitionFade::create(1.0f, pScene));
+				CCTransitionFade::create(0.0f, pScene));
 }
 
 char DeeWorld::getNextAminoAcid() {
@@ -933,6 +970,13 @@ char DeeWorld::getNextAminoAcid() {
 	}
 	CCLog("Next Acid is %c", end);
 	return end;
+}
+
+bool DeeWorld::isAminoAcidRemaining(){
+	if( this->aminoSequence.size() > 0 ){
+		return true;
+	}
+	return false;
 }
 
 void DeeWorld::setSequence(std::string seq) {
@@ -947,30 +991,10 @@ void DeeWorld::setSequence(std::string seq) {
 	}
 }
 
-// http://www.cocos2d-x.org/reference/native-cpp/V2.2/de/d8f/class_cocos_denshion_1_1_simple_audio_engine.html#a91013ef8ca9544db243e255161e15c1c
-void DeeWorld::startBackgroundSound(){
-	if(DeeWorld::isSoundEnabled()){
-	CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("background-music-aac.wav", true);
-	}
-}
-
-void DeeWorld::stopBackgroundSound(){
-	if(CocosDenshion::SimpleAudioEngine::sharedEngine()->isBackgroundMusicPlaying()){
-		CocosDenshion::SimpleAudioEngine::sharedEngine()->stopBackgroundMusic(true);
-	}
-}
 
 bool DeeWorld::isGamePaused(){
 	bool ret = this->pausedGame || CCDirector::sharedDirector()->isPaused();
 	return ret;
 }
 
-bool DeeWorld::isSoundEnabled(){
-	CCLog("Music: %s", cocos2d::CCUserDefault::sharedUserDefault()->getBoolForKey("music_enable", true) ? "on" :"off");
-	if(SOUND_DISABLED == 1 || (!	cocos2d::CCUserDefault::sharedUserDefault()->getBoolForKey(
-			"music_enable", true))){
-		return false;
-	}else{
-		return true;
-	}
-}
+

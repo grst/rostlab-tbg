@@ -50,6 +50,7 @@ public:
 private:
      cocos2d::CCMenu* levelMenu;
 
+
 };
 
 class SettingsScreenScene : public cocos2d::CCScene
