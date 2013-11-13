@@ -963,9 +963,9 @@ bool DeeWorld::isGamePaused(){
 }
 
 bool DeeWorld::isSoundEnabled(){
-	// TODO add call to user defaults
-	if(SOUND_DISABLED == 1 ||!	cocos2d::CCUserDefault::sharedUserDefault()->getBoolForKey(
-			"music_enable", true)){
+	CCLog("Music: %s", cocos2d::CCUserDefault::sharedUserDefault()->getBoolForKey("music_enable", true) ? "on" :"off");
+	if(SOUND_DISABLED == 1 || (!	cocos2d::CCUserDefault::sharedUserDefault()->getBoolForKey(
+			"music_enable", true))){
 		return false;
 	}else{
 		return true;

@@ -92,9 +92,9 @@ void HelperFunctions::toggleMusic(){
 	cocos2d::CCLog("toggle music");
 	bool music = cocos2d::CCUserDefault::sharedUserDefault()->getBoolForKey(
 						"music_enable", true);
-	if (music == 0) {
+	if (music) {
 		cocos2d::CCUserDefault::sharedUserDefault()->setBoolForKey("music_enable", false);
 	}else{
-		cocos2d::CCUserDefault::sharedUserDefault()->setBoolForKey("music_enable", false);
+		cocos2d::CCUserDefault::sharedUserDefault()->setBoolForKey("music_enable", true);
 	}
 }

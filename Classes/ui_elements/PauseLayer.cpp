@@ -7,6 +7,8 @@
 
 #include "PauseLayer.h"
 #include "../helper/HelperFunctions.h"
+#include "../screens/MainScreenScene.h"
+#include "../screens/SettingsScreenScene.h"
 
 using namespace cocos2d;
 
@@ -44,7 +46,7 @@ bool PauseLayer::init()
 							menu_selector(PauseLayer::OnMenu));
 		pSettingsItem->setPosition(ccp(winSize.width / 5+ pSettingsItem->getContentSize().width ,
 						winSize.height -  pSettingsItem->getContentSize().height));
-		pSettingsItem->setTag(1);
+		pSettingsItem->setTag(3);
 		menuIcons->addObject(pSettingsItem);
 
 		//music
@@ -59,7 +61,7 @@ bool PauseLayer::init()
 		CCMenuItemToggle * toggleMenu = CCMenuItemToggle::createWithTarget(this,menu_selector(PauseLayer::OnMenu), pMusicItemOn, pMusicItemOff, NULL );
 		toggleMenu->setPosition(ccp(winSize.width / 5+ toggleMenu->getContentSize().width  +100,
 				winSize.height - toggleMenu->getContentSize().height));
-		toggleMenu->setTag(1);
+		toggleMenu->setTag(2);
 		// add current value
 		if( !	cocos2d::CCUserDefault::sharedUserDefault()->getBoolForKey(
 					"music_enable", true)){
@@ -75,7 +77,7 @@ bool PauseLayer::init()
 							menu_selector(PauseLayer::OnMenu));
 		pMainMenu->setPosition(ccp(winSize.width / 5+ pMainMenu->getContentSize().width  +200,
 						winSize.height - pMainMenu->getContentSize().height));
-		pMainMenu->setTag(3);
+		pMainMenu->setTag(1);
 		menuIcons->addObject(pMainMenu);
 
 
@@ -98,7 +100,7 @@ bool PauseLayer::init()
 		layer3->setStartColor(ccc3(100, 100, 100));
 		layer3->setEndColor(ccc3(120, 120, 120));
 		layer3->setStartOpacity(160);
-		layer3->setEndOpacity(200);
+		layer3->setEndOpacity(240);
 		ccBlendFunc blend;
 		blend.src = GL_SRC_ALPHA;
 		blend.dst = GL_ONE_MINUS_SRC_ALPHA;
@@ -120,15 +122,22 @@ void PauseLayer::OnMenu(CCObject* pSender)
 	CCMenuItem* pMenuItem = (CCMenuItemImage *) (pSender);
 	int tag = (int) pMenuItem->getTag();
 
-	CCLOG("MenuItem  %d", tag);
+	CCLOG("PauseMenuItem  %d", tag);
 
+	CCScene *pScene1;
 	switch(tag){
-	case 1: break;
+	case 1:
+		 pScene1 = MainScreenScene::create();
+		 CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(1.0f, pScene1));
+		break;
 	case 2:
 		// toggle music
 		HelperFunctions::toggleMusic();
 		break;
-	case 3: break;
+	case 3:
+		pScene1 = SettingsScreenScene::create();
+		CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(1.0f, pScene1));
+		break;
 	}
 
 //	CCScene* nextScene = MainMenu::scene();
