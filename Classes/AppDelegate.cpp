@@ -28,15 +28,22 @@ bool AppDelegate::applicationDidFinishLaunching() {
     if (screenSize.height > 320)
     {
         searchPaths.push_back("hd");
+        searchPaths.push_back("hd/acids");
+        searchPaths.push_back("hd/buttons");
+        searchPaths.push_back("hd/backgrounds");
         pDirector->setContentScaleFactor(640.0f/designSize.height);
     }
     else
     {
         searchPaths.push_back("sd");
+        searchPaths.push_back("sd/acids");
+        searchPaths.push_back("sd/buttons");
+        searchPaths.push_back("hd/backgrounds");
         pDirector->setContentScaleFactor(320.0f/designSize.height);
     }
     
     searchPaths.push_back("matrices");
+    searchPaths.push_back("music");
 
     CCFileUtils::sharedFileUtils()->setSearchPaths(searchPaths);
     
@@ -68,7 +75,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 // This function will be called when the app is inactive. When comes a phone call,it's be invoked too
 void AppDelegate::applicationDidEnterBackground() {
     CCDirector::sharedDirector()->stopAnimation();
-
+    CCLOG("Application in background");
     // if you use SimpleAudioEngine, it must be pause
     // SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
 }
@@ -76,6 +83,7 @@ void AppDelegate::applicationDidEnterBackground() {
 // this function will be called when the app is active again
 void AppDelegate::applicationWillEnterForeground() {
     CCDirector::sharedDirector()->startAnimation();
+    CCLOG("Application there again");
 
     // if you use SimpleAudioEngine, it must resume here
     // SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();

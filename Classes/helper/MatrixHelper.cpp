@@ -88,6 +88,8 @@ const char * MatrixHelper::getImagePathForAcid(char c) {
         case 'Y':
             url = "LTyrosine.png";
             break;
+        default:
+        	url = "DAlanine.png";
 	}
 
 	//add subfolder - NOT possible
@@ -115,6 +117,10 @@ b2Vec2* MatrixHelper::getVerticeData(char c, float scaleRatio) {
         return NULL;
     }
     b2Vec2 *verts = new b2Vec2[n];
+
+
+    // TODO add vertix data for other  AA
+
     switch(c) {
         case 'A':
             verts[0].Set(-53.0f * scaleRatio, 55.0f * scaleRatio);
@@ -392,7 +398,7 @@ int MatrixHelper::getVerticeNum(char c) {
 }
 
 char MatrixHelper::getRandomAminoAcid() {
-	int i = HelperFunctions::randomValueBetween(0, 20);
+	int i = arc4random() % 20;
 	char a;
 	switch (i) {
 	case 0:
