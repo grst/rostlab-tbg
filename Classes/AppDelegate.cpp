@@ -56,7 +56,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     pDirector->setAnimationInterval(1.0 / 60);
 
     // create a scene. it's an autorelease object
-    //CCScene *pScene = SplashScreenScene::create();
+    CCScene *pScene = SplashScreenScene::create(true);
 
     //Sebi: Change here the start screen
 
@@ -64,7 +64,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
    // CCScene *pScene = DeeWorld::scene();
 
     //GS: changed back to DeeWorld for dev purposes. 
-   CCScene *pScene = MainScreenScene::create();
+   //CCScene *pScene = MainScreenScene::create();
 
     // run
     pDirector->runWithScene(pScene);
@@ -74,17 +74,20 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
 // This function will be called when the app is inactive. When comes a phone call,it's be invoked too
 void AppDelegate::applicationDidEnterBackground() {
-    CCDirector::sharedDirector()->stopAnimation();
     CCLOG("Application in background");
-    // if you use SimpleAudioEngine, it must be pause
-    // SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
+	CCDirector::sharedDirector()->stopAnimation();
+    CCDirector::sharedDirector()->pause();
+    CocosDenshion::SimpleAudioEngine::sharedEngine()->pauseAllEffects();
+    CocosDenshion::SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
+    CCNotificationCenter::sharedNotificationCenter()->postNotification("APP_STATUS_CHANGED", CCBool::create(false));
 }
 
 // this function will be called when the app is active again
 void AppDelegate::applicationWillEnterForeground() {
-    CCDirector::sharedDirector()->startAnimation();
     CCLOG("Application there again");
-
-    // if you use SimpleAudioEngine, it must resume here
-    // SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
+    CCDirector::sharedDirector()->startAnimation();
+    CCDirector::sharedDirector()->resume();
+    CocosDenshion::SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
+    CocosDenshion::SimpleAudioEngine::sharedEngine()->resumeAllEffects();
+    CCNotificationCenter::sharedNotificationCenter()->postNotification("APP_STATUS_CHANGED", CCBool::create(true));
 }
