@@ -51,12 +51,21 @@ bool AboutUsLayer::init()
 
 		// main menu
 		CCMenuItemImage *pMainMenu = CCMenuItemImage::create(
-							"ic_action_gamepad.png", "ic_action_gamepad.png", this,
+							"mainmenu.png", "mainmenu.png", this,
 							menu_selector(AboutUsLayer::OnMenu));
-		pMainMenu->setPosition(ccp(winSize.width / 5+ pMainMenu->getContentSize().width  +200,
+		pMainMenu->setPosition(ccp(winSize.width / 5+ pMainMenu->getContentSize().width ,
 						winSize.height - pMainMenu->getContentSize().height));
 		pMainMenu->setTag(1);
 		menuIcons->addObject(pMainMenu);
+
+		// close layer
+		CCMenuItemImage *pCloseLayer = CCMenuItemImage::create(
+							"closeapp.png", "closeapp.png", this,
+							menu_selector(AboutUsLayer::OnMenu));
+		pCloseLayer->setPosition(ccp(winSize.width *2/ 5+ pMainMenu->getContentSize().width ,
+						winSize.height - pCloseLayer->getContentSize().height));
+		pCloseLayer->setTag(2);
+		menuIcons->addObject(pCloseLayer);
 
 
 
@@ -105,25 +114,16 @@ void AboutUsLayer::OnMenu(CCObject* pSender)
 
 	CCScene *pScene1;
 	switch(tag){
-	case 1:
-		 SoundEffectHelper::playClickSound();
-		 pScene1 = MainScreenScene::create();
-		 CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(1.0f, pScene1));
-		break;
-	case 2:
-		// toggle music
-		HelperFunctions::toggleMusic();
-		SoundEffectHelper::playLevelBackgroundMusic(Globals::level);
-		SoundEffectHelper::pauseBackgroundMusic();
-		if(SoundEffectHelper::isSoundEnabled()){
-			SoundEffectHelper::playClickSound();
-		}
-		break;
-	case 3:
-		SoundEffectHelper::playClickSound();
-		pScene1 = SettingsScreenScene::create();
-		CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(1.0f, pScene1));
-		break;
+		case 1:
+			 SoundEffectHelper::playClickSound();
+			 pScene1 = MainScreenScene::create();
+			 CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(1.0f, pScene1));
+			break;
+		case 2:
+			// simulate close Button clicked
+			MainScreenLayer *layer = (MainScreenLayer*) this->getParent();
+			layer->keyBackClicked();
+			break;
 	}
 
 //	CCScene* nextScene = MainMenu::scene();

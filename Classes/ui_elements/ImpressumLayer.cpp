@@ -46,16 +46,23 @@ bool ImpressumLayer::init()
 		CCArray * menuIcons = CCArray::create();
 
 
-
-
 		// main menu
 		CCMenuItemImage *pMainMenu = CCMenuItemImage::create(
-							"ic_action_gamepad.png", "ic_action_gamepad.png", this,
+							"mainmenu.png", "mainmenu.png", this,
 							menu_selector(ImpressumLayer::OnMenu));
-		pMainMenu->setPosition(ccp(winSize.width / 5+ pMainMenu->getContentSize().width  +200,
+		pMainMenu->setPosition(ccp(winSize.width / 5+ pMainMenu->getContentSize().width ,
 						winSize.height - pMainMenu->getContentSize().height));
 		pMainMenu->setTag(1);
 		menuIcons->addObject(pMainMenu);
+
+		// close layer
+		CCMenuItemImage *pCloseLayer = CCMenuItemImage::create(
+							"closeapp.png", "closeapp.png", this,
+							menu_selector(ImpressumLayer::OnMenu));
+		pCloseLayer->setPosition(ccp(winSize.width *2/ 5+ pMainMenu->getContentSize().width ,
+						winSize.height - pCloseLayer->getContentSize().height));
+		pCloseLayer->setTag(2);
+		menuIcons->addObject(pCloseLayer);
 
 
 
@@ -94,12 +101,11 @@ bool ImpressumLayer::init()
 void ImpressumLayer::OnMenu(CCObject* pSender)
 {
 
-
-
 	CCMenuItem* pMenuItem = (CCMenuItemImage *) (pSender);
 	int tag = (int) pMenuItem->getTag();
 
-	CCLOG("PauseMenuItem  %d", tag);
+	CCLOG("ImpressumItem  %d", tag);
+	SoundEffectHelper::playClickSound();
 
 	CCScene *pScene1;
 	switch(tag){
@@ -109,22 +115,10 @@ void ImpressumLayer::OnMenu(CCObject* pSender)
 		 CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(1.0f, pScene1));
 		break;
 	case 2:
-		// toggle music
-		HelperFunctions::toggleMusic();
-		SoundEffectHelper::playLevelBackgroundMusic(Globals::level);
-		SoundEffectHelper::pauseBackgroundMusic();
-		if(SoundEffectHelper::isSoundEnabled()){
-			SoundEffectHelper::playClickSound();
-		}
-		break;
-	case 3:
-		SoundEffectHelper::playClickSound();
-		pScene1 = SettingsScreenScene::create();
-		CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(1.0f, pScene1));
+		// simulate close Button clicked
+		MainScreenLayer *layer = (MainScreenLayer*) this->getParent();
+		layer->keyBackClicked();
 		break;
 	}
-
-//	CCScene* nextScene = MainMenu::scene();
-	//CCDirector::sharedDirector()->replaceScene(nextScene);
 }
 

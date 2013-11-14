@@ -10,6 +10,7 @@
 #include "../screens/MainScreenScene.h"
 #include "../screens/SettingsScreenScene.h"
 #include "../screens/SplashScreenScene.h"
+#include "../screens/DeeWorldScene.h"
 #include "../Globals.h"
 
 using namespace cocos2d;
@@ -129,9 +130,6 @@ bool PauseLayer::init()
 
 void PauseLayer::OnMenu(CCObject* pSender)
 {
-
-
-
 	CCMenuItem* pMenuItem = (CCMenuItemImage *) (pSender);
 	int tag = (int) pMenuItem->getTag();
 
@@ -159,13 +157,10 @@ void PauseLayer::OnMenu(CCObject* pSender)
 		CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(1.0f, pScene1));
 		break;
 	case 4:
-		SoundEffectHelper::playClickSound();
-		pScene1 = SplashScreenScene::create(false);
-		CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(1.0f, pScene1));
+		// simulate close Button clicked
+		DeeWorld *layer = (DeeWorld*) this->getParent();
+		layer->keyBackClicked();
 		break;
 	}
-
-//	CCScene* nextScene = MainMenu::scene();
-	//CCDirector::sharedDirector()->replaceScene(nextScene);
 }
 
