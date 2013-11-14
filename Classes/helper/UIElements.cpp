@@ -19,6 +19,56 @@ UIElements::~UIElements() {
 }
 
 
+
+void UIElements::runDestroyAcidEffect(cocos2d::CCLabelTTF* label){
+
+   CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
+
+   CCFiniteTimeAction* actionMove = CCMoveTo::create((float) 0.8,ccp(visibleSize.height, visibleSize.width));
+
+   // Sebi: we have to add some dummy parameters otherwise it fails on Android
+   CCSequence *readySequence = CCSequence::create(actionMove, NULL, NULL);
+   label->runAction(readySequence);
+}
+
+// TODO make it run more fluently
+void UIElements::displayScoreEffect(DeeWorld* scene, int scoring) {
+
+	std::string strScoring = static_cast<ostringstream*>(&(ostringstream()<< scoring))->str();
+	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
+	return;
+
+	//this->_scoreNumber = CCLabelAtlas::create(str.c_str(), "Helvetica", 200, visibleSize, kCCTextAlignmentCenter);
+	scene->_scoreNumber = CCLabelAtlas::create(strScoring.c_str(),"tuffy_bold_italic-charmap.png", 80, 80, ' ');
+
+	scene->_scoreNumber->setPosition(ccp(visibleSize.width / 2, visibleSize.height / 2));
+
+	// generates a nice color according to the score
+	scene->_scoreNumber->setColor(UIElements::getColorForScore(scoring));
+
+	scene->addChild(scene->_scoreNumber);
+
+
+	CCActionInterval * tintToNumber;
+	if (scoring > 0) {
+		tintToNumber = CCTintTo::create(1.0, 0, 255, 0);
+
+	} else if (scoring < 0) {
+		tintToNumber = CCTintTo::create(1.0, 255, 0, 0);
+
+	} else {
+		tintToNumber = CCTintTo::create(1.5, 0, 0, 0);
+	}
+
+
+
+
+	scene->_scoreNumber->runAction(tintToNumber);
+	CCActionInterval * scaleTo = CCScaleTo::create(1.0, 0.01);
+	scene->_scoreNumber->runAction(scaleTo);
+
+}
+
 /**
  * TODO: is this still necessary? If not --> remove!
  */

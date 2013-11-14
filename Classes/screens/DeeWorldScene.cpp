@@ -826,56 +826,12 @@ void DeeWorld::scoreAminoAcid(AminoAcid* sTarget) {
     char wantedAcid = acid->acid;
     
     // show score
-    int scoring = MatrixHelper::getScoreForAminoAcid(wantedAcid,
-                                                     hitAcid);
+    int scoring = MatrixHelper::getScoreForAminoAcid(wantedAcid,hitAcid);
     // add to the current score
     Globals::score= scoring + Globals::score;
     
-    std::string str = static_cast<ostringstream*>(&(ostringstream()
-                                                    << scoring))->str();
-    CCSize visibleSize =
-    CCDirector::sharedDirector()->getVisibleSize();
-   // this->_scoreNumber = CCLabelAtlas::create(str.c_str(), "Helvetica", 200, visibleSize, kCCTextAlignmentCenter);
- //   this->_scoreNumber = CCLabelAtlas::create(str.c_str(),"tuffy_bold_italic-charmap.png", 80, 80, ' ');
-
-    /*this->_scoreNumber->setPosition(
-                                    ccp(visibleSize.width / 2, visibleSize.height / 2));
-    
-    // generates a nice color according to the score
-    this->_scoreNumber->setColor(
-                                 UIElements::getColorForScore(scoring));
-    
-    this->addChild(_scoreNumber);
-    
-
-    CCActionInterval * tintToNumber;
-    if (scoring > 0) {
-        tintToNumber = CCTintTo::create(1.0, 0, 255, 0);
-
-    } else if (scoring < 0) {
-        tintToNumber = CCTintTo::create(1.0, 255, 0, 0);
-
-    } else {
-        tintToNumber = CCTintTo::create(1.5, 0, 0, 0);
-    }
-    
-
-
-
-    this->_scoreNumber->runAction(tintToNumber);
-    CCActionInterval * scaleTo = CCScaleTo::create(1.0, 0.01);
-    this->_scoreNumber->runAction(scaleTo);
-  */
-    cocos2d::CCLabelTTF* label = acid->_label;
-    
-    CCFiniteTimeAction* actionMove = CCMoveTo::create((float) 0.8,
-                                                      ccp(visibleSize.height, visibleSize.width));
-    
-    // Sebi: we have to add some dummy parameters otherwise it fails on Android
-    CCSequence *readySequence = CCSequence::create(actionMove, NULL,
-                                                   NULL);
-    label->runAction(readySequence);
-    
+    UIElements::displayScoreEffect(this, scoring);
+    UIElements::runDestroyAcidEffect(acid->_label);
 
     // play a nice sound
     if(SoundEffectHelper::isSoundEnabled()){
@@ -889,7 +845,7 @@ void DeeWorld::scoreAminoAcid(AminoAcid* sTarget) {
     }
 
 
-    // TODO delete acid;
+    // TODO release acid;
     _code.pop();
     
     UIElements::createNewAminoAcid(this);
@@ -912,10 +868,10 @@ void DeeWorld::pauseAction(int i) {
 	if(timer == 0){
 
 		if(pausedGame && i == 1){
-			CCMessage("You can't pause that", "Pause error");
+			cocos2d::CCMessageBox("You can't pause that", "Pause error");
 		}
 		if(!pausedGame && i == 2){
-			CCMessage("You can't resume that", "Resume error");
+			cocos2d::CCMessageBox("You can't resume that", "Resume error");
 		}
 
 		if(!pausedGame){

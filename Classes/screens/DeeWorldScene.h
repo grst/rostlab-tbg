@@ -69,6 +69,8 @@ public:
 
 	std::queue<BoardAcid*> _code;
 
+	cocos2d::CCLabelAtlas* _scoreNumber;
+
 
 protected:
     cocos2d::CCArray *_targets;
@@ -119,7 +121,6 @@ private:
 
 	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _timerLabel, timerLabel);
 	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _scoreLabel, scoreLabel);
-	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelAtlas*, _scoreNumber, scoreNumber);
 	bool validTouch;
 	int tempHeight;
     int AAcounter;

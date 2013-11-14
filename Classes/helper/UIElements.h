@@ -11,6 +11,7 @@
 #include "cocos2d.h"
 #include "../screens/DeeWorldScene.h"
 #include <queue>
+#include <string>
 
 class UIElements {
 public:
@@ -19,6 +20,8 @@ public:
 
 	static void fancyMovement(cocos2d::CCPoint pt,cocos2d::CCPoint playerPoint, DeeWorld* scene);
 	static void createNewAminoAcid(DeeWorld* scene);
+	static void displayScoreEffect(DeeWorld* scene, int score);
+	static void runDestroyAcidEffect(cocos2d::CCLabelTTF* label);
 	static ccColor3B getColorForScore(int scoring);
 };
 
