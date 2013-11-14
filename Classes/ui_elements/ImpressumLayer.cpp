@@ -39,6 +39,10 @@ bool ImpressumLayer::init()
 		CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 		pauseLabel->setPosition(ccp(pauseLabel->getContentSize().width/2,winSize.height - pauseLabel->getContentSize().height/2));
 
+		// add this to the layer
+		this->addChild(pauseLabel, 11);
+
+
 		CCArray * menuIcons = CCArray::create();
 
 
@@ -63,8 +67,6 @@ bool ImpressumLayer::init()
 		this->addChild(levelMenu, 11);
 
 
-		// add this to the layer
-		this->addChild(pauseLabel, 11);
 
 
 		CCLayerGradient* layer3 = CCLayerGradient::create();

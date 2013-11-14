@@ -39,6 +39,9 @@ bool PauseLayer::init()
 
 		CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 		pauseLabel->setPosition(ccp(pauseLabel->getContentSize().width/2,winSize.height - pauseLabel->getContentSize().height/2));
+		// add this to the layer
+		this->addChild(pauseLabel, 11);
+
 
 		CCArray * menuIcons = CCArray::create();
 
@@ -77,7 +80,7 @@ bool PauseLayer::init()
 		CCMenuItemImage *pMainMenu = CCMenuItemImage::create(
 							"mainmenu.png", "mainmenu.png", this,
 							menu_selector(PauseLayer::OnMenu));
-		pMainMenu->setPosition(ccp(winSize.width + pMainMenu->getContentSize().width   * 9 / 2,
+		pMainMenu->setPosition(ccp(winSize.width * 1/5 + pMainMenu->getContentSize().width   * 9 / 2,
 						winSize.height - pMainMenu->getContentSize().height));
 		pMainMenu->setTag(1);
 		menuIcons->addObject(pMainMenu);
@@ -100,9 +103,6 @@ bool PauseLayer::init()
 		// Add the menu to TestWorld layer as a child layer.
 		this->addChild(levelMenu, 11);
 
-
-		// add this to the layer
-		this->addChild(pauseLabel, 11);
 
 
 		CCLayerGradient* layer3 = CCLayerGradient::create();

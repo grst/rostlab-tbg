@@ -34,7 +34,8 @@ DeeWorld::~DeeWorld() {
 		_scoreLabel = NULL;
 	}
 
-	CC_SAFE_RELEASE(_scoreNumber);
+	// TODO add release
+	//CC_SAFE_RELEASE(_scoreNumber);
 
 	// cpp don't need to call super dealloc
 	// virtual destructor will do this

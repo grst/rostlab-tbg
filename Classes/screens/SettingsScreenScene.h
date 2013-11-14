@@ -49,6 +49,7 @@ public:
     //virtual void keyMenuClicked();
 private:
      cocos2d::CCMenu* levelMenu;
+     void showCurrentMatrix();
 
 
 };
