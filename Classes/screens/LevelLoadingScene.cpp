@@ -105,7 +105,7 @@ bool LevelLoadingLayer::init() {
 void LevelLoadingLayer::addLabels() {
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
-	std::string strLevel = static_cast<std::ostringstream*>(&(std::ostringstream() << Globals::level))->str();
+	std::string strLevel = static_cast<std::ostringstream*>(&(std::ostringstream() << level))->str();
 	std::string seqLevel= "Level: " + strLevel;
 	this->levelLabel = CCLabelTTF::create(seqLevel.c_str(), "Artial", 32);
 	levelLabel->retain();

@@ -220,6 +220,7 @@ void MainScreenLayer::menuStartGameCallback(CCObject* pSender) {
 	}
 
 	CCScene *pScene = LevelLoadingScene::create(seq, tag);
+	Globals::level = tag;
 
 	//SoundEffectHelper::stopBackgroundMusic();
 

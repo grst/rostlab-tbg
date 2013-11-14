@@ -860,7 +860,6 @@ void DeeWorld::pauseLayerCallback(CCObject* pSender) {
 	}
 }
 
-// TODO
 // 0: toggle
 // 1: on
 // 2: off
