@@ -46,7 +46,7 @@ bool SettingsScreenLayer::init() {
 		// add the sprite as a child to this layer
 		this->addChild(pSpriteBackground, 0);
 
-		this->_label = CCLabelTTF::create("", "Artial", 32);
+		this->_label = CCLabelTTF::create("", "Arial", 32);
 		_label->retain();
 		_label->setColor(ccc3(0, 0, 0));
 		_label->setPosition(ccp(winSize.width / 2, winSize.height / 2));
