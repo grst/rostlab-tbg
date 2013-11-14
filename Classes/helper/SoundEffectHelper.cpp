@@ -41,6 +41,18 @@ void SoundEffectHelper::playLevelStartSound(){
 	}
 }
 
+void SoundEffectHelper::playGameEndSound(){
+	if(isSoundEnabled()){
+			CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("pew-pew-lei.wav");
+	}
+}
+
+void SoundEffectHelper::playGameStartSound(){
+	if(isSoundEnabled()){
+			CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("pew-pew-lei.wav");
+	}
+}
+
 void SoundEffectHelper::playTimerTickSound(){
 	if(isSoundEnabled()){
 			CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("pew-pew-lei.wav");

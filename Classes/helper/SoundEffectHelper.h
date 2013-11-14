@@ -18,6 +18,8 @@ public:
 	static void playClickSound();
 	static void playLevelEndSound();
 	static void playLevelStartSound();
+	static void playGameStartSound();
+	static void playGameEndSound();
 	static void playTimerTickSound();
 	static void playNegativeCollisionSound();
 	static void playNeutralCollisionSound();
