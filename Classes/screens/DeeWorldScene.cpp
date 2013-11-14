@@ -162,10 +162,10 @@ void DeeWorld::onApplicationStatusChanged(CCObject* obj)
 	if(b->getValue()){
 		CCLog("app resumed");
 		CCMessageBox("Application resumed", "Debug by us");
-		pauseAction(NULL);
+		pauseAction(2);
 	}else{
 		CCLog("app went into background");
-		pauseAction(NULL);
+		pauseAction(1);
 	}
 
 
@@ -177,7 +177,7 @@ void DeeWorld::makeMenu() {
 	CCPoint origin = CCDirector::sharedDirector()->getVisibleOrigin();
 
 	CCMenuItemImage *pSettings = CCMenuItemImage::create("settings.png",
-			"settings.png", this, menu_selector(DeeWorld::pauseAction));
+			"settings.png", this, menu_selector(DeeWorld::pauseLayerCallback));
 
 	// Place the menu item top-left corner.
 	pSettings->setPosition(
@@ -200,13 +200,6 @@ void DeeWorld::makeMenu() {
 	this->addChild(pMenu, 1);
 }
 
-void DeeWorld::menuCloseCallback(CCObject* pSender) {
-	// "close" menu item clicked
-	CCDirector::sharedDirector()->end();
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-	exit(0);
-#endif
-}
 
 void DeeWorld::initBox2D() {
 	b2Vec2 gravity = b2Vec2(0.0f, -0.0f); //no gravity
@@ -595,7 +588,7 @@ void DeeWorld::ccTouchesEnded(cocos2d::CCSet* pTouches,
  * this function is called when the back button is pressed. only useful for android?
  */
 void DeeWorld::keyBackClicked(void) {
-	pauseAction(NULL);
+	pauseAction(0);
 }
 
 /**
@@ -902,9 +895,29 @@ void DeeWorld::scoreAminoAcid(AminoAcid* sTarget) {
     UIElements::createNewAminoAcid(this);
 }
 
-// TODO blend layer with pause and pause the whole game
-void DeeWorld::pauseAction(CCObject* pSender) {
+
+
+
+void DeeWorld::pauseLayerCallback(CCObject* pSender) {
+	if(!isLayerOpen()){
+		pauseAction(1);
+	}
+}
+
+// TODO
+// 0: toggle
+// 1: on
+// 2: off
+void DeeWorld::pauseAction(int i) {
 	if(timer == 0){
+
+		if(pausedGame && i == 1){
+			CCMessage("You can't pause that", "Pause error");
+		}
+		if(!pausedGame && i == 2){
+			CCMessage("You can't resume that", "Resume error");
+		}
+
 		if(!pausedGame){
 			pauseGame();
 			PauseLayer *layer = PauseLayer::create();
@@ -998,6 +1011,13 @@ void DeeWorld::setSequence(std::string seq) {
 bool DeeWorld::isGamePaused(){
 	bool ret = this->pausedGame || CCDirector::sharedDirector()->isPaused();
 	return ret;
+}
+
+bool DeeWorld::isLayerOpen(){
+	if(this->getChildByTag(TAG_PAUSE_LAYER) != NULL){
+		return true;
+	}
+	return false;
 }
 
 

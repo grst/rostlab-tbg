@@ -35,8 +35,7 @@ public:
 
 	void setSequence(std::string seq);
 
-	// a selector callback
-	virtual void menuCloseCallback(cocos2d::CCObject* pSender);
+
 
 	// implement the "static node()" method manually
 	CREATE_FUNC (DeeWorld);
@@ -93,7 +92,9 @@ private:
     void onApplicationStatusChanged(CCObject* obj);
 
     
-    void pauseAction(CCObject* pSender);
+	// a selector callback
+	void pauseLayerCallback(cocos2d::CCObject* pSender);
+    void pauseAction(int i);
     void pauseGame();
 
 	void manageCollision(b2Body* target);
@@ -104,6 +105,7 @@ private:
 	void updateInfoUI();
 	bool isGamePaused();
 	void resumeGame();
+	bool isLayerOpen();
 
     int detectCorner();
 
