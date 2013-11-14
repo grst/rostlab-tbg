@@ -871,7 +871,7 @@ void DeeWorld::scoreAminoAcid(AminoAcid* sTarget) {
     this->_scoreNumber->runAction(tintToNumber);
     CCActionInterval * scaleTo = CCScaleTo::create(1.0, 0.01);
     this->_scoreNumber->runAction(scaleTo);
-    
+  */
     cocos2d::CCLabelTTF* label = acid->_label;
     
     CCFiniteTimeAction* actionMove = CCMoveTo::create((float) 0.8,
@@ -882,7 +882,7 @@ void DeeWorld::scoreAminoAcid(AminoAcid* sTarget) {
                                                    NULL);
     label->runAction(readySequence);
     
-*/
+
     // play a nice sound
     if(SoundEffectHelper::isSoundEnabled()){
 		if (scoring > 0) {
