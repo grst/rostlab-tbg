@@ -40,7 +40,7 @@ SplashScreenScene::~SplashScreenScene() {
 bool SplashScreenLayer::init() {
 	if (CCLayerColor::initWithColor(ccc4(255, 255, 255, 255))) {
 
-		SoundEffectHelper::playLevelEndSound();
+
 		CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
 		// add "SplashScreen" splash screen"
@@ -94,8 +94,10 @@ void SplashScreenLayer::addLabels(){
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 	std::string seq = "";
 	if(start){
+		SoundEffectHelper::playGameStartSound();
 		seq = "Starting game. Good Luck!";
 	}else{
+		SoundEffectHelper::playGameEndSound();
 		seq = "Thank you for playing with us";
 	}
 

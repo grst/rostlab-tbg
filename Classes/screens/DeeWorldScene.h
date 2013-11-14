@@ -117,7 +117,7 @@ private:
 
 	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _timerLabel, timerLabel);
 	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _scoreLabel, scoreLabel);
-	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _scoreNumber, scoreNumber);
+	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelAtlas*, _scoreNumber, scoreNumber);
 	bool validTouch;
 	int tempHeight;
     int AAcounter;

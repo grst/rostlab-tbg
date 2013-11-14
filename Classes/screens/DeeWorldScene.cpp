@@ -12,7 +12,7 @@
 USING_NS_CC;
 
 #define PTM_RATIO 32.0
-#define INTRO_TIME_SECONDS 3
+#define INTRO_TIME_SECONDS 4
 #define TOLERANCE_PLAYER -30
 #define MS_TIME_PLAYER_BLOCKED 0
 #define PLAYER_IMAGE "Player.png"
@@ -824,6 +824,7 @@ void DeeWorld::manageCollision(b2Body* target) {
  * of the current collision.
  */
 void DeeWorld::scoreAminoAcid(AminoAcid* sTarget) {
+
     //scoring-event
     BoardAcid * acid = this->_code.front();
 
@@ -840,10 +841,10 @@ void DeeWorld::scoreAminoAcid(AminoAcid* sTarget) {
                                                     << scoring))->str();
     CCSize visibleSize =
     CCDirector::sharedDirector()->getVisibleSize();
-    this->_scoreNumber = CCLabelTTF::create(str.c_str(),
-                                            "Helvetica", 200, visibleSize, kCCTextAlignmentCenter);
-    this->_scoreNumber->retain();
-    this->_scoreNumber->setPosition(
+   // this->_scoreNumber = CCLabelAtlas::create(str.c_str(), "Helvetica", 200, visibleSize, kCCTextAlignmentCenter);
+ //   this->_scoreNumber = CCLabelAtlas::create(str.c_str(),"tuffy_bold_italic-charmap.png", 80, 80, ' ');
+
+    /*this->_scoreNumber->setPosition(
                                     ccp(visibleSize.width / 2, visibleSize.height / 2));
     
     // generates a nice color according to the score
@@ -852,6 +853,7 @@ void DeeWorld::scoreAminoAcid(AminoAcid* sTarget) {
     
     this->addChild(_scoreNumber);
     
+
     CCActionInterval * tintToNumber;
     if (scoring > 0) {
         tintToNumber = CCTintTo::create(1.0, 0, 255, 0);
@@ -880,7 +882,7 @@ void DeeWorld::scoreAminoAcid(AminoAcid* sTarget) {
                                                    NULL);
     label->runAction(readySequence);
     
-
+*/
     // play a nice sound
     if(SoundEffectHelper::isSoundEnabled()){
 		if (scoring > 0) {
