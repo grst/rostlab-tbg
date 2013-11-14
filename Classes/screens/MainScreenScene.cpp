@@ -149,6 +149,11 @@ void MainScreenLayer::initBackground() {
 
 void MainScreenLayer::changeScene(CCObject* pSender) {
 
+	// disable lower layers
+	if(isLayerOpen()){
+		return;
+	}
+
 	SoundEffectHelper::playClickSound();
 
 	CCScene *pScene1;
@@ -190,6 +195,11 @@ void MainScreenLayer::changeScene(CCObject* pSender) {
 
 void MainScreenLayer::menuStartGameCallback(CCObject* pSender) {
 
+	// disable lower layers
+	if(isLayerOpen()){
+		return;
+	}
+
 	SoundEffectHelper::playClickSound();
 
 	CCMenuItem* pMenuItem = (CCMenuItem *) (pSender);
@@ -219,20 +229,34 @@ void MainScreenLayer::menuStartGameCallback(CCObject* pSender) {
 }
 
 void MainScreenLayer::keyBackClicked(void) {
-	CCDirector::sharedDirector()->end();
+	if(this->getChildByTag(TAG_ABOUTUS_LAYER) != NULL){
+		this->removeChildByTag(TAG_ABOUTUS_LAYER, true);
+		return;
+	}
+	if(this->getChildByTag(TAG_IMPRESSUM_LAYER) != NULL){
+		this->removeChildByTag(TAG_IMPRESSUM_LAYER, true);
+		return;
+	}
+	CCScene *pScene = SplashScreenScene::create(false);
+	//transition to next scene for one sec
+	CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(1.0f, pScene));
+}
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-	exit(0);
-#endif
-
+bool MainScreenLayer::isLayerOpen(){
+	if(this->getChildByTag(TAG_ABOUTUS_LAYER) != NULL){
+		return true;
+	}
+	if(this->getChildByTag(TAG_IMPRESSUM_LAYER) != NULL){
+			return true;
+		}
+	return false;
 }
 
 void MainScreenLayer::keyMenuClicked(void) {
 
 	CCScene *pScene = SettingsScreenScene::create();
 	//transition to next scene for one sec
-	CCDirector::sharedDirector()->replaceScene(
-			CCTransitionFade::create(1.0f, pScene));
+	CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(1.0f, pScene));
 }
 
 void MainScreenLayer::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent) {

@@ -46,15 +46,15 @@ public:
      virtual void keyMenuClicked();
 
      void ccTouchesBegan(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent);
-        void ccTouchesMoved(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent);
-        void ccTouchesEnded(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent);
-
+     void ccTouchesMoved(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent);
+     void ccTouchesEnded(cocos2d::CCSet *pTouches, cocos2d::CCEvent *pEvent);
 
     CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _label, Label);
 private:
     void menuStartGameCallback(CCObject* sender);
     void changeScene(CCObject* sender);
     void initBackground();
+    bool isLayerOpen();
     cocos2d::CCMenu* levelMenu;
     std::map< cocos2d::CCTouch *, CCBlade * >  _map;
 };
