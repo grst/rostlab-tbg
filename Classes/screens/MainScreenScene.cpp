@@ -211,7 +211,7 @@ void MainScreenLayer::menuStartGameCallback(CCObject* pSender) {
 
 	CCScene *pScene = LevelLoadingScene::create(seq, tag);
 
-	SoundEffectHelper::stopBackgroundMusic();
+	//SoundEffectHelper::stopBackgroundMusic();
 
 	//transition to next scene for one sec
 	CCDirector::sharedDirector()->replaceScene(
