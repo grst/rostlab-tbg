@@ -31,6 +31,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
         searchPaths.push_back("hd/acids");
         searchPaths.push_back("hd/buttons");
         searchPaths.push_back("hd/backgrounds");
+        searchPaths.push_back("hd/fonts");
         pDirector->setContentScaleFactor(640.0f/designSize.height);
     }
     else
@@ -39,6 +40,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
         searchPaths.push_back("sd/acids");
         searchPaths.push_back("sd/buttons");
         searchPaths.push_back("hd/backgrounds");
+        searchPaths.push_back("hd/fonts");
         pDirector->setContentScaleFactor(320.0f/designSize.height);
     }
     
