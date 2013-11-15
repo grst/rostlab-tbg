@@ -126,7 +126,7 @@ void LevelLoadingLayer::endScreen() {
 	 SoundEffectHelper::stopBackgroundMusic();
 	 CCScene *pScene = DeeWorld::scene(seq, level);
 	 //transition to next scene for one sec
-	 CCDirector::sharedDirector()->replaceScene( CCTransitionFade::create(2.0f, pScene));
+	 CCDirector::sharedDirector()->replaceScene( CCTransitionFadeDown::create(2.0f, pScene));
 }
 
 LevelLoadingLayer::~LevelLoadingLayer() {

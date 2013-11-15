@@ -25,6 +25,12 @@ PauseLayer::~PauseLayer() {
 }
 
 
+cocos2d::CCLayer* PauseLayer::create(int level){
+	PauseLayer *layer = PauseLayer::create();
+	layer->level = level;
+	return layer;
+}
+
 bool PauseLayer::init()
 {
 
@@ -140,12 +146,12 @@ void PauseLayer::OnMenu(CCObject* pSender)
 	case 1:
 		 SoundEffectHelper::playClickSound();
 		 pScene1 = MainScreenScene::create();
-		 CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(1.0f, pScene1));
+		 CCDirector::sharedDirector()->replaceScene(CCTransitionSlideInT::create(1.0f, pScene1));
 		break;
 	case 2:
 		// toggle music
 		HelperFunctions::toggleMusic();
-		SoundEffectHelper::playLevelBackgroundMusic(Globals::level);
+		SoundEffectHelper::playLevelBackgroundMusic(level);
 		SoundEffectHelper::pauseBackgroundMusic();
 		if(SoundEffectHelper::isSoundEnabled()){
 			SoundEffectHelper::playClickSound();
@@ -154,7 +160,7 @@ void PauseLayer::OnMenu(CCObject* pSender)
 	case 3:
 		SoundEffectHelper::playClickSound();
 		pScene1 = SettingsScreenScene::create();
-		CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(1.0f, pScene1));
+		CCDirector::sharedDirector()->replaceScene(CCTransitionSplitCols::create(1.0f, pScene1));
 		break;
 	case 4:
 		// simulate close Button clicked

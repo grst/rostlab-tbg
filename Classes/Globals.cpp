@@ -8,8 +8,6 @@
 #include "Globals.h"
 
 
-// Here we define all global variables
+// Here we define all global dynamic variables
 namespace Globals{
-	int level = 0;
-	int score =0;
 }

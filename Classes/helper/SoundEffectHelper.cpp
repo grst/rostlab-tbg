@@ -14,7 +14,7 @@ using namespace cocos2d;
 
 
 bool SoundEffectHelper::isSoundEnabled(){
-	CCLog("Music is: %s", cocos2d::CCUserDefault::sharedUserDefault()->getBoolForKey("music_enable", true) ? "on" :"off");
+	// CCLog("Music is: %s", cocos2d::CCUserDefault::sharedUserDefault()->getBoolForKey("music_enable", true) ? "on" :"off");
 	if(!Globals::gSoundEnabled || (!	cocos2d::CCUserDefault::sharedUserDefault()->getBoolForKey(
 			"music_enable", true))){
 		return false;

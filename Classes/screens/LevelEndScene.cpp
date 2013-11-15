@@ -12,9 +12,9 @@ CCScene* LevelEndScene::create(int score, int level) {
 		// 'scene' is an autorelease object
 		scene = LevelEndScene::create();
 		CC_BREAK_IF(!scene);
-		scene->_layer->addLabels();
 		scene->_layer->score = score;
 		scene->_layer->level = level;
+		scene->_layer->addLabels();
 
 	}while(0);
 
@@ -100,7 +100,7 @@ bool LevelEndLayer::init() {
 void LevelEndLayer::addLabels(){
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
-	std::string strLevel = static_cast<std::ostringstream*>(&(std::ostringstream() << Globals::level))->str();
+	std::string strLevel = static_cast<std::ostringstream*>(&(std::ostringstream() << level))->str();
 	std::string seqLevel= "Level:" + strLevel;
 	this->levelLabel = CCLabelTTF::create(seqLevel.c_str(), "Artial", 32);
 	levelLabel->retain();
@@ -108,7 +108,7 @@ void LevelEndLayer::addLabels(){
 	levelLabel->setPosition(ccp(winSize.width / 2 , winSize.height / 2 - 40));
 	this->addChild(levelLabel);
 
-	std::string strScore = static_cast<std::ostringstream*>(&(std::ostringstream() << Globals::score))->str();
+	std::string strScore = static_cast<std::ostringstream*>(&(std::ostringstream() << score))->str();
 	std::string seqScore = "Score:"+ strScore;
 	this->scoreLabel = CCLabelTTF::create(seqScore.c_str(), "Artial", 32);
 	scoreLabel->retain();
@@ -127,7 +127,7 @@ void LevelEndLayer::endScreen() {
 	 CCTransitionFade::create(1.0f, pScene));
 	 */
 	CCScene *pScene = MainScreenScene::create();
-	CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(2.0f, pScene));
+	CCDirector::sharedDirector()->replaceScene(CCTransitionFlipX::create(2.0f, pScene));
 }
 
 LevelEndLayer::~LevelEndLayer() {

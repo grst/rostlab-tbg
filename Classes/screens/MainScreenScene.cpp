@@ -220,7 +220,6 @@ void MainScreenLayer::menuStartGameCallback(CCObject* pSender) {
 	}
 
 	CCScene *pScene = LevelLoadingScene::create(seq, tag);
-	Globals::level = tag;
 
 	//SoundEffectHelper::stopBackgroundMusic();
 
@@ -240,7 +239,7 @@ void MainScreenLayer::keyBackClicked(void) {
 	}
 	CCScene *pScene = SplashScreenScene::create(false);
 	//transition to next scene for one sec
-	CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(1.0f, pScene));
+	CCDirector::sharedDirector()->replaceScene(CCTransitionJumpZoom::create(1.0f, pScene));
 }
 
 bool MainScreenLayer::isLayerOpen(){
@@ -257,7 +256,7 @@ void MainScreenLayer::keyMenuClicked(void) {
 
 	CCScene *pScene = SettingsScreenScene::create();
 	//transition to next scene for one sec
-	CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(1.0f, pScene));
+	CCDirector::sharedDirector()->replaceScene(CCTransitionCrossFade::create(1.0f, pScene));
 }
 
 void MainScreenLayer::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent) {

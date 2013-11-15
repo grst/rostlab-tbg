@@ -10,8 +10,6 @@
 
 namespace Globals{
 	const bool gSoundEnabled = true;
-	extern int level;
-	extern int score;
 }
 
 #endif /* CONSTANTS_H_ */
