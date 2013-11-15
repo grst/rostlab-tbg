@@ -20,6 +20,11 @@ UIElements::~UIElements() {
 
 
 
+void UIElements::loadCache(DeeWorld* scene){
+	scene->_scoreNumber = CCLabelBMFont::create( "0", "Arial-num.fnt" );
+	scene->_scoreNumber->setVisible(false);
+}
+
 void UIElements::runDestroyAcidEffect(cocos2d::CCLabelTTF* label){
 
    CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
@@ -36,10 +41,9 @@ void UIElements::displayScoreEffect(DeeWorld* scene, int scoring) {
 
 	std::string strScoring = static_cast<ostringstream*>(&(ostringstream()<< scoring))->str();
 	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
-	return;
 
-	//this->_scoreNumber = CCLabelAtlas::create(str.c_str(), "Helvetica", 200, visibleSize, kCCTextAlignmentCenter);
-	scene->_scoreNumber = CCLabelAtlas::create(strScoring.c_str(),"tuffy_bold_italic-charmap.png", 80, 80, ' ');
+	scene->_scoreNumber = CCLabelBMFont::create( strScoring.c_str(), "Arial-num.fnt" );
+	//scene->_scoreNumber->setScale(5);
 
 	scene->_scoreNumber->setPosition(ccp(visibleSize.width / 2, visibleSize.height / 2));
 
