@@ -1,0 +1,18 @@
+info face="Arial" size=800 bold=0 italic=0 charset="" unicode=1 stretchH=100 smooth=1 aa=1 padding=0,0,0,0 spacing=1,1 outline=0
+common lineHeight=800 base=648 scaleW=2048 scaleH=1200 pages=1 packed=0 alphaChnl=1 redChnl=0 greenChnl=0 blueChnl=0
+page id=0 file="Arial-num_0.png"
+chars count=12
+char id=43   x=1218  y=522   width=341   height=341   xoffset=39    yoffset=226   xadvance=418   page=0  chnl=15
+char id=45   x=1560  y=522   width=194   height=63    xoffset=22    yoffset=431   xadvance=238   page=0  chnl=15
+char id=48   x=1347  y=0     width=333   height=521   xoffset=31    yoffset=135   xadvance=398   page=0  chnl=15
+char id=49   x=0     y=522   width=189   height=514   xoffset=78    yoffset=134   xadvance=398   page=0  chnl=15
+char id=50   x=546   y=522   width=338   height=513   xoffset=22    yoffset=135   xadvance=398   page=0  chnl=15
+char id=51   x=676   y=0     width=335   height=521   xoffset=30    yoffset=135   xadvance=398   page=0  chnl=15
+char id=52   x=190   y=522   width=355   height=513   xoffset=8     yoffset=135   xadvance=398   page=0  chnl=15
+char id=53   x=1681  y=0     width=339   height=514   xoffset=30    yoffset=142   xadvance=398   page=0  chnl=15
+char id=54   x=0     y=0     width=337   height=521   xoffset=28    yoffset=135   xadvance=398   page=0  chnl=15
+char id=55   x=885   y=522   width=332   height=506   xoffset=33    yoffset=142   xadvance=398   page=0  chnl=15
+char id=56   x=338   y=0     width=337   height=521   xoffset=30    yoffset=135   xadvance=398   page=0  chnl=15
+char id=57   x=1012  y=0     width=334   height=521   xoffset=31    yoffset=135   xadvance=398   page=0  chnl=15
+kernings count=1
+kerning first=49  second=49  amount=-53 
