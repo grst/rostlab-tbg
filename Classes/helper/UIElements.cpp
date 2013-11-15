@@ -195,6 +195,8 @@ void UIElements::createNewAminoAcid(DeeWorld* scene) {
 		scene->_code.push(acid);
 	}
 
+	CCLog("moving AAs finished");
+
 	if (scene->_code.empty()) {
 		scene->gameEnd();
 		return;
