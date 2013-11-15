@@ -53,6 +53,7 @@ public:
     
 	// The back key clicked
 	virtual void keyBackClicked();
+	virtual void keyMenuClicked();
 
     //collision detected
     void BeginContact(b2Contact* contact);
@@ -69,7 +70,7 @@ public:
 
 	std::queue<BoardAcid*> _code;
 
-	cocos2d::CCLabelAtlas* _scoreNumber;
+	cocos2d::CCLabelBMFont* _scoreNumber;
 
 
 protected:
@@ -89,6 +90,11 @@ private:
     void initPlayer();
     void initInfoUI();
     void initBackground();
+
+    int getMinSpeed();
+    int getMaxSpeed();
+
+    bool gameEnded;
 
     void initListener();
     void onApplicationStatusChanged(CCObject* obj);
@@ -111,12 +117,18 @@ private:
 
     int detectCorner();
 
+    void playerRestore();
+
 	int timer;
 	double startTime;
 	long lastAminoHitTime;
 	std::string aminoSequence;
 	bool isAminoAcidRemaining();
 	bool pausedGame;
+	int level;
+	int score;
+	bool togglePlayer;
+	bool blockedPlayer;
 
 
 	CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _timerLabel, timerLabel);

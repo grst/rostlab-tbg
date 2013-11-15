@@ -12,7 +12,7 @@
 USING_NS_CC;
 
 #define PTM_RATIO 32.0
-#define INTRO_TIME_SECONDS 4
+#define INTRO_TIME_SECONDS 1
 #define TOLERANCE_PLAYER -30
 #define MS_TIME_PLAYER_BLOCKED 0
 #define PLAYER_IMAGE "Player.png"
@@ -64,7 +64,7 @@ CCScene* DeeWorld::scene(std::string sequence, int level) {
 		CC_BREAK_IF(!layer);
 
 		layer->setSequence(sequence);
-		Globals::level = level;
+		layer->level =level;
 
 		// add layer as a child to scene
 		scene->addChild(layer);
@@ -86,6 +86,7 @@ bool DeeWorld::init() {
 	}
 
 	pausedGame = false;
+	gameEnded = false;
 	cocos2d::CCLog("Hello World. App ist starting now");
     AAcounter = 0;
 
@@ -124,7 +125,7 @@ bool DeeWorld::init() {
 
 	updateInfoUI();
 
-	SoundEffectHelper::playLevelBackgroundMusic(Globals::level);
+	SoundEffectHelper::playLevelBackgroundMusic(level);
 
 
 	CCDirector::sharedDirector()->getTouchDispatcher()->addStandardDelegate(
@@ -289,7 +290,7 @@ void DeeWorld::initInfoUI() {
 	//reset AminoHit
 	lastAminoHitTime = 0.0f;
 
-	Globals::score = 0;
+	score = 0;
 	CCSize layerSize = this->getContentSize();
 
 	CCLog("setting score");
@@ -307,6 +308,7 @@ void DeeWorld::initInfoUI() {
 	//timer
 	pauseGame();
 	showCountdown(INTRO_TIME_SECONDS);
+	UIElements::loadCache(this);
 }
 
 void DeeWorld::showCountdown(int time){
@@ -410,6 +412,7 @@ int DeeWorld::detectCorner() {
  */
 void DeeWorld::addTarget() {
 	AminoAcid *sTarget = AminoAcid::createRandom();
+	CCLog("Adding Target called: %c " + sTarget->getType());
     HelperFunctions::resizseSprite(sTarget, 64, 0);
 	//Place target in a randomly picked corner.
 	int startX, startY;
@@ -591,6 +594,10 @@ void DeeWorld::keyBackClicked(void) {
 	pauseAction(0);
 }
 
+void DeeWorld::keyMenuClicked(void) {
+	pauseAction(0);
+}
+
 /**
  * contact listener for collision detection
  */
@@ -709,7 +716,7 @@ b2Body* DeeWorld::CreateBox2DBodyForSprite(cocos2d::CCSprite *sprite,
 void DeeWorld::updateInfoUI() {
 	//update score
 	string temp =
-			static_cast<ostringstream*>(&(ostringstream() << Globals::score))->str();
+			static_cast<ostringstream*>(&(ostringstream() << score))->str();
 	this->_scoreLabel->setString(temp.c_str());
 	this->_scoreLabel->draw();
 	this->_scoreLabel->update(0.5);
@@ -723,6 +730,7 @@ void DeeWorld::updateInfoUI() {
  */
 void DeeWorld::tick(float delta) {
 
+	//  TODO what happens if AA is deleted / remove
 	if(!isGamePaused()){
 
 		_b2dWorld->Step(delta, 10, 10);
@@ -751,8 +759,8 @@ void DeeWorld::tick(float delta) {
 					// --> tutorial www.iforce2d.net/b2dtut/constant-speed
 					b2Vec2 vel = b->GetLinearVelocity();
 					//CCLog("Speed: %f, x: %f, y: %f", vel.Length(), vel.x, vel.y);
-					if(vel.Length() > MAX_SPEED || vel.Length() < MIN_SPEED) {
-						float desiredVelocity = HelperFunctions::randomValueBetween(MIN_SPEED, MAX_SPEED);
+					if(vel.Length() > getMaxSpeed() || vel.Length() < getMinSpeed()) {
+						float desiredVelocity = HelperFunctions::randomValueBetween(getMinSpeed(), getMaxSpeed());
 						vel.Normalize();
 					  //  CCLog("Normalized: %f, x: %f, y: %f", vel.Length(), vel.x, vel.y);
 						vel.operator*=(desiredVelocity);
@@ -803,10 +811,50 @@ void DeeWorld::manageCollision(b2Body* target) {
 
     scoreAminoAcid(aTarget);
 
+    //animate our own player
+    CCSprite* playerSprite = (CCSprite* )this->player->GetUserData();
+  //  if(!blockedPlayer){
+	if(false){
+    CCActionInterval * rotateBy = CCFlipY3D::create(3.0);
+
+		playerSprite->runAction(rotateBy);
+		blockedPlayer = true;
+		 this->runAction(CCSequence::create(CCDelayTime::create(4),
+		    						CCCallFunc::create(this,
+		    								callfunc_selector(DeeWorld::playerRestore)),NULL));
+    }
+
+    CCActionInterval * tintTo = CCTintTo::create(2.0, 122 , 156, 163 );
+    playerSprite->runAction(tintTo);
+
+
+    //animate our own player
+    if(!togglePlayer){
+
+		CCActionInterval * scalteTo = CCScaleBy::create(1.0, 2.0);
+		playerSprite->runAction(scalteTo);
+		togglePlayer = true;
+    }else{
+    	CCActionInterval * scalteTo = CCScaleBy::create(1.0, 0.5);
+    	playerSprite->runAction(scalteTo);
+    	togglePlayer = false;
+    }
+
+
+
     //remove amino acid
     aTarget->flagForDelete();
     
     this->updateInfoUI();	
+}
+
+// TODO: remove or use
+void DeeWorld::playerRestore(){
+	return;
+	CCSprite* playerSprite = (CCSprite* )this->player->GetUserData();
+	CCActionInterval * rotateBy = CCFlipX3D::create(2.0);
+	playerSprite->runAction(rotateBy);
+	blockedPlayer = false;
 }
 
 /**
@@ -819,36 +867,38 @@ void DeeWorld::manageCollision(b2Body* target) {
  */
 void DeeWorld::scoreAminoAcid(AminoAcid* sTarget) {
 
-    //scoring-event
-    BoardAcid * acid = this->_code.front();
+	if(this->_code.size() != 0 &&  !gameEnded){
+		//scoring-event
+		BoardAcid * acid = this->_code.front();
 
-    char hitAcid = sTarget->getType();
-    char wantedAcid = acid->acid;
-    
-    // show score
-    int scoring = MatrixHelper::getScoreForAminoAcid(wantedAcid,hitAcid);
-    // add to the current score
-    Globals::score= scoring + Globals::score;
-    
-    UIElements::displayScoreEffect(this, scoring);
-    UIElements::runDestroyAcidEffect(acid->_label);
+		char hitAcid = sTarget->getType();
+		char wantedAcid = acid->acid;
 
-    // play a nice sound
-    if(SoundEffectHelper::isSoundEnabled()){
-		if (scoring > 0) {
-			SoundEffectHelper::playPositiveCollisionSound();
-		}else if(scoring == 0){
-			SoundEffectHelper::playNeutralCollisionSound();
-		}else{
-			SoundEffectHelper::playNegativeCollisionSound();
+		// show score
+		int scoring = MatrixHelper::getScoreForAminoAcid(wantedAcid,hitAcid);
+		// add to the current score
+		score= scoring + score;
+
+		UIElements::displayScoreEffect(this, scoring);
+		UIElements::runDestroyAcidEffect(acid->_label);
+
+		// play a nice sound
+		if(SoundEffectHelper::isSoundEnabled()){
+			if (scoring > 0) {
+				SoundEffectHelper::playPositiveCollisionSound();
+			}else if(scoring == 0){
+				SoundEffectHelper::playNeutralCollisionSound();
+			}else{
+				SoundEffectHelper::playNegativeCollisionSound();
+			}
 		}
-    }
 
 
-    // TODO release acid;
-    _code.pop();
-    
-    UIElements::createNewAminoAcid(this);
+		// TODO release acid;
+		_code.pop();
+
+		UIElements::createNewAminoAcid(this);
+	}
 }
 
 
@@ -889,16 +939,23 @@ void DeeWorld::pauseAction(int i) {
 
 void DeeWorld::pauseGame(){
 	if(!pausedGame){
+		CCLog("pause game");
 		SoundEffectHelper::pauseAllMusic();
+		CCLog("finished pausing music");
 		pausedGame = true;
 		this->setTouchEnabled(false);
+		/*
+		 * this executes a exception on android
 		CCArray* childs = this->getChildren();
 		CCObject* child;
+		CCLog("calling pause action on all sprites");
 		CCARRAY_FOREACH(childs, child)
 		{
 		   CCSprite *sprite = (CCSprite *)child;
 		   sprite->pauseSchedulerAndActions();
 		}
+		CCLog("finished calling pause action on all sprites");
+		*/
 	}
 }
 
@@ -923,13 +980,13 @@ void DeeWorld::resumeGame(){
  * this function is called when all sequences have been processed
  */
 void DeeWorld::gameEnd() {
+	gameEnded = true;
 	SoundEffectHelper::stopBackgroundMusic();
 	CCLog("LEVEL END");
 
-	CCScene *pScene = LevelEndScene::create(Globals::score, Globals::level);
+	CCScene *pScene = LevelEndScene::create(score, level);
 	//transition to next scene for one sec
-	CCDirector::sharedDirector()->replaceScene(
-				CCTransitionFade::create(0.0f, pScene));
+	CCDirector::sharedDirector()->replaceScene(CCTransitionPageTurn::create(0.0f, pScene, false));
 }
 
 char DeeWorld::getNextAminoAcid() {
@@ -964,7 +1021,7 @@ void DeeWorld::setSequence(std::string seq) {
 
 
 bool DeeWorld::isGamePaused(){
-	bool ret = this->pausedGame || CCDirector::sharedDirector()->isPaused();
+	bool ret = this->pausedGame || CCDirector::sharedDirector()->isPaused() || gameEnded;
 	return ret;
 }
 
@@ -975,4 +1032,11 @@ bool DeeWorld::isLayerOpen(){
 	return false;
 }
 
+int DeeWorld::getMinSpeed(){
+	return MIN_SPEED;
+}
+
+int DeeWorld::getMaxSpeed(){
+	return MAX_SPEED + level /2;
+}
 
