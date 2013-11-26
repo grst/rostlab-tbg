@@ -4,6 +4,8 @@ include $(CLEAR_VARS)
 
 APP_CFLAGS += -Wno-error=format-security
 
+LOCAL_EXPORT_CFLAGS += -g 
+
 LOCAL_MODULE := game_shared
 
 LOCAL_MODULE_FILENAME := libgame
@@ -24,6 +26,7 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/helper/DebugDraw.cpp  \
                    ../../Classes/helper/MatrixHelper.cpp  \
                    ../../Classes/helper/HelperFunctions.cpp  \
+                   ../../Classes/helper/LevelHelper.cpp \
                    ../../Classes/helper/SoundEffectHelper.cpp  \
                    ../../Classes/helper/UIElements.cpp \
                    ../../Classes/helper/WebOpNative.cpp \
