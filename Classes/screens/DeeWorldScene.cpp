@@ -827,19 +827,14 @@ void DeeWorld::manageCollision(b2Body* target) {
     playerSprite->runAction(tintTo);
 
 
-    //animate our own player
-    if(!togglePlayer){
 
-		CCActionInterval * scalteTo = CCScaleBy::create(1.0, 2.0);
-		playerSprite->runAction(scalteTo);
-		togglePlayer = true;
-    }else{
-    	CCActionInterval * scalteTo = CCScaleBy::create(1.0, 0.5);
-    	playerSprite->runAction(scalteTo);
-    	togglePlayer = false;
-    }
-
-
+    playerSprite->stopAllActions();
+    HelperFunctions::resizseSprite(playerSprite, 64, 64);
+    CCActionInterval * scalteTo = CCScaleBy::create(.3, 2.0);
+    CCActionInterval * scaleBack = CCScaleBy::create(.3, 0.5);
+    playerSprite->runAction(scalteTo);
+    playerSprite->runAction(scaleBack);
+		
 
     //remove amino acid
     aTarget->flagForDelete();
