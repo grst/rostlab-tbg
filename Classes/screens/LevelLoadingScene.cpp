@@ -46,7 +46,11 @@ LevelLoadingScene::~LevelLoadingScene() {
 }
 
 bool LevelLoadingLayer::init() {
-	if (CCLayerColor::initWithColor(ccc4(255, 255, 255, 255))) {
+	//////////////////////////////
+	    // 1. super init first
+	    if (!CCLayer::init()) {
+	        return false;
+	    }
 
 		SoundEffectHelper::playLevelLoadingBackgroundMusic();
 		CCSize winSize = CCDirector::sharedDirector()->getWinSize();
@@ -98,9 +102,7 @@ bool LevelLoadingLayer::init() {
 
 
 		return true;
-	} else {
-		return false;
-	}
+
 }
 
 void LevelLoadingLayer::addLabels() {

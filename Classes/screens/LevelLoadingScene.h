@@ -29,7 +29,7 @@
 #include <string>
 #include "cocos2d.h"
 
-class LevelLoadingLayer : public cocos2d::CCLayerColor
+class LevelLoadingLayer : public cocos2d::CCLayer
 {
 public:
 	LevelLoadingLayer():_label(NULL) {};
