@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>rostlab_tbg</name>
+	<name>rostlab_tbg-</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -50,17 +50,17 @@
 		<link>
 			<name>Box2D</name>
 			<type>2</type>
-			<location>/home/xsebi/programs/frameworks/cocod2x-x-2.1/external/Box2D</location>
+			<location>/home/xsebi/programs/frameworks/cocos2d-x-2.2.1/rostlab-tbg/lib/Box2D</location>
 		</link>
 		<link>
 			<name>Classes</name>
 			<type>2</type>
-			<location>/home/xsebi/programs/frameworks/cocod2x-x-2.1/rostlab_tbg/Classes</location>
+			<location>/home/xsebi/programs/frameworks/cocos2d-x-2.2.1/rostlab-tbg/Classes</location>
 		</link>
 		<link>
 			<name>Resources</name>
 			<type>2</type>
-			<location>/home/xsebi/programs/frameworks/cocod2x-x-2.1/rostlab_tbg/Resources</location>
+			<location>/home/xsebi/programs/frameworks/cocos2d-x-2.2.1/rostlab-tbg/Resources</location>
 		</link>
 		<link>
 			<name>actions</name>
