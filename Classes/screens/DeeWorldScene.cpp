@@ -7,6 +7,7 @@
 #include "MainScreenScene.h"
 #include "../ui_elements/PauseLayer.h"
 #include "../helper/SoundEffectHelper.h"
+#include "../helper/LevelHelper.h"
 
 
 USING_NS_CC;
@@ -14,15 +15,8 @@ USING_NS_CC;
 #define PTM_RATIO 32.0
 #define INTRO_TIME_SECONDS 1
 #define TOLERANCE_PLAYER -30
-#define MS_TIME_PLAYER_BLOCKED 0
 #define PLAYER_IMAGE "Player.png"
 #define BLADE_FILE "streak.png"
-#define MIN_AMINO_ACIDS 6
-#define MAX_AMINO_ACIDS 9
-#define MIN_SPEED 4
-#define MAX_SPEED 6
-#define AA_ADD_PROBABILITY 230 //Every n calls of tick, one additional amino acid is added (if withing MIN and MAX)
-#define AA_REMOVE_PROBABILITY 15 //Every n wall collisions, remove one amino acid.
 #define TAG_PAUSE_LAYER 567 // arbitrary tag for pause menu - DO NOT MODIFY
 #define DEBUG_DRAW 0 // 1 enable debug draw, 0 disable
 
@@ -464,7 +458,7 @@ void DeeWorld::addTarget() {
     minDeg -= 90*corner;
     maxDeg -= 90*corner;
     float deg = HelperFunctions::randomValueBetween(minDeg, maxDeg);
-    float scale = HelperFunctions::randomValueBetween(MIN_SPEED, MAX_SPEED);
+    float scale = HelperFunctions::randomValueBetween(getMinSpeed(), getMaxSpeed());
     b2Vec2 vel = b2Vec2(sin(CC_DEGREES_TO_RADIANS(deg)), cos(CC_DEGREES_TO_RADIANS(deg)));
     vel.operator*=(scale);
 	b2Body* target = CreateBox2DBodyForSprite(sTarget, n, verts);
@@ -647,7 +641,7 @@ void DeeWorld::BeginContact(b2Contact *contact) {
 
 			// if a target collides with a wall, we want to remove it with a certain probability
 			if(toRemove != NULL) {
-				if(HelperFunctions::randomValueBetween(0, AA_REMOVE_PROBABILITY) < 1) {
+				if(HelperFunctions::randomValueBetween(0, this->getAARemProb()) < 1) {
 					toRemove->flagForDelete();
 				}
 			}
@@ -733,7 +727,10 @@ void DeeWorld::tick(float delta) {
 	//  TODO what happens if AA is deleted / remove
 	if(!isGamePaused()){
 
+        //CCLog("Starting tickTack");
 		_b2dWorld->Step(delta, 10, 10);
+		//CCLog("Stopping tickTack");
+
 		// Loop through all of the Box2D bodies in our Box2D world..
 		for (b2Body *b = _b2dWorld->GetBodyList(); b; b = b->GetNext()) {
 			// See if there's any user data attached to the Box2D body
@@ -780,11 +777,13 @@ void DeeWorld::tick(float delta) {
 		}
 		if(isAminoAcidRemaining()){
 			//add aminoAcids, if neccessary
-			while(AAcounter < MIN_AMINO_ACIDS) {
+			while(AAcounter < this->getMinAA()) {
+				CCLog("adding AAs to min (1)");
 				this->addTarget();
 			}
-			if(AAcounter < MAX_AMINO_ACIDS) {
-				if(HelperFunctions::randomValueBetween(0, AA_ADD_PROBABILITY) < 1) {
+			if(AAcounter < this->getMaxAA()) {
+				if(HelperFunctions::randomValueBetween(0, this->getAAAddProb()) < 1) {
+					CCLog("adding AAs to max (2)");
 					this->addTarget();
 				}
 			}
@@ -1033,10 +1032,33 @@ bool DeeWorld::isLayerOpen(){
 }
 
 int DeeWorld::getMinSpeed(){
-	return MIN_SPEED;
+	// TODO: add some code to speed up during game
+	return LevelHelper::getMinSpeed(level);
 }
 
 int DeeWorld::getMaxSpeed(){
-	return MAX_SPEED + level /2;
+	// TODO: add some code to speed up during game
+	return LevelHelper::getMaxSpeed(level);
+}
+
+int DeeWorld::getMinAA(){
+	// TODO: add some code to speed up during game
+	return LevelHelper::getMinAA(level);
+}
+
+int DeeWorld::getMaxAA(){
+	// TODO: add some code to speed up during game
+	return LevelHelper::getMaxAA(level);
+}
+
+
+int DeeWorld::getAARemProb(){
+	// TODO: add some code to speed up during game
+	return LevelHelper::getAARemProb(level);
+}
+
+int DeeWorld::getAAAddProb(){
+	// TODO: add some code to speed up during game
+	return LevelHelper::getAAAddProb(level);
 }
 

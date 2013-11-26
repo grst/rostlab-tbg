@@ -1,5 +1,6 @@
 #include "LevelLoadingScene.h"
 #include "../helper/WebOpNative.h"
+#include "../helper/LevelHelper.h"
 #include "MainScreenScene.h"
 #include "DeeWorldScene.h"
 
@@ -61,7 +62,7 @@ bool LevelLoadingLayer::init() {
 		this->addChild(pSpriteBackground, 0);
 
 		CCString labelText = "You will fight for ";
-		this->_label = CCLabelTTF::create(labelText.getCString(), "Artial", 32);
+		this->_label = CCLabelTTF::create(labelText.getCString(), "Artial", 12);
 		_label->retain();
 		_label->setColor(ccc3(0, 0, 0));
 		_label->setPosition(ccp(winSize.width / 2, winSize.height / 2));
@@ -107,17 +108,24 @@ void LevelLoadingLayer::addLabels() {
 
 	std::string strLevel = static_cast<std::ostringstream*>(&(std::ostringstream() << level))->str();
 	std::string seqLevel= "Level: " + strLevel;
-	this->levelLabel = CCLabelTTF::create(seqLevel.c_str(), "Artial", 32);
+	this->levelLabel = CCLabelTTF::create(seqLevel.c_str(), "Artial", 18);
 	levelLabel->retain();
 	levelLabel->setColor(ccc3(0, 0, 0));
 	levelLabel->setPosition(ccp(winSize.width / 2 , winSize.height / 2 - 80));
 	this->addChild(levelLabel);
 
 	std::string seqSeq = "Sequenz: "+ seq;
-	this->seqLabel = CCLabelTTF::create(seqSeq.c_str(), "Artial", 32);
+	this->seqLabel = CCLabelTTF::create(seqSeq.c_str(), "Artial", 14);
 	seqLabel->retain();
 	seqLabel->setColor(ccc3(0, 0, 0));
 	seqLabel->setPosition(ccp(winSize.width / 2 , winSize.height / 2 -40));
+	this->addChild(seqLabel);
+
+	std::string sDesc = "Description: "+ LevelHelper::getDescriptionForLevel(level);
+	this->seqLabel = CCLabelTTF::create(sDesc.c_str(), "Artial", 14);
+	seqLabel->retain();
+	seqLabel->setColor(ccc3(0, 0, 0));
+	seqLabel->setPosition(ccp(winSize.width / 2 , winSize.height / 2 + 20));
 	this->addChild(seqLabel);
 }
 
@@ -126,7 +134,7 @@ void LevelLoadingLayer::endScreen() {
 	 SoundEffectHelper::stopBackgroundMusic();
 	 CCScene *pScene = DeeWorld::scene(seq, level);
 	 //transition to next scene for one sec
-	 CCDirector::sharedDirector()->replaceScene( CCTransitionFadeDown::create(2.0f, pScene));
+	 CCDirector::sharedDirector()->replaceScene( CCTransitionMoveInB::create(2.0f, pScene));
 }
 
 LevelLoadingLayer::~LevelLoadingLayer() {

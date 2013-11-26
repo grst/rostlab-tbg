@@ -24,6 +24,7 @@
 package org.rostlab.tbg;
 
 import org.cocos2dx.lib.Cocos2dxActivity;
+import org.cocos2dx.lib.Cocos2dxGLSurfaceView;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -32,13 +33,20 @@ import android.os.Bundle;
 
 public class rostlab_tbg extends Cocos2dxActivity {
 
-    private static Activity me = null;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        me = this;
+	private static Activity me = null;
+	
+    protected void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);     
     }
+
+    public Cocos2dxGLSurfaceView onCreateView() {
+        Cocos2dxGLSurfaceView glSurfaceView = new Cocos2dxGLSurfaceView(this);
+        // HelloCpp should create stencil buffer
+        glSurfaceView.setEGLConfigChooser(5, 6, 5, 0, 16, 8);
+        
+        return glSurfaceView;
+    }
+    
 
     static {
         System.loadLibrary("game");

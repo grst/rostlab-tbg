@@ -38,6 +38,7 @@ AminoAcid* AminoAcid::create(char type){
         
         return pobSprite;
     } else {
+    	CCLog("[Error]: no file found for AA %s", path);
         CC_SAFE_DELETE(pobSprite);
         return NULL;
     }    

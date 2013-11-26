@@ -1,5 +1,6 @@
 #include "MainScreenScene.h"
 #include "../helper/WebOpNative.h"
+#include "../helper/LevelHelper.h"
 #include "SettingsScreenScene.h"
 #include "SplashScreenScene.h"
 #include "DeeWorldScene.h"
@@ -59,7 +60,7 @@ bool MainScreenLayer::init() {
 
 		CCArray * menuIcons = CCArray::create();
 
-		int levels = 8;
+		int levels = 10;
 
 		for (int i = 0; i < levels; i++) {
 
@@ -70,11 +71,11 @@ bool MainScreenLayer::init() {
 			// some stupid rectangular order of the menu
 			pCloseItem->setPosition(
 					ccp(
-							origin.x + (i % 4) * (winSize.width / 5)
-									+ winSize.width / 5
+							origin.x + (i % 5) * (winSize.width / 6)
+									+ winSize.width / 6
 									- pCloseItem->getContentSize().width / 2,
 							origin.y + winSize.height - winSize.height / 3
-									- (i / 4) * (winSize.height / 3)
+									- (i / 6) * (winSize.height / 3)
 
 									- pCloseItem->getContentSize().height / 2));
 			// maybe we should use the dedicated align method for this?
@@ -207,17 +208,7 @@ void MainScreenLayer::menuStartGameCallback(CCObject* pSender) {
 
 	CCLOG("Starting level %d", tag);
 
-	// Crystal structure of human class II alcohol dehydrogenase (ADH4) in complex with NAD and Zn
-	std::string seq= "";
-
-	switch(tag){
-	//TODO
-	case 7:
-		// just for short testing
-		seq= "SMGTK"; break;
-	default:
-		seq= "SMGTKGKVIKCKAAIAWE";
-	}
+	std::string seq= LevelHelper::getSequenceForLevel(tag);
 
 	CCScene *pScene = LevelLoadingScene::create(seq, tag);
 
