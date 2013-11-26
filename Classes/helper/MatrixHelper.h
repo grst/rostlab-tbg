@@ -16,7 +16,7 @@
 #include <sstream>
 #include <ctype.h>
 #include "cocos2d.h"
-#include "Box2D.h"
+#include "Box2D/Box2D.h"
 
 
 class MatrixHelper {

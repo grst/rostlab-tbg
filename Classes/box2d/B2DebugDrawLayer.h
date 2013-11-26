@@ -10,7 +10,7 @@
 #define __B2_DEBUG_DRAW_LAYER_H__
 
 #include "cocos2d.h"
-#include "Box2D.h"
+#include "Box2D/Box2D.h"
 #include "GLES-Render.h"
 
 class B2DebugDrawLayer : public cocos2d::CCLayer

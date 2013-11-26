@@ -12,7 +12,7 @@
 #include "cocos2d.h"
 using namespace cocos2d;
 
-#include "Box2D.h"
+#include "Box2D/Box2D.h"
 
 
 #define PTM_RATIO 32.0

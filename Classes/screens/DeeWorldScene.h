@@ -9,7 +9,7 @@
 
 #include "cocos2d.h"
 
-#include "Box2D.h"
+#include "Box2D/Box2D.h"
 //for debug-draw
 #include "../box2d/B2DebugDrawLayer.h"
 

@@ -521,7 +521,7 @@ void MatrixHelper::loadMatrix(std::string name) {
     if(fileContents == NULL) {
         cocos2d::CCLog("Error reading Matrix");
     }
-    cocos2d::CCLog((char *)fileContents);
+    //cocos2d::CCLog((char *)fileContents);
 	contents.append((char *) fileContents);
 
 	// Create a string stream so that we can use getline( ) on it
