@@ -201,6 +201,7 @@ void UIElements::createNewAminoAcid(DeeWorld* scene) {
 		scene->gameEnd();
 		return;
 	}
+	CCLog("end of created AA");
 }
 
 ccColor3B UIElements::getColorForScore(int scoring) {

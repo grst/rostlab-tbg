@@ -93,6 +93,10 @@ private:
 
     int getMinSpeed();
     int getMaxSpeed();
+    int getMinAA();
+    int getMaxAA();
+    int getAAAddProb();
+    int getAARemProb();
 
     bool gameEnded;
 
