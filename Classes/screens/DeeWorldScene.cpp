@@ -863,28 +863,26 @@ void DeeWorld::manageCollision(b2Body* target) {
 	CCActionInterval * tintTo = CCTintTo::create(2.0, 122, 156, 163);
 	playerSprite->runAction(tintTo);
 
-	//animate our own player
-	if (!togglePlayer) {
 
-		CCActionInterval * scalteTo = CCScaleBy::create(1.0, 2.0);
-		playerSprite->runAction(scalteTo);
-		togglePlayer = true;
-	} else {
-		CCActionInterval * scalteTo = CCScaleBy::create(1.0, 0.5);
-		playerSprite->runAction(scalteTo);
-		togglePlayer = false;
-	}
 
-	//remove amino acid
-	aTarget->flagForDelete();
+    playerSprite->stopAllActions();
+    HelperFunctions::resizseSprite(playerSprite, 64, 64);
+    CCActionInterval * scalteTo = CCScaleBy::create(.3, 2.0);
+    CCActionInterval * scaleBack = CCScaleBy::create(.3, 0.5);
+    playerSprite->runAction(scalteTo);
+    playerSprite->runAction(scaleBack);
+		
+
+    //remove amino acid
+    aTarget->flagForDelete();
 
 	this->updateInfoUI();
 }
 
 // TODO: remove or use
-void DeeWorld::playerRestore() {
+void DeeWorld::playerRestore(){
 	return;
-	CCSprite* playerSprite = (CCSprite*) this->player->GetUserData();
+	CCSprite* playerSprite = (CCSprite* )this->player->GetUserData();
 	CCActionInterval * rotateBy = CCFlipX3D::create(2.0);
 	playerSprite->runAction(rotateBy);
 	blockedPlayer = false;
@@ -900,7 +898,7 @@ void DeeWorld::playerRestore() {
  */
 void DeeWorld::scoreAminoAcid(AminoAcid* sTarget) {
 
-	if (this->_code.size() != 0 && !gameEnded) {
+	if(this->_code.size() != 0 &&  !gameEnded){
 		//scoring-event
 		BoardAcid * acid = this->_code.front();
 
