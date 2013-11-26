@@ -2,7 +2,7 @@
 APPNAME="rostlab_tbg"
 
 # paths
-NDK_ROOT="/home/xsebi/programs/frameworks/android-ndk-r9" 
+NDK_ROOT="/home/xsebi/programs/frameworks/android-ndk-r9b" 
 
 
 # options
