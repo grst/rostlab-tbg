@@ -9,7 +9,6 @@
 #include "../helper/SoundEffectHelper.h"
 #include "../helper/LevelHelper.h"
 
-
 USING_NS_CC;
 
 #define PTM_RATIO 32.0
@@ -39,7 +38,6 @@ DeeWorld::DeeWorld() {
 
 }
 
-
 /*
  * pass the sequence on construction
  */
@@ -58,7 +56,7 @@ CCScene* DeeWorld::scene(std::string sequence, int level) {
 		CC_BREAK_IF(!layer);
 
 		layer->setSequence(sequence);
-		layer->level =level;
+		layer->level = level;
 
 		// add layer as a child to scene
 		scene->addChild(layer);
@@ -82,7 +80,7 @@ bool DeeWorld::init() {
 	pausedGame = false;
 	gameEnded = false;
 	cocos2d::CCLog("Hello World. App ist starting now");
-    AAcounter = 0;
+	AAcounter = 0;
 
 	initBackground();
 	makeMenu();
@@ -121,7 +119,6 @@ bool DeeWorld::init() {
 
 	SoundEffectHelper::playLevelBackgroundMusic(level);
 
-
 	CCDirector::sharedDirector()->getTouchDispatcher()->addStandardDelegate(
 			this, 10);
 
@@ -145,24 +142,23 @@ void DeeWorld::initBackground() {
 }
 
 //Listen event.
-void DeeWorld::initListener()
-{
-    CCNotificationCenter::sharedNotificationCenter()->addObserver(this, callfuncO_selector(DeeWorld::onApplicationStatusChanged), "APP_STATUS_CHANGED", NULL);
+void DeeWorld::initListener() {
+	CCNotificationCenter::sharedNotificationCenter()->addObserver(this,
+			callfuncO_selector(DeeWorld::onApplicationStatusChanged),
+			"APP_STATUS_CHANGED", NULL);
 }
 
 //Handling event
-void DeeWorld::onApplicationStatusChanged(CCObject* obj)
-{
+void DeeWorld::onApplicationStatusChanged(CCObject* obj) {
 	CCBool* b = (CCBool*) obj;
-	if(b->getValue()){
+	if (b->getValue()) {
 		CCLog("app resumed");
 		CCMessageBox("Application resumed", "Debug by us");
 		pauseAction(2);
-	}else{
+	} else {
 		CCLog("app went into background");
 		pauseAction(1);
 	}
-
 
 }
 
@@ -176,9 +172,9 @@ void DeeWorld::makeMenu() {
 
 	// Place the menu item top-left corner.
 	pSettings->setPosition(
-			ccp(pSettings->getContentSize().width /2 ,
+			ccp(pSettings->getContentSize().width / 2,
 					origin.y + winSize.height
-							- pSettings->getContentSize().height /2));
+							- pSettings->getContentSize().height / 2));
 
 	if (!pSettings) {
 		return;
@@ -195,7 +191,6 @@ void DeeWorld::makeMenu() {
 	this->addChild(pMenu, 1);
 }
 
-
 void DeeWorld::initBox2D() {
 	b2Vec2 gravity = b2Vec2(0.0f, -0.0f); //no gravity
 	_b2dWorld = new b2World(gravity);
@@ -203,9 +198,9 @@ void DeeWorld::initBox2D() {
 	this->schedule(schedule_selector(DeeWorld::tick));
 
 	//debug draw made easy with helper class
-    if(DEBUG_DRAW > 0) {
-        this->addChild(B2DebugDrawLayer::create(_b2dWorld, PTM_RATIO), 9999);
-    }	
+	if (DEBUG_DRAW > 0) {
+		this->addChild(B2DebugDrawLayer::create(_b2dWorld, PTM_RATIO), 9999);
+	}
 
 	// Create contact listener
 	_b2dWorld->SetContactListener(this);
@@ -224,18 +219,29 @@ void DeeWorld::initWorld() {
 	b2PolygonShape groundEdge;
 	b2FixtureDef boxShapeDef;
 	boxShapeDef.shape = &groundEdge;
-    int wallThickness = 40;
-    int wallOffset = wallThickness * 1;
+	int wallThickness = 40;
+	int wallOffset = wallThickness * 1;
 
-    //wall definitions
-	groundEdge.SetAsBox(visibleSize.width / PTM_RATIO, wallThickness / PTM_RATIO, b2Vec2(visibleSize.width / PTM_RATIO / 2, -wallOffset / PTM_RATIO), 0);
+	//wall definitions
+	groundEdge.SetAsBox(visibleSize.width / PTM_RATIO,
+			wallThickness / PTM_RATIO,
+			b2Vec2(visibleSize.width / PTM_RATIO / 2, -wallOffset / PTM_RATIO),
+			0);
 	bottom = groundBody->CreateFixture(&boxShapeDef);
-	groundEdge.SetAsBox(wallThickness/PTM_RATIO, visibleSize.height/PTM_RATIO, b2Vec2(-wallOffset /PTM_RATIO, visibleSize.height / PTM_RATIO /2), 0);
+	groundEdge.SetAsBox(wallThickness / PTM_RATIO,
+			visibleSize.height / PTM_RATIO,
+			b2Vec2(-wallOffset / PTM_RATIO, visibleSize.height / PTM_RATIO / 2),
+			0);
 	left = groundBody->CreateFixture(&boxShapeDef);
-	groundEdge.SetAsBox(visibleSize.width / PTM_RATIO, wallThickness/PTM_RATIO, b2Vec2(visibleSize.width / PTM_RATIO / 2, (visibleSize.height + wallOffset) / PTM_RATIO), 0);
+	groundEdge.SetAsBox(visibleSize.width / PTM_RATIO,
+			wallThickness / PTM_RATIO,
+			b2Vec2(visibleSize.width / PTM_RATIO / 2,
+					(visibleSize.height + wallOffset) / PTM_RATIO), 0);
 	top = groundBody->CreateFixture(&boxShapeDef);
-	groundEdge.SetAsBox(wallThickness/PTM_RATIO, visibleSize.height/PTM_RATIO,
-                        b2Vec2((visibleSize.width + wallOffset) /PTM_RATIO, visibleSize.height / PTM_RATIO/2), 0);
+	groundEdge.SetAsBox(wallThickness / PTM_RATIO,
+			visibleSize.height / PTM_RATIO,
+			b2Vec2((visibleSize.width + wallOffset) / PTM_RATIO,
+					visibleSize.height / PTM_RATIO / 2), 0);
 	right = groundBody->CreateFixture(&boxShapeDef);
 
 }
@@ -249,7 +255,7 @@ void DeeWorld::initPlayer() {
 	//player
 	CCSprite *sPlayer = CCSprite::create(PLAYER_IMAGE);
 	sPlayer->setPosition(ccp(visibleSize.width / 2, visibleSize.height / 2));
-    HelperFunctions::resizseSprite(sPlayer, 32, 0);
+	HelperFunctions::resizseSprite(sPlayer, 32, 0);
 
 	float x = 1 / PTM_RATIO / 8;
 	float y = 1 / PTM_RATIO / 8;
@@ -266,7 +272,6 @@ void DeeWorld::initPlayer() {
 	player = CreateBox2DBodyForSprite(sPlayer, num, vertices);
 	//only rectangle around the player (for testing)
 	// player = CreateBox2DBodyForSprite(sPlayer, 0, NULL);
-
 
 	player->SetUserData(sPlayer);
 	player->SetType(b2_kinematicBody);
@@ -291,10 +296,10 @@ void DeeWorld::initInfoUI() {
 	//score
 	// int -> str
 	this->_scoreLabel = CCLabelTTF::create("0", "Helvetica", 30,
-                                           CCSizeMake(60, 30), kCCTextAlignmentRight);
+			CCSizeMake(60, 30), kCCTextAlignmentRight);
 	this->_scoreLabel->retain();
 	this->_scoreLabel->setPosition(
-                                   ccp(layerSize.width - 30, layerSize.height - 30));
+			ccp(layerSize.width - 30, layerSize.height - 30));
 	this->_scoreLabel->setColor(ccc3(20, 25, 255));
 	this->addChild(_scoreLabel);
 
@@ -305,12 +310,12 @@ void DeeWorld::initInfoUI() {
 	UIElements::loadCache(this);
 }
 
-void DeeWorld::showCountdown(int time){
-	timer =time;
+void DeeWorld::showCountdown(int time) {
+	timer = time;
 
 	CCSize layerSize = this->getContentSize();
 	this->_timerLabel = CCLabelTTF::create("", "Helvetica",
-				layerSize.height * 2 / 3, layerSize, kCCTextAlignmentCenter);
+			layerSize.height * 2 / 3, layerSize, kCCTextAlignmentCenter);
 	this->_timerLabel->retain();
 	this->_timerLabel->setPosition(
 			ccp(layerSize.width / 2, layerSize.height / 2));
@@ -357,46 +362,48 @@ void DeeWorld::countdown() {
 	}
 }
 
-
-
 /**
  * detects, depending on the player's position,
  * in which corner the next amino acid should appear.
  */
 int DeeWorld::detectCorner() {
-    //split board into 4 areas:
-    // A1 | B2
-    // -----
-    // C0 | D3
-    // A and C overlap partly, B and D do likewise
-    // if the player is found in one of the areas,
-    // the amino acid must not appear in that area
-    CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
-    float areaWidth = (visibleSize.width / 2) - ((CCSprite *) player->GetUserData())->getContentSize().width;
-    float areaHeight = (visibleSize.height / 2) * 1.2;
-    CCSprite* sPlayer = (CCSprite *) player->GetUserData();
-    CCPoint playerPosition = sPlayer->getPosition();
-    vector<int> validCorners;
-    
-    //player in C
-    if(!(playerPosition.x < areaWidth && playerPosition.y < areaHeight)) {
-        validCorners.push_back(0);
-    }
-    //player in A
-    if(!(playerPosition.x < areaWidth && playerPosition.y > visibleSize.height - areaHeight)) {
-        validCorners.push_back(1);
-    }
-    //player in B
-    if(!(playerPosition.x > visibleSize.width - areaWidth && playerPosition.y > visibleSize.height - areaHeight)) {
-        validCorners.push_back(2);
-    }
-    //player in C
-    if(!(playerPosition.x > visibleSize.width - areaWidth && playerPosition.y < areaHeight)) {
-        validCorners.push_back(3);
-    }
-    
-    int length = validCorners.size();
-    return validCorners.at(arc4random() % length);
+	//split board into 4 areas:
+	// A1 | B2
+	// -----
+	// C0 | D3
+	// A and C overlap partly, B and D do likewise
+	// if the player is found in one of the areas,
+	// the amino acid must not appear in that area
+	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
+	float areaWidth = (visibleSize.width / 2)
+			- ((CCSprite *) player->GetUserData())->getContentSize().width;
+	float areaHeight = (visibleSize.height / 2) * 1.2;
+	CCSprite* sPlayer = (CCSprite *) player->GetUserData();
+	CCPoint playerPosition = sPlayer->getPosition();
+	vector<int> validCorners;
+
+	//player in C
+	if (!(playerPosition.x < areaWidth && playerPosition.y < areaHeight)) {
+		validCorners.push_back(0);
+	}
+	//player in A
+	if (!(playerPosition.x < areaWidth
+			&& playerPosition.y > visibleSize.height - areaHeight)) {
+		validCorners.push_back(1);
+	}
+	//player in B
+	if (!(playerPosition.x > visibleSize.width - areaWidth
+			&& playerPosition.y > visibleSize.height - areaHeight)) {
+		validCorners.push_back(2);
+	}
+	//player in C
+	if (!(playerPosition.x > visibleSize.width - areaWidth
+			&& playerPosition.y < areaHeight)) {
+		validCorners.push_back(3);
+	}
+
+	int length = validCorners.size();
+	return validCorners.at(arc4random() % length);
 }
 
 /**
@@ -406,63 +413,65 @@ int DeeWorld::detectCorner() {
  */
 void DeeWorld::addTarget() {
 	AminoAcid *sTarget = AminoAcid::createRandom();
-	CCLog("Adding Target called: %c " + sTarget->getType());
-    HelperFunctions::resizseSprite(sTarget, 64, 0);
+	CCLog("Adding Target called: %c ", +sTarget->getType());
+	HelperFunctions::resizseSprite(sTarget, 64, 0);
 	//Place target in a randomly picked corner.
 	int startX, startY;
 	int corner = detectCorner();
 	CCSize winSize = CCDirector::sharedDirector()->getVisibleSize();
 	b2Vec2 impulse;
-    int minDeg = 10;
-    int maxDeg = 80;
-    //position of the amino acids:
-    //inside the board, but directly at the border!
+	int minDeg = 10;
+	int maxDeg = 80;
+	//position of the amino acids:
+	//inside the board, but directly at the border!
 	switch (corner) {
-        case 0:
-            //left bottom
-            startX = 0;
-            startY = 0;
-            break;
-        case 1:
-            //left top
-            startY = winSize.height;
-            startX = 0;
-            break;
-        case 2:
-            //right top
-            startX = winSize.width;
-            startY = winSize.height;
-            break;
-        case 3:
-            //right bottom
-            startX = winSize.width;
-            startY = 0;
-            break;
+	case 0:
+		//left bottom
+		startX = 0;
+		startY = 0;
+		break;
+	case 1:
+		//left top
+		startY = winSize.height;
+		startX = 0;
+		break;
+	case 2:
+		//right top
+		startX = winSize.width;
+		startY = winSize.height;
+		break;
+	case 3:
+		//right bottom
+		startX = winSize.width;
+		startY = 0;
+		break;
 	}
-    
-    
+
 	CCLog("Start-Position:x=%i,y=%i", startX, startY);
 	sTarget->setPosition(ccp(startX, startY));
 
-    AAcounter++;
+	AAcounter++;
 	this->addChild(sTarget);
 
-    //Temp: static polygon
-    //TODO: put in MatrixHelperClass or read from file
-    //row 1, col 1
-    
-    b2Vec2 *verts = MatrixHelper::getVerticeData(sTarget->getType(), 1/PTM_RATIO/4);
-    int n = MatrixHelper::getVerticeNum(sTarget->getType());
+	//Temp: static polygon
+	//TODO: put in MatrixHelperClass or read from file
+	//row 1, col 1
+
+	b2Vec2 *verts = MatrixHelper::getVerticeData(sTarget->getType(),
+			1 / PTM_RATIO / 4);
+	int n = MatrixHelper::getVerticeNum(sTarget->getType());
 	//Move Target
-    //random direction, random velocity.
-    minDeg -= 90*corner;
-    maxDeg -= 90*corner;
-    float deg = HelperFunctions::randomValueBetween(minDeg, maxDeg);
-    float scale = HelperFunctions::randomValueBetween(getMinSpeed(), getMaxSpeed());
-    b2Vec2 vel = b2Vec2(sin(CC_DEGREES_TO_RADIANS(deg)), cos(CC_DEGREES_TO_RADIANS(deg)));
-    vel.operator*=(scale);
+	//random direction, random velocity.
+	minDeg -= 90 * corner;
+	maxDeg -= 90 * corner;
+	float deg = HelperFunctions::randomValueBetween(minDeg, maxDeg);
+	float scale = HelperFunctions::randomValueBetween(getMinSpeed(),
+			getMaxSpeed());
+	b2Vec2 vel = b2Vec2(sin(CC_DEGREES_TO_RADIANS(deg)),
+			cos(CC_DEGREES_TO_RADIANS(deg)));
+	vel.operator*=(scale);
 	b2Body* target = CreateBox2DBodyForSprite(sTarget, n, verts);
-    target->SetLinearVelocity(vel);
+	target->SetLinearVelocity(vel);
 }
 
 /**
@@ -543,8 +552,6 @@ void DeeWorld::ccTouchesMoved(cocos2d::CCSet* touches,
 	float y = tempHeight - pt.y;
 	player->SetTransform(b2Vec2(pt.x / PTM_RATIO, y / PTM_RATIO), 0);
 
-
-
 	for (CCSetIterator it = touches->begin(); it != touches->end(); it++) {
 		CCTouch *touch = (CCTouch *) *it;
 		if (_map.find(touch) == _map.end())
@@ -553,7 +560,7 @@ void DeeWorld::ccTouchesMoved(cocos2d::CCSet* touches,
 		CCBlade *blade = _map[touch];
 		CCPoint point = convertTouchToNodeSpace(touch);
 
-	//	cocos2d::CCLog("TouchTrail x:%d, y:%d", int(point.x), int(point.y));
+		//	cocos2d::CCLog("TouchTrail x:%d, y:%d", int(point.x), int(point.y));
 
 		//point = ccpAdd(ccpMult(point, 0.5f), ccpMult(touch->getPreviousLocation(), 0.5f));
 
@@ -601,7 +608,7 @@ void DeeWorld::keyMenuClicked(void) {
  * TODO: integeate into BeginContact Handler or move parts to seperate method
  */
 void DeeWorld::BeginContact(b2Contact *contact) {
-	if(!isGamePaused()){
+	if (!isGamePaused()) {
 		//CCLog("BeginContact");
 		b2Fixture* fixtureA = contact->GetFixtureA();
 		b2Fixture* fixtureB = contact->GetFixtureB();
@@ -631,24 +638,24 @@ void DeeWorld::BeginContact(b2Contact *contact) {
 				this->manageCollision(target);
 			}
 			// Is sprite A a target and sprite B a wall?
-			else if(iTagA == 1 && iTagB == 3) {
+			else if (iTagA == 1 && iTagB == 3) {
 				toRemove = (AminoAcid*) spriteA;
 			}
 			// Is sprite A a wall and sprite B a target?
-			else if(iTagA == 3 && iTagB == 1) {
+			else if (iTagA == 3 && iTagB == 1) {
 				toRemove = (AminoAcid*) spriteB;
 			}
 
 			// if a target collides with a wall, we want to remove it with a certain probability
-			if(toRemove != NULL) {
-				if(HelperFunctions::randomValueBetween(0, this->getAARemProb()) < 1) {
+			if (toRemove != NULL) {
+			//	if (HelperFunctions::randomValueBetween(0, this->getAARemProb())
+				//		< 1) {
 					toRemove->flagForDelete();
-				}
+			//	}
 			}
 		}
 	}
 }
-
 
 /**
  * create a box2d body for a given sprite.
@@ -681,7 +688,7 @@ b2Body* DeeWorld::CreateBox2DBodyForSprite(cocos2d::CCSprite *sprite,
 	spriteBodyDef.type = b2_dynamicBody;
 	spriteBodyDef.position.Set(pos.x / PTM_RATIO, pos.y / PTM_RATIO);
 	spriteBodyDef.userData = sprite;
-    spriteBodyDef.angularDamping = 0.9f; //slow down fast rotations quickly
+	spriteBodyDef.angularDamping = 0.9f; //slow down fast rotations quickly
 	b2Body *spriteBody = _b2dWorld->CreateBody(&spriteBodyDef);
 
 	b2PolygonShape spriteShape;
@@ -725,9 +732,34 @@ void DeeWorld::updateInfoUI() {
 void DeeWorld::tick(float delta) {
 
 	//  TODO what happens if AA is deleted / remove
-	if(!isGamePaused()){
+	if (!isGamePaused()) {
 
-        //CCLog("Starting tickTack");
+		for (b2Body *b = _b2dWorld->GetBodyList(); b; b = b->GetNext()) {
+			if (b->GetUserData() != NULL) {
+				// We know that the user data is a sprite since we set
+				// it that way, so cast it...
+				CCSprite *sprite = (CCSprite *) b->GetUserData();
+
+				//amino-Acid-specific-actions
+				AminoAcid* aSprite = dynamic_cast<AminoAcid*>(sprite);
+				if (aSprite != 0) {
+					if (aSprite->isFlaggedForDelete()) {
+						std::string stro = "DELETE ";
+						stro.append(std::string(1, aSprite->getType()));
+						CCLog("%s", stro.c_str());
+						AAcounter--;
+						b->SetUserData(NULL);
+						b = NULL;
+						//delete b;
+						this->removeChild(aSprite, true);
+						_b2dWorld->DestroyBody(b);
+						continue;
+					}
+				}
+			}
+		}
+
+		//CCLog("Starting tickTack");
 		_b2dWorld->Step(delta, 10, 10);
 		//CCLog("Stopping tickTack");
 
@@ -743,8 +775,8 @@ void DeeWorld::tick(float delta) {
 
 				//amino-Acid-specific-actions
 				AminoAcid* aSprite = dynamic_cast<AminoAcid*>(sprite);
-				if(aSprite != 0) {
-					if(aSprite->isFlaggedForDelete()) {
+				if (aSprite != 0) {
+					if (aSprite->isFlaggedForDelete()) {
 						AAcounter--;
 						_b2dWorld->DestroyBody(b);
 						this->removeChild(aSprite, true);
@@ -756,12 +788,15 @@ void DeeWorld::tick(float delta) {
 					// --> tutorial www.iforce2d.net/b2dtut/constant-speed
 					b2Vec2 vel = b->GetLinearVelocity();
 					//CCLog("Speed: %f, x: %f, y: %f", vel.Length(), vel.x, vel.y);
-					if(vel.Length() > getMaxSpeed() || vel.Length() < getMinSpeed()) {
-						float desiredVelocity = HelperFunctions::randomValueBetween(getMinSpeed(), getMaxSpeed());
+					if (vel.Length() > getMaxSpeed()
+							|| vel.Length() < getMinSpeed()) {
+						float desiredVelocity =
+								HelperFunctions::randomValueBetween(
+										getMinSpeed(), getMaxSpeed());
 						vel.Normalize();
-					  //  CCLog("Normalized: %f, x: %f, y: %f", vel.Length(), vel.x, vel.y);
+						//  CCLog("Normalized: %f, x: %f, y: %f", vel.Length(), vel.x, vel.y);
 						vel.operator*=(desiredVelocity);
-					   // CCLog("New Speed: %f, x: %f, y: %f", vel.Length(), vel.x, vel.y);
+						// CCLog("New Speed: %f, x: %f, y: %f", vel.Length(), vel.x, vel.y);
 						b->SetLinearVelocity(vel);
 					}
 				}
@@ -775,14 +810,15 @@ void DeeWorld::tick(float delta) {
 				sprite->setRotation(-1 * CC_RADIANS_TO_DEGREES(b->GetAngle()));
 			}
 		}
-		if(isAminoAcidRemaining()){
+		if (isAminoAcidRemaining()) {
 			//add aminoAcids, if neccessary
-			while(AAcounter < this->getMinAA()) {
+			while (AAcounter < this->getMinAA()) {
 				CCLog("adding AAs to min (1)");
 				this->addTarget();
 			}
-			if(AAcounter < this->getMaxAA()) {
-				if(HelperFunctions::randomValueBetween(0, this->getAAAddProb()) < 1) {
+			if (AAcounter < this->getMaxAA()) {
+				if (HelperFunctions::randomValueBetween(0, this->getAAAddProb())
+						< 1) {
 					CCLog("adding AAs to max (2)");
 					this->addTarget();
 				}
@@ -790,7 +826,6 @@ void DeeWorld::tick(float delta) {
 		}
 	}
 }
-
 
 /**
  * Manages the collision of the b2Body target (the Amino-Acid)
@@ -801,56 +836,55 @@ void DeeWorld::tick(float delta) {
  * - effects
  */
 void DeeWorld::manageCollision(b2Body* target) {
-	if(target->GetUserData() == NULL) {
-        return;
-    }
-    AminoAcid* aTarget = (AminoAcid*) target->GetUserData();
-    
+	if (target->GetUserData() == NULL) {
+		return;
+	}
+	AminoAcid* aTarget = (AminoAcid*) target->GetUserData();
+
 	CCLog("Collision with %c", aTarget->getType());
 
-    scoreAminoAcid(aTarget);
+	scoreAminoAcid(aTarget);
 
-    //animate our own player
-    CCSprite* playerSprite = (CCSprite* )this->player->GetUserData();
-  //  if(!blockedPlayer){
-	if(false){
-    CCActionInterval * rotateBy = CCFlipY3D::create(3.0);
+	//animate our own player
+	CCSprite* playerSprite = (CCSprite*) this->player->GetUserData();
+	//  if(!blockedPlayer){
+	if (false) {
+		CCActionInterval * rotateBy = CCFlipY3D::create(3.0);
 
 		playerSprite->runAction(rotateBy);
 		blockedPlayer = true;
-		 this->runAction(CCSequence::create(CCDelayTime::create(4),
-		    						CCCallFunc::create(this,
-		    								callfunc_selector(DeeWorld::playerRestore)),NULL));
-    }
+		this->runAction(
+				CCSequence::create(CCDelayTime::create(4),
+						CCCallFunc::create(this,
+								callfunc_selector(DeeWorld::playerRestore)),
+						NULL));
+	}
 
-    CCActionInterval * tintTo = CCTintTo::create(2.0, 122 , 156, 163 );
-    playerSprite->runAction(tintTo);
+	CCActionInterval * tintTo = CCTintTo::create(2.0, 122, 156, 163);
+	playerSprite->runAction(tintTo);
 
-
-    //animate our own player
-    if(!togglePlayer){
+	//animate our own player
+	if (!togglePlayer) {
 
 		CCActionInterval * scalteTo = CCScaleBy::create(1.0, 2.0);
 		playerSprite->runAction(scalteTo);
 		togglePlayer = true;
-    }else{
-    	CCActionInterval * scalteTo = CCScaleBy::create(1.0, 0.5);
-    	playerSprite->runAction(scalteTo);
-    	togglePlayer = false;
-    }
+	} else {
+		CCActionInterval * scalteTo = CCScaleBy::create(1.0, 0.5);
+		playerSprite->runAction(scalteTo);
+		togglePlayer = false;
+	}
 
+	//remove amino acid
+	aTarget->flagForDelete();
 
-
-    //remove amino acid
-    aTarget->flagForDelete();
-    
-    this->updateInfoUI();	
+	this->updateInfoUI();
 }
 
 // TODO: remove or use
-void DeeWorld::playerRestore(){
+void DeeWorld::playerRestore() {
 	return;
-	CCSprite* playerSprite = (CCSprite* )this->player->GetUserData();
+	CCSprite* playerSprite = (CCSprite*) this->player->GetUserData();
 	CCActionInterval * rotateBy = CCFlipX3D::create(2.0);
 	playerSprite->runAction(rotateBy);
 	blockedPlayer = false;
@@ -866,7 +900,7 @@ void DeeWorld::playerRestore(){
  */
 void DeeWorld::scoreAminoAcid(AminoAcid* sTarget) {
 
-	if(this->_code.size() != 0 &&  !gameEnded){
+	if (this->_code.size() != 0 && !gameEnded) {
 		//scoring-event
 		BoardAcid * acid = this->_code.front();
 
@@ -874,24 +908,23 @@ void DeeWorld::scoreAminoAcid(AminoAcid* sTarget) {
 		char wantedAcid = acid->acid;
 
 		// show score
-		int scoring = MatrixHelper::getScoreForAminoAcid(wantedAcid,hitAcid);
+		int scoring = MatrixHelper::getScoreForAminoAcid(wantedAcid, hitAcid);
 		// add to the current score
-		score= scoring + score;
+		score = scoring + score;
 
 		UIElements::displayScoreEffect(this, scoring);
 		UIElements::runDestroyAcidEffect(acid->_label);
 
 		// play a nice sound
-		if(SoundEffectHelper::isSoundEnabled()){
+		if (SoundEffectHelper::isSoundEnabled()) {
 			if (scoring > 0) {
 				SoundEffectHelper::playPositiveCollisionSound();
-			}else if(scoring == 0){
+			} else if (scoring == 0) {
 				SoundEffectHelper::playNeutralCollisionSound();
-			}else{
+			} else {
 				SoundEffectHelper::playNegativeCollisionSound();
 			}
 		}
-
 
 		// TODO release acid;
 		_code.pop();
@@ -900,11 +933,8 @@ void DeeWorld::scoreAminoAcid(AminoAcid* sTarget) {
 	}
 }
 
-
-
-
 void DeeWorld::pauseLayerCallback(CCObject* pSender) {
-	if(!isLayerOpen()){
+	if (!isLayerOpen()) {
 		pauseAction(1);
 	}
 }
@@ -913,22 +943,22 @@ void DeeWorld::pauseLayerCallback(CCObject* pSender) {
 // 1: on
 // 2: off
 void DeeWorld::pauseAction(int i) {
-	if(timer == 0){
+	if (timer == 0) {
 
-		if(pausedGame && i == 1){
+		if (pausedGame && i == 1) {
 			cocos2d::CCMessageBox("You can't pause that", "Pause error");
 		}
-		if(!pausedGame && i == 2){
+		if (!pausedGame && i == 2) {
 			cocos2d::CCMessageBox("You can't resume that", "Resume error");
 		}
 
-		if(!pausedGame){
+		if (!pausedGame) {
 			pauseGame();
 			PauseLayer *layer = PauseLayer::create();
 			this->addChild(layer, 10, TAG_PAUSE_LAYER);
 
-		}else{
-			if(this->getChildByTag(TAG_PAUSE_LAYER) != NULL){
+		} else {
+			if (this->getChildByTag(TAG_PAUSE_LAYER) != NULL) {
 				this->removeChildByTag(TAG_PAUSE_LAYER, true);
 			}
 			showCountdown(3);
@@ -936,8 +966,8 @@ void DeeWorld::pauseAction(int i) {
 	}
 }
 
-void DeeWorld::pauseGame(){
-	if(!pausedGame){
+void DeeWorld::pauseGame() {
+	if (!pausedGame) {
 		CCLog("pause game");
 		SoundEffectHelper::pauseAllMusic();
 		CCLog("finished pausing music");
@@ -945,21 +975,20 @@ void DeeWorld::pauseGame(){
 		this->setTouchEnabled(false);
 		/*
 		 * this executes a exception on android
-		CCArray* childs = this->getChildren();
-		CCObject* child;
-		CCLog("calling pause action on all sprites");
-		CCARRAY_FOREACH(childs, child)
-		{
-		   CCSprite *sprite = (CCSprite *)child;
-		   sprite->pauseSchedulerAndActions();
-		}
-		CCLog("finished calling pause action on all sprites");
-		*/
+		 CCArray* childs = this->getChildren();
+		 CCObject* child;
+		 CCLog("calling pause action on all sprites");
+		 CCARRAY_FOREACH(childs, child)
+		 {
+		 CCSprite *sprite = (CCSprite *)child;
+		 sprite->pauseSchedulerAndActions();
+		 }
+		 CCLog("finished calling pause action on all sprites");
+		 */
 	}
 }
 
-void DeeWorld::resumeGame(){
-
+void DeeWorld::resumeGame() {
 
 	pausedGame = false;
 	SoundEffectHelper::resumeAllMusic();
@@ -967,10 +996,9 @@ void DeeWorld::resumeGame(){
 
 	CCArray* childs = this->getChildren();
 	CCObject* child;
-	CCARRAY_FOREACH(childs, child)
-	{
-	   CCSprite *sprite = (CCSprite *)child;
-	   sprite->resumeSchedulerAndActions();
+	CCARRAY_FOREACH(childs, child) {
+		CCSprite *sprite = (CCSprite *) child;
+		sprite->resumeSchedulerAndActions();
 	}
 	SoundEffectHelper::playLevelStartSound();
 }
@@ -985,7 +1013,8 @@ void DeeWorld::gameEnd() {
 
 	CCScene *pScene = LevelEndScene::create(score, level);
 	//transition to next scene for one sec
-	CCDirector::sharedDirector()->replaceScene(CCTransitionPageTurn::create(0.0f, pScene, false));
+	CCDirector::sharedDirector()->replaceScene(
+			CCTransitionPageTurn::create(0.0f, pScene, false));
 }
 
 char DeeWorld::getNextAminoAcid() {
@@ -999,8 +1028,8 @@ char DeeWorld::getNextAminoAcid() {
 	return end;
 }
 
-bool DeeWorld::isAminoAcidRemaining(){
-	if( this->aminoSequence.size() > 0 ){
+bool DeeWorld::isAminoAcidRemaining() {
+	if (this->aminoSequence.size() > 0) {
 		return true;
 	}
 	return false;
@@ -1018,46 +1047,45 @@ void DeeWorld::setSequence(std::string seq) {
 	}
 }
 
-
-bool DeeWorld::isGamePaused(){
-	bool ret = this->pausedGame || CCDirector::sharedDirector()->isPaused() || gameEnded;
+bool DeeWorld::isGamePaused() {
+	bool ret = this->pausedGame || CCDirector::sharedDirector()->isPaused()
+			|| gameEnded;
 	return ret;
 }
 
-bool DeeWorld::isLayerOpen(){
-	if(this->getChildByTag(TAG_PAUSE_LAYER) != NULL){
+bool DeeWorld::isLayerOpen() {
+	if (this->getChildByTag(TAG_PAUSE_LAYER) != NULL) {
 		return true;
 	}
 	return false;
 }
 
-int DeeWorld::getMinSpeed(){
+int DeeWorld::getMinSpeed() {
 	// TODO: add some code to speed up during game
 	return LevelHelper::getMinSpeed(level);
 }
 
-int DeeWorld::getMaxSpeed(){
+int DeeWorld::getMaxSpeed() {
 	// TODO: add some code to speed up during game
 	return LevelHelper::getMaxSpeed(level);
 }
 
-int DeeWorld::getMinAA(){
+int DeeWorld::getMinAA() {
 	// TODO: add some code to speed up during game
 	return LevelHelper::getMinAA(level);
 }
 
-int DeeWorld::getMaxAA(){
+int DeeWorld::getMaxAA() {
 	// TODO: add some code to speed up during game
 	return LevelHelper::getMaxAA(level);
 }
 
-
-int DeeWorld::getAARemProb(){
+int DeeWorld::getAARemProb() {
 	// TODO: add some code to speed up during game
 	return LevelHelper::getAARemProb(level);
 }
 
-int DeeWorld::getAAAddProb(){
+int DeeWorld::getAAAddProb() {
 	// TODO: add some code to speed up during game
 	return LevelHelper::getAAAddProb(level);
 }
