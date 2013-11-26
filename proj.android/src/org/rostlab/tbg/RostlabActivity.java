@@ -31,7 +31,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
-public class rostlab_tbg extends Cocos2dxActivity {
+public class RostlabActivity extends Cocos2dxActivity {
 
 	private static Activity me = null;
 	
@@ -49,7 +49,7 @@ public class rostlab_tbg extends Cocos2dxActivity {
     
 
     static {
-        System.loadLibrary("game");
+        System.loadLibrary("cocos2dcpp");
     }
 
     public static void openURL(String url) {
