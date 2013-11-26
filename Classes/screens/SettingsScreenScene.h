@@ -28,7 +28,7 @@
 
 #include "cocos2d.h"
 
-class SettingsScreenLayer : public cocos2d::CCLayerColor
+class SettingsScreenLayer : public cocos2d::CCLayer
 {
 public:
 	SettingsScreenLayer():_label(NULL) {};

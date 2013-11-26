@@ -41,7 +41,11 @@ LevelEndScene::~LevelEndScene() {
 }
 
 bool LevelEndLayer::init() {
-	if (CCLayerColor::initWithColor(ccc4(255, 255, 255, 255))) {
+	//////////////////////////////
+	    // 1. super init first
+	    if (!CCLayer::init()) {
+	        return false;
+	    }
 
 		SoundEffectHelper::playLevelEndSound();
 		CCSize winSize = CCDirector::sharedDirector()->getWinSize();
@@ -92,9 +96,7 @@ bool LevelEndLayer::init() {
 
 
 		return true;
-	} else {
-		return false;
-	}
+
 }
 
 void LevelEndLayer::addLabels(){

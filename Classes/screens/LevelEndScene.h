@@ -32,7 +32,7 @@
 #include <ctype.h>
 #include "cocos2d.h"
 
-class LevelEndLayer : public cocos2d::CCLayerColor
+class LevelEndLayer : public cocos2d::CCLayer
 {
 public:
 	LevelEndLayer():_label(NULL) {};

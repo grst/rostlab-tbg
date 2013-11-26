@@ -28,7 +28,11 @@ SettingsScreenScene::~SettingsScreenScene() {
 }
 
 bool SettingsScreenLayer::init() {
-	if (CCLayerColor::initWithColor(ccc4(255, 255, 255, 255))) {
+	//////////////////////////////
+	    // 1. super init first
+	    if (!CCLayer::init()) {
+	        return false;
+	    }
 
 		// enable Android back button
 		this->setKeypadEnabled(true);
@@ -86,9 +90,7 @@ bool SettingsScreenLayer::init() {
 		showCurrentMatrix();
 
 		return true;
-	} else {
-		return false;
-	}
+
 
 }
 

@@ -28,7 +28,7 @@
 
 #include "cocos2d.h"
 
-class SplashScreenLayer : public cocos2d::CCLayerColor
+class SplashScreenLayer : public cocos2d::CCLayer
 {
 public:
 	SplashScreenLayer():_label(NULL) {};

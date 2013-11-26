@@ -30,7 +30,7 @@
 #include "../ui_elements/CCBlade.h"
 #include "../helper/SoundEffectHelper.h"
 
-class MainScreenLayer : public cocos2d::CCLayerColor
+class MainScreenLayer : public cocos2d::CCLayer
 {
 public:
 	MainScreenLayer():_label(NULL) {};
