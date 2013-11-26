@@ -725,7 +725,33 @@ void DeeWorld::updateInfoUI() {
 void DeeWorld::tick(float delta) {
 
 	//  TODO what happens if AA is deleted / remove
-	if(!isGamePaused()){
+	if (!isGamePaused()) {
+
+		for (b2Body *b = _b2dWorld->GetBodyList(); b; b = b->GetNext()) {
+			if (b->GetUserData() != NULL) {
+				// We know that the user data is a sprite since we set
+				// it that way, so cast it...
+				CCSprite *sprite = (CCSprite *) b->GetUserData();
+
+				//amino-Acid-specific-actions
+				AminoAcid* aSprite = dynamic_cast<AminoAcid*>(sprite);
+				if (aSprite != 0) {
+					if (aSprite->isFlaggedForDelete()) {
+						std::string stro = "DELETE ";
+						stro.append(std::string(1,aSprite->getType()));
+						CCLog("%s", stro.c_str());
+						AAcounter--;
+						b->SetUserData(NULL);
+						b = NULL;
+						//delete b;
+						this->removeChild(aSprite, true);
+						_b2dWorld->DestroyBody(b);
+						continue;
+					}
+				}
+			}
+		}
+
 
         //CCLog("Starting tickTack");
 		_b2dWorld->Step(delta, 10, 10);
