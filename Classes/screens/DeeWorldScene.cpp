@@ -990,7 +990,7 @@ void DeeWorld::resumeGame() {
 
 	pausedGame = false;
 	SoundEffectHelper::resumeAllMusic();
-	this->setTouchEnabled(true);
+	//this->setTouchEnabled(true);
 
 	CCArray* childs = this->getChildren();
 	CCObject* child;

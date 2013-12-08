@@ -55,7 +55,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	pDirector->setAnimationInterval(1.0 / 60);
 
 	// create a scene. it's an autorelease object
-	CCScene *pScene = SplashScreenScene::create(true);
+	//CCScene *pScene = SplashScreenScene::create(true);
 
 	//Sebi: Change here the start screen
 
@@ -63,7 +63,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	// CCScene *pScene = DeeWorld::scene();
 
 	//GS: changed back to DeeWorld for dev purposes.
-	//CCScene *pScene = MainScreenScene::create();
+	CCScene *pScene = MainScreenScene::create();
 
 	// run
 	pDirector->runWithScene(pScene);
