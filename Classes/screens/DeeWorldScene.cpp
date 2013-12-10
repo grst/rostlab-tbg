@@ -612,7 +612,7 @@ void DeeWorld::BeginContact(b2Contact *contact) {
 		//CCLog("BeginContact");
 		b2Fixture* fixtureA = contact->GetFixtureA();
 		b2Fixture* fixtureB = contact->GetFixtureB();
-		AminoAcid* toRemove;
+		AminoAcid* toRemove = NULL;
 
 		b2Body* target;
 
