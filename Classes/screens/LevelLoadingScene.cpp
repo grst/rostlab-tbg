@@ -56,7 +56,7 @@ bool LevelLoadingLayer::init() {
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
 	// add "LevelLoading" splash screen"
-		CCSprite* pSpriteBackground = CCSprite::create("wood-grunge.jpg");
+	CCSprite* pSpriteBackground = CCSprite::create("wood-grunge.jpg");
 
 	// position the sprite on the center of the screen
 	pSpriteBackground->setPosition(ccp(winSize.width / 2, winSize.height / 2));
@@ -110,43 +110,61 @@ void LevelLoadingLayer::addLabels() {
 	std::string strScore =
 			static_cast<std::ostringstream*>(&(std::ostringstream() << score))->str();
 
-	std::string seqLevel = "Your Score: " + strScore;
-	this->levelLabel = CCLabelTTF::create(seqLevel.c_str(), "Artial", 18);
+	std::string seqLevel = "Your Score: " + strScore+ "/1000";
+	this->levelLabel = CCLabelTTF::create(seqLevel.c_str(), "Artial", 18,
+			CCSizeMake(winSize.width * 3 / 6, 30), kCCTextAlignmentRight,
+			kCCVerticalTextAlignmentTop);
 	levelLabel->retain();
 	levelLabel->setColor(ccc3(255, 255, 255));
-	levelLabel->setPosition(ccp(winSize.width * 5 / 6, winSize.height * 1 / 6));
+	levelLabel->setPosition(ccp(winSize.width * 4 / 6, winSize.height * 1 / 8));
 	this->addChild(levelLabel);
 
-	// add Protein
-	CCSprite* pPercentage = CCSprite::create("loading-bar-bg.png");
+	/* todo
+
+	// add Loading bar BG
+	CCSprite* pPercentageBG = CCSprite::create("loading-bar-bg.png");
 
 	//scale it proportionally to 30% of the screen
-	float scalePer = 0.3;
+	float scalePerBG = 0.4;
+	CCSize logoPercentageBGSize = pPercentageBG->getContentSize();
+	HelperFunctions::resizseSprite(pPercentageBG, winSize.width * scalePerBG, 0.0);
+	pPercentageBG->setPosition(
+			ccp(
+					winSize.width  * 2 /3, winSize.height * 1 / 4));
+	this->addChild(pPercentageBG, 0);
+
+	// add Loading bar
+	CCSprite* pPercentage = CCSprite::create("loading-bar.png");
+
+	//scale it proportionally to 30% of the screen
+	float scalePer = 0.38;
 	CCSize logoPercentageSize = pPercentage->getContentSize();
 	HelperFunctions::resizseSprite(pPercentage, winSize.width * scalePer, 0.0);
 	pPercentage->setPosition(
-			ccp(winSize.width - logoPercentageSize.width * scalePer - winSize.width * 5 / 6,
-					winSize.height * 2 / 3));
-	this->addChild(pPercentage, 0);
+			ccp(
+					winSize.width  * 2 / 3, winSize.height * 1 / 4));
+	this->addChild(pPercentage, 1);
+
+*/
 
 	// name
 	this->seqLabel = CCLabelTTF::create(
 			LevelHelper::getNameForLevel(level).c_str(), "Artial", 20,
-			CCSizeMake(60, 30), kCCTextAlignmentCenter,
+			CCSizeMake(winSize.width * 3 / 6, 30), kCCTextAlignmentRight,
 			kCCVerticalTextAlignmentTop);
 	seqLabel->retain();
 	seqLabel->setColor(ccc3(255, 255, 255));
-	seqLabel->setPosition(ccp(winSize.width * 4 / 6, winSize.height * 5 / 6));
+	seqLabel->setPosition(ccp(winSize.width * 4 / 6, winSize.height * 6 / 7));
 	this->addChild(seqLabel);
 
 	// desc
 	std::string sDesc = LevelHelper::getDescriptionForLevel(level);
 	this->seqLabel = CCLabelTTF::create(sDesc.c_str(), "Artial", 12,
-			CCSizeMake(winSize.width * 3/6, winSize.height * 1 / 2),
+			CCSizeMake(winSize.width * 3 / 6, winSize.height * 1 / 2),
 			kCCTextAlignmentRight, kCCVerticalTextAlignmentCenter);
 	seqLabel->retain();
 	seqLabel->setColor(ccc3(255, 255, 255));
-	seqLabel->setPosition(ccp(winSize.width * 4 /6, winSize.height * 2 / 4));
+	seqLabel->setPosition(ccp(winSize.width * 4 / 6, winSize.height * 3 / 5));
 	this->addChild(seqLabel);
 
 	// code
@@ -156,7 +174,7 @@ void LevelLoadingLayer::addLabels() {
 			kCCVerticalTextAlignmentCenter);
 	seqLabel->retain();
 	seqLabel->setColor(ccc3(255, 255, 255));
-	seqLabel->setPosition(ccp(winSize.width * 1 / 6, winSize.height * 1 / 6));
+	seqLabel->setPosition(ccp(winSize.width * 1 / 6, winSize.height * 1 / 8));
 	this->addChild(seqLabel);
 
 	// add Protein
@@ -167,7 +185,9 @@ void LevelLoadingLayer::addLabels() {
 	float scale = 0.3;
 	CCSize logoSize = pProtein->getContentSize();
 	HelperFunctions::resizseSprite(pProtein, winSize.width * scale, 0.0);
-	pProtein->setPosition(ccp(logoSize.width * scale + winSize.width * 1/12, winSize.height * 2 / 3));
+	pProtein->setPosition(
+			ccp(logoSize.width * scale + winSize.width * 1 / 12,
+					winSize.height * 2 / 3));
 	this->addChild(pProtein, 0);
 
 }

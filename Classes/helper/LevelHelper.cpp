@@ -17,32 +17,38 @@ std::string LevelHelper::getDescriptionForLevel(int level) {
 						"ponder the enzyme that ceaselessly battles the champagne that we consume. "
 						"Alcohol dehydrogenase is our primary defense against alcohol, "
 						"a toxic molecule that compromises the function of our nervous system."
-						"Alcohol dehydrogenase (EC:1.1.1.1) (ADH) catalyzes the reversible oxidation"
-						"of alcohols to their corresponding acetaldehyde or ketone with the concomitant reduction of NAD";
+						"Alcohol dehydrogenase";
 		break;
 	case 1:
 		description =
-				"p53 tumor suppressor is a transcription factor that mobilizes genes involved in sensing and responding to cell damage. It is a large, flexible molecule composed of four chains. This structure includes the portion that links the four chains together.";
+				"p53 tumor suppressor is a transcription factor that mobilizes genes involved "
+				"in sensing and responding to cell damage. It is a large, flexible molecule composed of four chains. This structure includes the portion that links the four chains together.";
 		break;
 	case 2:
 		description =
-				"Carbon is essential to life. All of our molecular machines are built around a central scaffolding of organic carbon. Unfortunately, carbon in the earth and atmosphere is locked in highly oxidized forms, such as carbonate minerals and carbon dioxide gas.";
+				"Carbon is essential to life. All of our molecular machines are built "
+				"around a central scaffolding of organic carbon. Unfortunately, carbon in the earth and atmosphere is locked in highly oxidized forms, such as carbonate minerals and carbon dioxide gas.";
 		break;
 	case 3:
 		description =
-				"Proteins are tough, so we use an arsenal of enzymes to digest them into their component amino acids. Digestion of proteins begins in the stomach, where hydrochloric acid unfolds proteins and the enzyme pepsin begins a rough disassembly. The real work then starts in the intestines. The pancreas adds a collection of protein-cutting enzymes, with trypsin playing the central role, that chop the protein chains into pieces just a few amino acids long";
+				"Proteins are tough, so we use an arsenal of enzymes to digest them into "
+				"their component amino acids. Digestion of proteins begins in the stomach, where hydrochloric acid unfolds proteins and the enzyme pepsin begins a rough disassembly. The real work then starts in the intestines. The pancreas adds a collection of protein-cutting enzymes, with trypsin playing the central role, that chop the protein chains into pieces just a few amino acids long";
 		break;
 	case 4:
 		description =
-				" If one strand in the DNA breaks, it is not a disaster, but it can lead to problems when the DNA double helix is unwound during the processes of transcription and replication. Breakage of both strands, on the other hand, is far more serious. To protect us from these dangers, our cells use DNA ligases to glue together DNA strands that have been broken.";
+				" If one strand in the DNA breaks, it is not a disaster, "
+				"but it can lead to problems when the DNA double helix is unwound during the processes of transcription and replication. Breakage of both strands, on the other hand, is far more serious. To protect us from these dangers, our cells use DNA ligases to glue together DNA strands that have been broken.";
 		break;
 	case 5:
 		description =
 				"DNA polymerase plays the central role in the processes of life. It carries the weighty responsibility of duplicating our genetic information. Each time a cell divides, DNA polymerase duplicates all of its DNA, and the cell passes one copy to each daughter cell. In this way, genetic information is passed from generation to generation";
 		break;
+
 	case 6:
 		description =
-				"RNA is a versatile molecule. In its most familiar role, RNA acts as an intermediary, carrying genetic information from the DNA to the machinery of protein synthesis. RNA also plays more active roles, performing many of the catalytic and recognition functions normally reserved for proteins. The enzyme RNA polymerase carries the weighty responsibility of creating all of these different RNA molecule";
+				"RNA is a versatile molecule. In its most familiar role,"
+				" RNA acts as an intermediary, carrying genetic information from the DNA to the machinery"
+				" of protein synthesis. RNA also plays more active roles, performing many of the catalytic and recognition functions normally reserved for proteins. The enzyme RNA polymerase carries the weighty responsibility of creating all of these different RNA molecule";
 		break;
 	case 7:
 		description =
@@ -284,7 +290,6 @@ std::string LevelHelper::getNameForLevel(int level) {
 	}
 	return sequence;
 }
-
 
 int LevelHelper::getMaxSpeed(int level) {
 	return 6;
