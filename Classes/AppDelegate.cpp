@@ -56,15 +56,13 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	pDirector->setAnimationInterval(1.0 / 60);
 
 	// create a scene. it's an autorelease object
-	//CCScene *pScene = SplashScreenScene::create(true);
-
-	//Sebi: Change here the start screen
-
-	// for dev reasons use normal screen
-	// CCScene *pScene = DeeWorld::scene();
-
-	//GS: changed back to DeeWorld for dev purposes.
-	CCScene *pScene = MainScreenScene::create();
+    //ugly compiler flag. Splashscreen only on android. 
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    CCScene *pScene = SplashScreenScene::create(true);
+#endif
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    CCScene *pScene = MainScreenScene::create();
+#endif
 
 	// run
 	pDirector->runWithScene(pScene);

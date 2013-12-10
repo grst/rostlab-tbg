@@ -132,10 +132,9 @@ bool DeeWorld::init() {
 void DeeWorld::initBackground() {
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
-	CCSprite* pSpriteBackground = CCSprite::create("DeeWorldBackground.jpg");
+	CCSprite* pSpriteBackground = CCSprite::create("wood.jpg");
 
-	// position the sprite on the center of the screen
-	pSpriteBackground->setPosition(ccp(winSize.width / 2, winSize.height / 2));
+    HelperFunctions::fitBackground(pSpriteBackground);
 
 	// add the sprite as a child to this layer
 	this->addChild(pSpriteBackground, 0);
@@ -815,7 +814,7 @@ void DeeWorld::tick(float delta) {
 				sprite->setRotation(-1 * CC_RADIANS_TO_DEGREES(b->GetAngle()));
 			}
 		}
-		if (isAminoAcidRemaining()) {
+		//if (isAminoAcidRemaining()) {
 			//add aminoAcids, if neccessary
 			while (AAcounter < this->getMinAA()) {
 				CCLog("adding AAs to min (1)");
@@ -828,7 +827,7 @@ void DeeWorld::tick(float delta) {
 					this->addTarget();
 				}
 			}
-		}
+		//}
 	}
 }
 

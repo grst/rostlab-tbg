@@ -132,7 +132,7 @@ bool MainScreenLayer::init() {
 void MainScreenLayer::initBackground() {
 	
 
-	CCSprite* pSpriteBackground = CCSprite::create("MainScreenBackground.jpg");
+	CCSprite* pSpriteBackground = CCSprite::create("wood.jpg");
     HelperFunctions::fitBackground(pSpriteBackground);
 
 // add the sprite as a child to this layer

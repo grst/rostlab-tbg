@@ -1,6 +1,7 @@
 #include "LevelEndScene.h"
 #include "../helper/WebOpNative.h"
 #include "MainScreenScene.h"
+#include "../helper/HelperFunctions.h"
 
 using namespace cocos2d;
 
@@ -51,11 +52,9 @@ bool LevelEndLayer::init() {
 		CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
 		// add "LevelEnd" splash screen"
-		CCSprite* pSpriteBackground = CCSprite::create("NotificationScreenBackground.jpg");
+		CCSprite* pSpriteBackground = CCSprite::create("wood.jpg");
 
-		// position the sprite on the center of the screen
-		pSpriteBackground->setPosition(
-				ccp(winSize.width / 2, winSize.height / 2));
+    HelperFunctions::fitBackground(pSpriteBackground);
 
 		// add the sprite as a child to this layer
 		this->addChild(pSpriteBackground, 0);

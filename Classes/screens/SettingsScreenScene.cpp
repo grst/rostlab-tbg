@@ -59,7 +59,6 @@ bool SettingsScreenLayer::init() {
 
 	//info
 	CCLog("settings: loading info");
-	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 	CCPoint origin = CCDirector::sharedDirector()->getVisibleOrigin();
 
 	CCArray * menuIcons = CCArray::create();
