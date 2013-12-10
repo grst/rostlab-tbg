@@ -35,9 +35,7 @@ public:
     virtual ~SplashScreenLayer();
     bool init();
     CREATE_FUNC(SplashScreenLayer);
-
-    void endScreen();
-    void addLabels();
+    void startGame();
 
     cocos2d::CCLabelTTF* _label;
 

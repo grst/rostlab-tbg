@@ -132,10 +132,9 @@ bool DeeWorld::init() {
 void DeeWorld::initBackground() {
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
-	CCSprite* pSpriteBackground = CCSprite::create("DeeWorldBackground.jpg");
+	CCSprite* pSpriteBackground = CCSprite::create("wood.jpg");
 
-	// position the sprite on the center of the screen
-	pSpriteBackground->setPosition(ccp(winSize.width / 2, winSize.height / 2));
+    HelperFunctions::fitBackground(pSpriteBackground);
 
 	// add the sprite as a child to this layer
 	this->addChild(pSpriteBackground, 0);
@@ -167,14 +166,12 @@ void DeeWorld::makeMenu() {
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 	CCPoint origin = CCDirector::sharedDirector()->getVisibleOrigin();
 
-	CCMenuItemImage *pSettings = CCMenuItemImage::create("settings.png",
-			"settings.png", this, menu_selector(DeeWorld::pauseLayerCallback));
+	CCMenuItemImage *pSettings = CCMenuItemImage::create("white/settings.png",
+			"white/settings.png", this, menu_selector(DeeWorld::pauseLayerCallback));
+    pSettings->setScale(.7f);
 
 	// Place the menu item top-left corner.
-	pSettings->setPosition(
-			ccp(pSettings->getContentSize().width / 2,
-					origin.y + winSize.height
-							- pSettings->getContentSize().height / 2));
+	pSettings->setPosition(ccp(20, winSize.height - 20));
 
 	if (!pSettings) {
 		return;
@@ -815,7 +812,7 @@ void DeeWorld::tick(float delta) {
 				sprite->setRotation(-1 * CC_RADIANS_TO_DEGREES(b->GetAngle()));
 			}
 		}
-		if (isAminoAcidRemaining()) {
+		//if (isAminoAcidRemaining()) {
 			//add aminoAcids, if neccessary
 			while (AAcounter < this->getMinAA()) {
 				CCLog("adding AAs to min (1)");
@@ -828,7 +825,7 @@ void DeeWorld::tick(float delta) {
 					this->addTarget();
 				}
 			}
-		}
+		//}
 	}
 }
 

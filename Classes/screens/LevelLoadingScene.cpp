@@ -56,7 +56,7 @@ bool LevelLoadingLayer::init() {
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
 	// add "LevelLoading" splash screen"
-	CCSprite* pSpriteBackground = CCSprite::create(
+		CCSprite* pSpriteBackground = CCSprite::create("wood-grunge.jpg");
 			"NotificationScreenBackground.jpg");
 
 	// position the sprite on the center of the screen

@@ -38,15 +38,15 @@ bool PauseLayer::init()
 	do
 	{
 		CC_BREAK_IF(! CCLayer::init());
+        CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 		this->setTouchEnabled(true);
 
 		CCLabelTTF* pauseLabel = CCLabelTTF::create("Game paused", "Arial", 24);
+        pauseLabel->setPosition(ccp(winSize.width/2, winSize.height - 30));
 		CC_BREAK_IF(! pauseLabel);
 
 
-		CCSize winSize = CCDirector::sharedDirector()->getWinSize();
-		pauseLabel->setPosition(ccp(pauseLabel->getContentSize().width/2,winSize.height - pauseLabel->getContentSize().height/2));
-		// add this to the layer
+		
 		this->addChild(pauseLabel, 11);
 
 
@@ -56,9 +56,7 @@ bool PauseLayer::init()
 		CCMenuItemImage *pSettingsItem = CCMenuItemImage::create(
 							"grey/settings.png", "grey/settings.png", this,
 							menu_selector(PauseLayer::OnMenu));
-		pSettingsItem->setPosition(ccp(winSize.width * 1/ 5+ pSettingsItem->getContentSize().width ,
-						winSize.height -  pSettingsItem->getContentSize().height));
-		pSettingsItem->setTag(3);
+				pSettingsItem->setTag(3);
 		menuIcons->addObject(pSettingsItem);
 
 		//music
@@ -71,9 +69,7 @@ bool PauseLayer::init()
 										menu_selector(PauseLayer::OnMenu));
 
 		CCMenuItemToggle * toggleMenu = CCMenuItemToggle::createWithTarget(this,menu_selector(PauseLayer::OnMenu), pMusicItemOn, pMusicItemOff, NULL );
-		toggleMenu->setPosition(ccp(winSize.width / 5+ toggleMenu->getContentSize().width * 5 / 2 ,
-				winSize.height - toggleMenu->getContentSize().height));
-		toggleMenu->setTag(2);
+				toggleMenu->setTag(2);
 		// add current value
 		if( !	cocos2d::CCUserDefault::sharedUserDefault()->getBoolForKey(
 					"music_enable", true)){
@@ -87,8 +83,7 @@ bool PauseLayer::init()
 		CCMenuItemImage *pMainMenu = CCMenuItemImage::create(
 							"grey/mainmenu.png", "grey/mainmenu.png", this,
 							menu_selector(PauseLayer::OnMenu));
-		pMainMenu->setPosition(ccp(winSize.width * 1/5 + pMainMenu->getContentSize().width   * 9 / 2,
-						winSize.height - pMainMenu->getContentSize().height));
+		
 		pMainMenu->setTag(1);
 		menuIcons->addObject(pMainMenu);
 
@@ -96,8 +91,7 @@ bool PauseLayer::init()
 		CCMenuItemImage *pCloseApp = CCMenuItemImage::create(
 							"grey/closeapp.png", "grey/closeapp.png", this,
 							menu_selector(PauseLayer::OnMenu));
-		pCloseApp->setPosition(ccp(winSize.width * 1/ 5+ pCloseApp->getContentSize().width  * 13 / 2,
-						winSize.height - pCloseApp->getContentSize().height));
+
 		pCloseApp->setTag(4);
 		menuIcons->addObject(pCloseApp);
 
@@ -105,7 +99,7 @@ bool PauseLayer::init()
 
 		// Create a menu with our menu items
 		levelMenu = CCMenu::createWithArray(menuIcons);
-		levelMenu->setPosition(CCPointZero);
+        levelMenu->alignItemsHorizontallyWithPadding(15);
 
 		// Add the menu to TestWorld layer as a child layer.
 		this->addChild(levelMenu, 11);
