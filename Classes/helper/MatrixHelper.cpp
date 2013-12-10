@@ -332,7 +332,7 @@ b2Vec2* MatrixHelper::getVerticeData(char c, float scaleRatio) {
  */
 float MatrixHelper::getRelativeScaleFactor(char c) {
     //base scale.
-    float n = 0.25f;
+    float n = 1.0f;
     switch(c) {
         case 'A':
             n *= 1;
@@ -344,22 +344,22 @@ float MatrixHelper::getRelativeScaleFactor(char c) {
             n *= 1;
             break;
         case 'E':
-            n *= 1;
+            n *= 1.1;
             break;
         case 'F':
-            n *= 1;
+            n *= 1.25;
             break;
         case 'G':
-            n *= 1;
+            n *= 1.15;
             break;
         case 'H':
-            n *= 1;
+            n *= 1.1;
             break;
         case 'I':
-            n *= 1;
+            n *= 1.1;
             break;
         case 'K':
-            n *= 1;
+            n *= 1.3;
             break;
         case 'L':
            n *= 1;
@@ -377,7 +377,7 @@ float MatrixHelper::getRelativeScaleFactor(char c) {
             n *= 1;
             break;
         case 'R':
-            n *= 1;
+            n *= 1.25;
             break;
         case 'S':
             n *= 1;
@@ -389,10 +389,10 @@ float MatrixHelper::getRelativeScaleFactor(char c) {
             n *= 1;
             break;
         case 'W':
-            n *= 1;
+            n *= 1.2;
             break;
         case 'Y':
-            n *= 1;
+            n *= 1.1;
             break;
     }
     return n;

@@ -456,7 +456,7 @@ int DeeWorld::detectCorner() {
 void DeeWorld::addTarget() {
 	AminoAcid *sTarget = AminoAcid::createRandom();
 	CCLog("Adding Target called: %c ", +sTarget->getType());
-	HelperFunctions::resizseSprite(sTarget, 64, 0);
+	sTarget->setScale(MatrixHelper::getRelativeScaleFactor(sTarget->getType()));
 	//Place target in a randomly picked corner.
 	int startX, startY;
 	int corner = detectCorner();
@@ -500,7 +500,7 @@ void DeeWorld::addTarget() {
 	//row 1, col 1
 
 	b2Vec2 *verts = MatrixHelper::getVerticeData(sTarget->getType(),
-                                                 MatrixHelper::getRelativeScaleFactor(sTarget->getType())/PTM_RATIO);
+                                                 MatrixHelper::getRelativeScaleFactor(sTarget->getType())/PTM_RATIO/4);
 	int n = MatrixHelper::getVerticeNum(sTarget->getType());
 	//Move Target
 	//random direction, random velocity.
