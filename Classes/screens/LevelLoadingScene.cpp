@@ -59,8 +59,7 @@ bool LevelLoadingLayer::init() {
 	CCSprite* pSpriteBackground = CCSprite::create("wood-grunge.jpg");
 	HelperFunctions::fitBackground(pSpriteBackground);
 
-	// position the sprite on the center of the screen
-	pSpriteBackground->setPosition(ccp(winSize.width / 2, winSize.height / 2));
+    HelperFunctions::fitBackground(pSpriteBackground);
 
 	// add the sprite as a child to this layer
 	this->addChild(pSpriteBackground, 0);

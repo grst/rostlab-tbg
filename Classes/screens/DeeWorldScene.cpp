@@ -83,7 +83,6 @@ bool DeeWorld::init() {
 	AAcounter = 0;
 
 	initBackground();
-	makeMenu();
 	initBox2D();
 
 	////TAGS
@@ -211,7 +210,7 @@ void DeeWorld::initWorld() {
 	// Create edges around the entire screen
 	b2BodyDef groundBodyDef;
 	groundBodyDef.position.Set(0, 0);
-    CCSprite * emptySprite = new CCSprite();
+    CCSprite * emptySprite = new CCSprite(); //only to keep tag.
     emptySprite->setTag(3);
     groundBodyDef.userData = emptySprite;
 
@@ -285,23 +284,66 @@ void DeeWorld::initPlayer() {
  * TODO: also move to UI-Elements-Class (?)
  */
 void DeeWorld::initInfoUI() {
+    float cornerScale = .7f;
+    int num = 5;
+    b2Vec2 verts_right[] = {
+        b2Vec2(-107.5f * cornerScale /  PTM_RATIO, 45.5f * cornerScale /  PTM_RATIO),
+        b2Vec2(-106.5f * cornerScale /  PTM_RATIO, 1.5f * cornerScale /  PTM_RATIO),
+        b2Vec2(-87.5f * cornerScale /  PTM_RATIO, -20.5f * cornerScale /  PTM_RATIO),
+        b2Vec2(130.5f * cornerScale /  PTM_RATIO, -19.5f * cornerScale /  PTM_RATIO),
+        b2Vec2(130.5f * cornerScale /  PTM_RATIO, 45.5f * cornerScale /  PTM_RATIO)
+    };
+    
+    b2Vec2 verts_left[] = {
+        b2Vec2(-130.5f * cornerScale /  PTM_RATIO, 45.5f * cornerScale /  PTM_RATIO),
+        b2Vec2(-129.5f * cornerScale /  PTM_RATIO, -18.5f * cornerScale /  PTM_RATIO),
+        b2Vec2(86.5f * cornerScale /  PTM_RATIO, -20.5f * cornerScale /  PTM_RATIO),
+        b2Vec2(108.5f * cornerScale /  PTM_RATIO, -1.5f * cornerScale /  PTM_RATIO),
+        b2Vec2(108.5f * cornerScale /  PTM_RATIO, 46.5f * cornerScale /  PTM_RATIO)
+    };
+    
+
+    CCSize layerSize = this->getContentSize();
+    
+    CCSprite * cornerLeft = CCSprite::create("corner-left.png");
+    CCSprite * cornerRight = CCSprite::create("corner-right.png");
+    
+    cornerLeft->setScale(cornerScale);
+    cornerRight->setScale(cornerScale);
+    
+    cornerLeft->setPosition(ccp(cornerLeft->getContentSize().width*cornerScale/2,
+                                layerSize.height - cornerLeft->getContentSize().height*cornerScale/2));
+    cornerRight->setPosition(ccp(layerSize.width - cornerRight->getContentSize().width*cornerScale/2,
+                                 layerSize.height - cornerLeft->getContentSize().height*cornerScale/2));
+    cornerLeft->setTag(3);
+    cornerRight->setTag(3);
+    b2Body * clbody = CreateBox2DBodyForSprite(cornerLeft, num, verts_left);
+    b2Body * crbody = CreateBox2DBodyForSprite(cornerRight, num, verts_right);
+    clbody->SetType(b2_staticBody);
+    crbody->SetType(b2_staticBody);
+
 
 	//reset AminoHit
 	lastAminoHitTime = 0.0f;
 
 	score = 0;
-	CCSize layerSize = this->getContentSize();
+	
 
 	CCLog("setting score");
 	//score
 	// int -> str
-	this->_scoreLabel = CCLabelTTF::create("0", "Helvetica", 30,
-			CCSizeMake(60, 30), kCCTextAlignmentRight);
+	this->_scoreLabel = CCLabelTTF::create("Score: 0", "Helvetica", 30,
+			CCSizeMake(100, 30), kCCTextAlignmentRight);
 	this->_scoreLabel->retain();
 	this->_scoreLabel->setPosition(
-			ccp(layerSize.width - 30, layerSize.height - 30));
-	this->_scoreLabel->setColor(ccc3(20, 25, 255));
+			ccp(layerSize.width - 60, layerSize.height - 20));
+	this->_scoreLabel->setColor(ccc3(255, 255, 255));
+    
+    this->addChild(cornerRight);
+    this->addChild(cornerLeft);
 	this->addChild(_scoreLabel);
+    
+    makeMenu();
 
 	CCLog("setting timer");
 	//timer
@@ -432,13 +474,13 @@ void DeeWorld::addTarget() {
 		break;
 	case 1:
 		//left top
-		startY = winSize.height;
+		startY = winSize.height - 60;
 		startX = 0;
 		break;
 	case 2:
 		//right top
 		startX = winSize.width;
-		startY = winSize.height;
+		startY = winSize.height - 60;
 		break;
 	case 3:
 		//right bottom
@@ -720,7 +762,8 @@ void DeeWorld::updateInfoUI() {
 	//update score
 	string temp =
 			static_cast<ostringstream*>(&(ostringstream() << score))->str();
-	this->_scoreLabel->setString(temp.c_str());
+	//this->_scoreLabel->setString(("Score: " + temp).c_str());
+    this->_scoreLabel->setString(temp.c_str());
 	this->_scoreLabel->draw();
 	this->_scoreLabel->update(0.5);
 }

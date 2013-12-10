@@ -29,7 +29,7 @@ void UIElements::runDestroyAcidEffect(cocos2d::CCLabelTTF* label){
 
    CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 
-   CCFiniteTimeAction* actionMove = CCMoveTo::create((float) 0.8,ccp(visibleSize.height, visibleSize.width));
+   CCFiniteTimeAction* actionMove = CCMoveTo::create((float) 0.8,ccp(80, visibleSize.height + 100));
 
    // Sebi: we have to add some dummy parameters otherwise it fails on Android
    CCSequence *readySequence = CCSequence::create(actionMove, NULL, NULL);
@@ -100,12 +100,12 @@ void UIElements::createNewAminoAcid(DeeWorld* scene) {
 		CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 
 		CCLabelTTF * label = CCLabelTTF::create(str.c_str(), "Helvetica", 30,
-				CCSizeMake(60, 30),
+				CCSizeMake(100, 30),
 				kCCTextAlignmentRight);
 		acid->_label = label;
 
-		acid->_label->setPosition(ccp(visibleSize.width - 30, 30));
-		acid->_label->setColor(ccc3(20, 20, 255));
+		acid->_label->setPosition(ccp(80, visibleSize.height - 20));
+		acid->_label->setColor(ccc3(255, 255, 255));
 		scene->addChild(acid->_label);
 
 	}
