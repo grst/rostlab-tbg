@@ -166,14 +166,12 @@ void DeeWorld::makeMenu() {
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 	CCPoint origin = CCDirector::sharedDirector()->getVisibleOrigin();
 
-	CCMenuItemImage *pSettings = CCMenuItemImage::create("settings.png",
-			"settings.png", this, menu_selector(DeeWorld::pauseLayerCallback));
+	CCMenuItemImage *pSettings = CCMenuItemImage::create("white/settings.png",
+			"white/settings.png", this, menu_selector(DeeWorld::pauseLayerCallback));
+    pSettings->setScale(.7f);
 
 	// Place the menu item top-left corner.
-	pSettings->setPosition(
-			ccp(pSettings->getContentSize().width / 2,
-					origin.y + winSize.height
-							- pSettings->getContentSize().height / 2));
+	pSettings->setPosition(ccp(20, winSize.height - 20));
 
 	if (!pSettings) {
 		return;
