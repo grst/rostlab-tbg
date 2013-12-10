@@ -26,43 +26,43 @@ bool SoundEffectHelper::isSoundEnabled(){
 
 void SoundEffectHelper::playClickSound(){
 	if(isSoundEnabled()){
-			CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("pew-pew-lei.wav");
+			CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("click.mp3");
 	}
 }
 
 void SoundEffectHelper::playLevelEndSound(){
 	if(isSoundEnabled()){
-			CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("pew-pew-lei.wav");
+			//CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("pew-pew-lei.wav");
 	}
 }
 
 void SoundEffectHelper::playLevelStartSound(){
 	if(isSoundEnabled()){
-			CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("pew-pew-lei.wav");
+			//CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("pew-pew-lei.wav");
 	}
 }
 
 void SoundEffectHelper::playGameEndSound(){
 	if(isSoundEnabled()){
-			CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("pew-pew-lei.wav");
+			//CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("pew-pew-lei.wav");
 	}
 }
 
 void SoundEffectHelper::playGameStartSound(){
 	if(isSoundEnabled()){
-			CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("pew-pew-lei.wav");
+			//CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("pew-pew-lei.wav");
 	}
 }
 
 void SoundEffectHelper::playTimerTickSound(){
 	if(isSoundEnabled()){
-			CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("pew-pew-lei.wav");
+			CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("tick.mp3");
 	}
 }
 
 void SoundEffectHelper::playNegativeCollisionSound(){
 	if(isSoundEnabled()){
-		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("poing.mp3");
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("boing.mp3");
 	}
 }
 
@@ -109,10 +109,10 @@ void SoundEffectHelper::playMainMenuBackgroundMusic(){
 }
 
 void SoundEffectHelper::playLevelLoadingBackgroundMusic(){
-	stopBackgroundMusic();
-	if(isSoundEnabled() && ! CocosDenshion::SimpleAudioEngine::sharedEngine()->isBackgroundMusicPlaying()){
-		CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("background-music-aac.wav", true);
-	}
+//	stopBackgroundMusic();
+//	if(isSoundEnabled() && ! CocosDenshion::SimpleAudioEngine::sharedEngine()->isBackgroundMusicPlaying()){
+//		CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("background-music-aac.wav", true);
+//	}
 }
 
 void SoundEffectHelper::stopBackgroundMusic(){
