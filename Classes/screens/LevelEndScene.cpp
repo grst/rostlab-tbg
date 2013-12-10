@@ -52,7 +52,7 @@ bool LevelEndLayer::init() {
 		CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
 		// add "LevelEnd" splash screen"
-		CCSprite* pSpriteBackground = CCSprite::create("wood.jpg");
+		CCSprite* pSpriteBackground = CCSprite::create("wood-grunge.jpg");
 
     HelperFunctions::fitBackground(pSpriteBackground);
 

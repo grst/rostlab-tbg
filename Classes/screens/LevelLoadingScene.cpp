@@ -57,6 +57,7 @@ bool LevelLoadingLayer::init() {
 
 	// add "LevelLoading" splash screen"
 	CCSprite* pSpriteBackground = CCSprite::create("wood-grunge.jpg");
+	HelperFunctions::fitBackground(pSpriteBackground);
 
 	// position the sprite on the center of the screen
 	pSpriteBackground->setPosition(ccp(winSize.width / 2, winSize.height / 2));
@@ -197,8 +198,8 @@ void LevelLoadingLayer::endScreen() {
 	SoundEffectHelper::stopBackgroundMusic();
 	CCScene *pScene = DeeWorld::scene(seq, level);
 	//transition to next scene for one sec
-	//CCDirector::sharedDirector()->replaceScene(
-	//		CCTransitionMoveInB::create(2.0f, pScene));
+	CCDirector::sharedDirector()->replaceScene(
+			CCTransitionMoveInB::create(2.0f, pScene));
 }
 
 LevelLoadingLayer::~LevelLoadingLayer() {
