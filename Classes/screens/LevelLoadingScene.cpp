@@ -94,7 +94,7 @@ bool LevelLoadingLayer::init() {
 
 	// set a delay for three seconds
 	this->runAction(
-			CCSequence::create(CCDelayTime::create(3),
+			CCSequence::create(CCDelayTime::create(5),
 					CCCallFunc::create(this,
 							callfunc_selector(LevelLoadingLayer::endScreen)),
 					NULL));
@@ -198,7 +198,7 @@ void LevelLoadingLayer::endScreen() {
 	CCScene *pScene = DeeWorld::scene(seq, level);
 	//transition to next scene for one sec
 	CCDirector::sharedDirector()->replaceScene(
-			CCTransitionMoveInB::create(2.0f, pScene));
+			CCTransitionFade::create(1.0f, pScene));
 }
 
 LevelLoadingLayer::~LevelLoadingLayer() {

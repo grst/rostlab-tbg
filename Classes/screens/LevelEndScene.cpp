@@ -170,7 +170,7 @@ void LevelEndLayer::endScreen() {
 	 */
 	CCScene *pScene = MainScreenScene::create();
 	CCDirector::sharedDirector()->replaceScene(
-			CCTransitionFlipX::create(2.0f, pScene));
+			CCTransitionMoveInB::create(2.0f, pScene));
 }
 
 LevelEndLayer::~LevelEndLayer() {

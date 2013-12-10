@@ -209,7 +209,7 @@ void MainScreenLayer::menuStartGameCallback(CCObject* pSender) {
 
 //transition to next scene for one sec
 	CCDirector::sharedDirector()->replaceScene(
-			CCTransitionFade::create(1.0f, pScene));
+			CCTransitionMoveInB::create(0.7f, pScene));
 }
 
 void MainScreenLayer::keyBackClicked(void) {

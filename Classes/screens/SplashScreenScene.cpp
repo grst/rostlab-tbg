@@ -69,7 +69,7 @@ void SplashScreenLayer::startGame() {
     //start Game
     CCScene *pScene = MainScreenScene::create();
     CCDirector::sharedDirector()->replaceScene(
-                                               CCTransitionFlipX::create(0.7f, pScene));
+    		CCTransitionMoveInT::create(1.0f, pScene));
 }
 
 

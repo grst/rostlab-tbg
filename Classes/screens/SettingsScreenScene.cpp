@@ -237,7 +237,7 @@ void SettingsScreenLayer::endScreen() {
 	CCScene *pScene = MainScreenScene::create();
 	//transition to next scene for one sec
 	CCDirector::sharedDirector()->replaceScene(
-			CCTransitionFade::create(1.0f, pScene));
+			CCTransitionMoveInB::create(2.0f, pScene));
 }
 
 SettingsScreenLayer::~SettingsScreenLayer() {

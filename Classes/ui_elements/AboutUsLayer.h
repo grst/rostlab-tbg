@@ -19,9 +19,17 @@ public:
 	virtual bool init();
 	void DrawHUD();
 	void OnMenu(CCObject* pSender);
+	void initButt();
+	void getNextImage();
 	CREATE_FUNC(AboutUsLayer);
+
+	// The back key clicked
+	 virtual void keyBackClicked();
+
 private:
 	cocos2d::CCMenu* levelMenu;
+	int posImageCounter;
+	cocos2d::CCSprite* pImage;
 };
 
 #endif /* AboutUsLayer_H_ */

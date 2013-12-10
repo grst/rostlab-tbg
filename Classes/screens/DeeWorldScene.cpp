@@ -1057,7 +1057,7 @@ void DeeWorld::gameEnd() {
 	CCScene *pScene = LevelEndScene::create(score, level);
 	//transition to next scene for one sec
 	CCDirector::sharedDirector()->replaceScene(
-			CCTransitionPageTurn::create(0.0f, pScene, false));
+			CCTransitionMoveInB::create(1.0f, pScene));
 }
 
 char DeeWorld::getNextAminoAcid() {
