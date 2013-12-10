@@ -327,6 +327,78 @@ b2Vec2* MatrixHelper::getVerticeData(char c, float scaleRatio) {
 }
 
 /**
+ * returns the vertice number for the
+ * specified amino acid.
+ */
+float MatrixHelper::getRelativeScaleFactor(char c) {
+    //base scale.
+    float n = 0.25f;
+    switch(c) {
+        case 'A':
+            n *= 1;
+            break;
+        case 'C':
+            n *= 1;
+            break;
+        case 'D':
+            n *= 1;
+            break;
+        case 'E':
+            n *= 1;
+            break;
+        case 'F':
+            n *= 1;
+            break;
+        case 'G':
+            n *= 1;
+            break;
+        case 'H':
+            n *= 1;
+            break;
+        case 'I':
+            n *= 1;
+            break;
+        case 'K':
+            n *= 1;
+            break;
+        case 'L':
+           n *= 1;
+            break;
+        case 'M':
+            n *= 1;
+            break;
+        case 'N':
+            n *= 1;
+            break;
+        case 'P':
+            n *= 1;
+            break;
+        case 'Q':
+            n *= 1;
+            break;
+        case 'R':
+            n *= 1;
+            break;
+        case 'S':
+            n *= 1;
+            break;
+        case 'T':
+            n *= 1;
+            break;
+        case 'V':
+            n *= 1;
+            break;
+        case 'W':
+            n *= 1;
+            break;
+        case 'Y':
+            n *= 1;
+            break;
+    }
+    return n;
+}
+
+/**
  * returns the vertice number for the 
  * specified amino acid. 
  */

@@ -27,6 +27,7 @@ public:
 	static char getRandomAminoAcid();
 	static int getScoreForAminoAcid(char c, char d);
 	static int getAcidInt(char c);
+    static float getRelativeScaleFactor(char c);
     static b2Vec2* getVerticeData(char c, float scaleRatio);
     static int getVerticeNum(char c);
 	static void loadMatrix(std::string name);
