@@ -332,12 +332,12 @@ void DeeWorld::initInfoUI() {
 	CCLog("setting score");
 	//score
 	// int -> str
-	this->_scoreLabel = CCLabelTTF::create("0", "Helvetica", 30,
-			CCSizeMake(60, 30), kCCTextAlignmentRight);
+	this->_scoreLabel = CCLabelTTF::create("Score: 0", "Helvetica", 30,
+			CCSizeMake(100, 30), kCCTextAlignmentRight);
 	this->_scoreLabel->retain();
 	this->_scoreLabel->setPosition(
-			ccp(layerSize.width - 30, layerSize.height - 30));
-	this->_scoreLabel->setColor(ccc3(20, 25, 255));
+			ccp(layerSize.width - 60, layerSize.height - 20));
+	this->_scoreLabel->setColor(ccc3(255, 255, 255));
     
     this->addChild(cornerRight);
     this->addChild(cornerLeft);
@@ -762,7 +762,8 @@ void DeeWorld::updateInfoUI() {
 	//update score
 	string temp =
 			static_cast<ostringstream*>(&(ostringstream() << score))->str();
-	this->_scoreLabel->setString(temp.c_str());
+	//this->_scoreLabel->setString(("Score: " + temp).c_str());
+    this->_scoreLabel->setString(temp.c_str());
 	this->_scoreLabel->draw();
 	this->_scoreLabel->update(0.5);
 }
