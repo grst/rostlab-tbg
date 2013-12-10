@@ -139,17 +139,17 @@ void LevelLoadingLayer::addLabels() {
 			kCCVerticalTextAlignmentTop);
 	seqLabel->retain();
 	seqLabel->setColor(ccc3(255, 255, 255));
-	seqLabel->setPosition(ccp(winSize.width * 5 / 6, winSize.height * 4 / 5));
+	seqLabel->setPosition(ccp(winSize.width * 4 / 6, winSize.height * 5 / 6));
 	this->addChild(seqLabel);
 
 	// desc
 	std::string sDesc = LevelHelper::getDescriptionForLevel(level);
 	this->seqLabel = CCLabelTTF::create(sDesc.c_str(), "Artial", 12,
-			CCSizeMake(winSize.height * 1 / 3, winSize.width * 1 / 2),
+			CCSizeMake(winSize.width * 3/6, winSize.height * 1 / 2),
 			kCCTextAlignmentRight, kCCVerticalTextAlignmentCenter);
 	seqLabel->retain();
 	seqLabel->setColor(ccc3(255, 255, 255));
-	seqLabel->setPosition(ccp(winSize.width * 5 /6, winSize.height * 3 / 5));
+	seqLabel->setPosition(ccp(winSize.width * 4 /6, winSize.height * 3 / 5));
 	this->addChild(seqLabel);
 
 	// code
@@ -180,8 +180,8 @@ void LevelLoadingLayer::endScreen() {
 	SoundEffectHelper::stopBackgroundMusic();
 	CCScene *pScene = DeeWorld::scene(seq, level);
 	//transition to next scene for one sec
-	CCDirector::sharedDirector()->replaceScene(
-			CCTransitionMoveInB::create(2.0f, pScene));
+	//CCDirector::sharedDirector()->replaceScene(
+	//		CCTransitionMoveInB::create(2.0f, pScene));
 }
 
 LevelLoadingLayer::~LevelLoadingLayer() {
