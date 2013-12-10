@@ -7,6 +7,7 @@
 //
 
 #include "HelperFunctions.h"
+using namespace cocos2d;
 
 USING_NS_CC;
 
@@ -52,6 +53,16 @@ void HelperFunctions::resizseSprite(cocos2d::CCSprite* sprite, float width, floa
         sprite->setScaleX(width/contentWidth);
         sprite->setScaleY(height/contentHeight);
     }
+}
+
+/**
+ * sets the position and size of a sprite to fit the screen.
+ */
+void HelperFunctions::fitBackground(cocos2d::CCSprite *sprite) {
+    CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+    CCSize spriteSize = sprite->getContentSize();
+    sprite->setPosition(ccp(winSize.width / 2, winSize.height / 2));
+    HelperFunctions::resizseSprite(sprite, fmax(winSize.width, winSize.height*(spriteSize.width/spriteSize.height)), 0);
 }
 
 

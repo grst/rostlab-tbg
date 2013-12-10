@@ -56,6 +56,7 @@ private:
     void initBackground();
     bool isLayerOpen();
     cocos2d::CCMenu* levelMenu;
+    cocos2d::CCMenu* mainMenu;
     std::map< cocos2d::CCTouch *, CCBlade * >  _map;
 };
 

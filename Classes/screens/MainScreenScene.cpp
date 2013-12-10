@@ -14,6 +14,7 @@ using namespace cocos2d;
 #define kFileStreak "streak.png"
 #define TAG_IMPRESSUM_LAYER 789
 #define TAG_ABOUTUS_LAYER 796
+#define MENU_ITEM_SCALE .7f
 
 bool MainScreenScene::init() {
 	if (CCScene::init()) {
@@ -52,12 +53,12 @@ bool MainScreenLayer::init() {
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
 	initBackground();
-
-	this->_label = CCLabelTTF::create("Select your level", "Arial", 32);
-	_label->retain();
-	_label->setColor(ccc3(220, 220, 220));
-	_label->setPosition(ccp(winSize.width / 2, winSize.height - 50));
-	this->addChild(_label, 0);
+//
+//	this->_label = CCLabelTTF::create("Select your level", "Arial", 24);
+//	_label->retain();
+//	_label->setColor(ccc3(255, 255, 255));
+//	_label->setPosition(ccp(winSize.width / 2, winSize.height - 30));
+//	this->addChild(_label, 0);
 
 
 	// Place the menu item bottom-right corner.
@@ -65,78 +66,63 @@ bool MainScreenLayer::init() {
 	CCPoint origin = CCDirector::sharedDirector()->getVisibleOrigin();
 
 	CCArray * menuIcons = CCArray::create();
+    CCArray * levelIcons = CCArray::create();
 
 	int levels = 10;
 
 	for (int i = 0; i < levels; i++) {
 
-		CCMenuItemImage *pCloseItem = CCMenuItemImage::create("levelitem.png",
+		CCMenuItemImage *levelItem = CCMenuItemImage::create("white/levelitem.png",
 				"levelitem.png", this,
 				menu_selector(MainScreenLayer::menuStartGameCallback));
 
-		// some stupid rectangular order of the menu
-		pCloseItem->setPosition(
-				ccp(
-						origin.x + (i % 5) * (winSize.width / 6)
-								+ winSize.width / 6
-								- pCloseItem->getContentSize().width / 2,
-						origin.y + winSize.height - winSize.height / 3
-								- (i / 6) * (winSize.height / 3)
 
-								- pCloseItem->getContentSize().height / 2));
-		// maybe we should use the dedicated align method for this?
+		levelItem->setTag(i);
 
-		pCloseItem->setTag(i);
-
-		menuIcons->addObject(pCloseItem);
+		levelIcons->addObject(levelItem);
 	}
 
 	// settings
-	CCMenuItemImage *pSettingsItem = CCMenuItemImage::create("settings.png",
-			"settings.png", this, menu_selector(MainScreenLayer::changeScene));
-	pSettingsItem->setPosition(
-			ccp(winSize.width - pSettingsItem->getContentSize().width / 2,
-					origin.y + winSize.height
-							- pSettingsItem->getContentSize().height * 2));
-	pSettingsItem->setTag(10);
+	CCMenuItemImage *pSettingsItem = CCMenuItemImage::create("white/settings.png",
+			"white/settings.png", this, menu_selector(MainScreenLayer::changeScene));
+    pSettingsItem->setScale(MENU_ITEM_SCALE);
+    pSettingsItem->setTag(10);
 	menuIcons->addObject(pSettingsItem);
 
 	// about us
-	CCMenuItemImage *pAboutUs = CCMenuItemImage::create("aboutus.png",
-			"aboutus.png", this, menu_selector(MainScreenLayer::changeScene));
-	pAboutUs->setPosition(
-			ccp(pAboutUs->getContentSize().width / 2 + winSize.width * 1 / 4,
-					origin.y + winSize.height
-							- pAboutUs->getContentSize().height * 2));
+	CCMenuItemImage *pAboutUs = CCMenuItemImage::create("white/aboutus.png",
+			"white/aboutus.png", this, menu_selector(MainScreenLayer::changeScene));
+    pAboutUs->setScale(MENU_ITEM_SCALE);
 	pAboutUs->setTag(11);
 	menuIcons->addObject(pAboutUs);
 
 	// impressum
-	CCMenuItemImage *pImpressum = CCMenuItemImage::create("impressum.png",
-			"impressum.png", this, menu_selector(MainScreenLayer::changeScene));
-	pImpressum->setPosition(
-			ccp(pImpressum->getContentSize().width / 2 + winSize.width * 2 / 4,
-					origin.y + winSize.height
-							- pImpressum->getContentSize().height * 2));
+	CCMenuItemImage *pImpressum = CCMenuItemImage::create("white/impressum.png",
+			"white/impressum.png", this, menu_selector(MainScreenLayer::changeScene));
+    pImpressum->setScale(MENU_ITEM_SCALE);
 	pImpressum->setTag(12);
 	menuIcons->addObject(pImpressum);
 
 	// close app
-	CCMenuItemImage *pCloseApp = CCMenuItemImage::create("closeapp.png",
-			"closeapp.png", this, menu_selector(MainScreenLayer::changeScene));
-	pCloseApp->setPosition(
-			ccp(pCloseApp->getContentSize().width / 2 + winSize.width * 3 / 4,
-					origin.y + winSize.height
-							- pCloseApp->getContentSize().height * 2));
+	CCMenuItemImage *pCloseApp = CCMenuItemImage::create("white/closeapp.png",
+			"white/closeapp.png", this, menu_selector(MainScreenLayer::changeScene));
+    pCloseApp->setScale(MENU_ITEM_SCALE);
 	pCloseApp->setTag(13);
 	menuIcons->addObject(pCloseApp);
 
 	// Create a menu with our menu items
-	levelMenu = CCMenu::createWithArray(menuIcons);
-	levelMenu->setPosition(CCPointZero);
+	mainMenu = CCMenu::createWithArray(menuIcons);
+	mainMenu->setPosition(ccp(100, winSize.height - 25));
+    mainMenu->alignItemsHorizontallyWithPadding(15);
+    
+	levelMenu = CCMenu::createWithArray(levelIcons);
+	//levelMenu->setPosition(ccp(0, 50));
+    levelMenu->alignItemsInColumns(5, 5);
 
 	// Add the menu to TestWorld layer as a child layer.
-	this->addChild(levelMenu, 1);
+	this->addChild(mainMenu, 1);
+    this->addChild(levelMenu, 1);
+
 
 	SoundEffectHelper::playMainMenuBackgroundMusic();
 
@@ -144,12 +130,10 @@ bool MainScreenLayer::init() {
 }
 
 void MainScreenLayer::initBackground() {
-	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+	
 
 	CCSprite* pSpriteBackground = CCSprite::create("MainScreenBackground.jpg");
-
-// position the sprite on the center of the screen
-	pSpriteBackground->setPosition(ccp(winSize.width / 2, winSize.height / 2));
+    HelperFunctions::fitBackground(pSpriteBackground);
 
 // add the sprite as a child to this layer
 	this->addChild(pSpriteBackground, 0);
