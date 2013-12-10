@@ -6,7 +6,7 @@
 
 using namespace cocos2d;
 
-CCScene* LevelLoadingScene::create(std::string seq,  int level) {
+CCScene* LevelLoadingScene::create(std::string seq, int level) {
 
 	LevelLoadingScene * scene = NULL;
 	do {
@@ -21,21 +21,21 @@ CCScene* LevelLoadingScene::create(std::string seq,  int level) {
 		scene->_layer->level = level;
 		scene->_layer->addLabels();
 
-	}while(0);
+	} while (0);
 
 	return scene;
 }
 
 bool LevelLoadingScene::init() {
 	if (CCScene::init()) {
-			this->_layer = LevelLoadingLayer::create();
-			this->_layer->retain();
-			this->addChild(_layer);
+		this->_layer = LevelLoadingLayer::create();
+		this->_layer->retain();
+		this->addChild(_layer);
 
-			return true;
-		} else {
-			return false;
-		}
+		return true;
+	} else {
+		return false;
+	}
 }
 
 LevelLoadingScene::~LevelLoadingScene() {
@@ -47,96 +47,141 @@ LevelLoadingScene::~LevelLoadingScene() {
 
 bool LevelLoadingLayer::init() {
 	//////////////////////////////
-	    // 1. super init first
-	    if (!CCLayer::init()) {
-	        return false;
-	    }
+	// 1. super init first
+	if (!CCLayer::init()) {
+		return false;
+	}
 
-		SoundEffectHelper::playLevelLoadingBackgroundMusic();
-		CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+	SoundEffectHelper::playLevelLoadingBackgroundMusic();
+	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
-		// add "LevelLoading" splash screen"
-		CCSprite* pSpriteBackground = CCSprite::create("NotificationScreenBackground.jpg");
+	// add "LevelLoading" splash screen"
+	CCSprite* pSpriteBackground = CCSprite::create(
+			"NotificationScreenBackground.jpg");
 
-		// position the sprite on the center of the screen
-		pSpriteBackground->setPosition(
-				ccp(winSize.width / 2, winSize.height / 2));
+	// position the sprite on the center of the screen
+	pSpriteBackground->setPosition(ccp(winSize.width / 2, winSize.height / 2));
 
-		// add the sprite as a child to this layer
-		this->addChild(pSpriteBackground, 0);
+	// add the sprite as a child to this layer
+	this->addChild(pSpriteBackground, 0);
 
-		CCString labelText = "You will fight for ";
-		this->_label = CCLabelTTF::create(labelText.getCString(), "Artial", 12);
-		_label->retain();
-		_label->setColor(ccc3(0, 0, 0));
-		_label->setPosition(ccp(winSize.width / 2, winSize.height / 2));
-		this->addChild(_label);
-
-		// add "LevelLoading" splash screen"
-		CCSprite* pSpriteLogo = CCSprite::create("logo.png");
-
-		// position the sprite on the center of the screen
-		pSpriteLogo->setPosition(
-				ccp(winSize.width / 2, winSize.height / 2 + 40));
-
-		float scale = winSize.width;
-		CCSize logoSize = pSpriteLogo->getContentSize();
-
-		//scale it proportionally to 80% of the screen
-		float scaleFactor = winSize.width / logoSize.width * 0.8;
-
-		pSpriteLogo->setScaleX(scaleFactor);
-		pSpriteLogo->setScaleY(scaleFactor);
-
-		// add the sprite as a child to this layer
-		this->addChild(pSpriteLogo, 0);
-
-		// set a delay for three seconds
-		this->runAction(
-				CCSequence::create(CCDelayTime::create(3),
-						CCCallFunc::create(this,
-								callfunc_selector(
-										LevelLoadingLayer::endScreen)),
-						NULL));
+	/*
+	 CCString labelText = "You will fight for ";
+	 this->_label = CCLabelTTF::create(labelText.getCString(), "Artial", 12);
+	 _label->retain();
+	 _label->setColor(ccc3(0, 0, 0));
+	 _label->setPosition(ccp(winSize.width / 2, winSize.height / 2));
+	 this->addChild(_label);
 
 
+	 // add "LevelLoading" splash screen"
+	 CCSprite* pSpriteLogo = CCSprite::create("logo.png");
 
-		return true;
+	 // position the sprite on the center of the screen
+	 pSpriteLogo->setPosition(ccp(winSize.width / 2, winSize.height / 2 + 40));
+
+	 float scale = winSize.width;
+	 CCSize logoSize = pSpriteLogo->getContentSize();
+
+	 //scale it proportionally to 80% of the screen
+	 float scaleFactor = winSize.width / logoSize.width * 0.8;
+
+	 pSpriteLogo->setScaleX(scaleFactor);
+	 pSpriteLogo->setScaleY(scaleFactor);
+
+	 // add the sprite as a child to this layer
+	 this->addChild(pSpriteLogo, 0);
+	 */
+
+	// set a delay for three seconds
+	this->runAction(
+			CCSequence::create(CCDelayTime::create(3),
+					CCCallFunc::create(this,
+							callfunc_selector(LevelLoadingLayer::endScreen)),
+					NULL));
+
+	return true;
 
 }
 
 void LevelLoadingLayer::addLabels() {
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
-	std::string strLevel = static_cast<std::ostringstream*>(&(std::ostringstream() << level))->str();
-	std::string seqLevel= "Level: " + strLevel;
+	int score = 0;
+	std::string strScore =
+			static_cast<std::ostringstream*>(&(std::ostringstream() << score))->str();
+
+	std::string seqLevel = "Your Score: " + strScore;
 	this->levelLabel = CCLabelTTF::create(seqLevel.c_str(), "Artial", 18);
 	levelLabel->retain();
-	levelLabel->setColor(ccc3(0, 0, 0));
-	levelLabel->setPosition(ccp(winSize.width / 2 , winSize.height / 2 - 80));
+	levelLabel->setColor(ccc3(255, 255, 255));
+	levelLabel->setPosition(ccp(winSize.width * 5 / 6, winSize.height * 1 / 5));
 	this->addChild(levelLabel);
 
-	std::string seqSeq = "Sequenz: "+ seq;
-	this->seqLabel = CCLabelTTF::create(seqSeq.c_str(), "Artial", 14);
+	// add Protein
+	/*
+	CCSprite* pProtein = CCSprite::create("levelscore_blank");
+
+	//scale it proportionally to 30% of the screen
+	float scale = 0.3;
+	CCSize logoSize = pProtein->getContentSize();
+	HelperFunctions::resizseSprite(pProtein, winSize.width * scale, 0.0);
+	pProtein->setPosition(
+			ccp(winSize.width - logoSize.width * scale - winSize.width * 5 / 6,
+					winSize.height * 2 / 3));
+	this->addChild(pProtein, 0);
+	*/
+
+	// name
+	this->seqLabel = CCLabelTTF::create(
+			LevelHelper::getNameForLevel(level).c_str(), "Artial", 20,
+			CCSizeMake(60, 30), kCCTextAlignmentCenter,
+			kCCVerticalTextAlignmentTop);
 	seqLabel->retain();
-	seqLabel->setColor(ccc3(0, 0, 0));
-	seqLabel->setPosition(ccp(winSize.width / 2 , winSize.height / 2 -40));
+	seqLabel->setColor(ccc3(255, 255, 255));
+	seqLabel->setPosition(ccp(winSize.width * 5 / 6, winSize.height * 4 / 5));
 	this->addChild(seqLabel);
 
-	std::string sDesc = "Description: "+ LevelHelper::getDescriptionForLevel(level);
-	this->seqLabel = CCLabelTTF::create(sDesc.c_str(), "Artial", 14);
+	// desc
+	std::string sDesc = LevelHelper::getDescriptionForLevel(level);
+	this->seqLabel = CCLabelTTF::create(sDesc.c_str(), "Artial", 12,
+			CCSizeMake(winSize.height * 1 / 3, winSize.width * 1 / 2),
+			kCCTextAlignmentRight, kCCVerticalTextAlignmentCenter);
 	seqLabel->retain();
-	seqLabel->setColor(ccc3(0, 0, 0));
-	seqLabel->setPosition(ccp(winSize.width / 2 , winSize.height / 2 + 20));
+	seqLabel->setColor(ccc3(255, 255, 255));
+	seqLabel->setPosition(ccp(winSize.width * 5 /6, winSize.height * 3 / 5));
 	this->addChild(seqLabel);
+
+	// code
+	std::string seqCode = LevelHelper::getCodeForLevel(level);
+	this->seqLabel = CCLabelTTF::create(seqCode.c_str(), "Artial", 20,
+			CCSizeMake(80, 30), kCCTextAlignmentCenter,
+			kCCVerticalTextAlignmentCenter);
+	seqLabel->retain();
+	seqLabel->setColor(ccc3(255, 255, 255));
+	seqLabel->setPosition(ccp(winSize.width * 1 / 6, winSize.height * 1 / 5));
+	this->addChild(seqLabel);
+
+	// add Protein
+	CCSprite* pProtein = CCSprite::create(
+			LevelHelper::getPathForLevel(level).c_str());
+
+	//scale it proportionally to 30% of the screen
+	float scale = 0.3;
+	CCSize logoSize = pProtein->getContentSize();
+	HelperFunctions::resizseSprite(pProtein, winSize.width * scale, 0.0);
+	pProtein->setPosition(ccp(logoSize.width * scale + winSize.width * 1/12, winSize.height * 2 / 3));
+	this->addChild(pProtein, 0);
+
 }
 
 void LevelLoadingLayer::endScreen() {
 
-	 SoundEffectHelper::stopBackgroundMusic();
-	 CCScene *pScene = DeeWorld::scene(seq, level);
-	 //transition to next scene for one sec
-	 CCDirector::sharedDirector()->replaceScene( CCTransitionMoveInB::create(2.0f, pScene));
+	SoundEffectHelper::stopBackgroundMusic();
+	CCScene *pScene = DeeWorld::scene(seq, level);
+	//transition to next scene for one sec
+	CCDirector::sharedDirector()->replaceScene(
+			CCTransitionMoveInB::create(2.0f, pScene));
 }
 
 LevelLoadingLayer::~LevelLoadingLayer() {
