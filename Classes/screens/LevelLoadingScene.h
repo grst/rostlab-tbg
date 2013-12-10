@@ -48,6 +48,9 @@ public:
 private:
     cocos2d::CCLabelTTF* levelLabel;
     cocos2d::CCLabelTTF* seqLabel;
+    cocos2d::CCLabelTTF* pProtein;
+    cocos2d::CCLabelTTF* seqName;
+    cocos2d::CCLabelTTF* seqDesc;
 };
 
 class LevelLoadingScene : public cocos2d::CCScene

@@ -50,6 +50,9 @@ public:
 private:
     cocos2d::CCLabelTTF* scoreLabel;
     cocos2d::CCLabelTTF* levelLabel;
+    cocos2d::CCLabelTTF* pProtein;
+    cocos2d::CCLabelTTF* seqName;
+    cocos2d::CCLabelTTF* seqDesc;
 };
 
 class LevelEndScene : public cocos2d::CCScene

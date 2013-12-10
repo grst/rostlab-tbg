@@ -149,7 +149,7 @@ void LevelLoadingLayer::addLabels() {
 */
 
 	// name
-	this->seqLabel = CCLabelTTF::create(
+	this->seqName= CCLabelTTF::create(
 			LevelHelper::getNameForLevel(level).c_str(), "Artial", 20,
 			CCSizeMake(winSize.width * 3 / 6, 30), kCCTextAlignmentRight,
 			kCCVerticalTextAlignmentTop);
@@ -160,7 +160,7 @@ void LevelLoadingLayer::addLabels() {
 
 	// desc
 	std::string sDesc = LevelHelper::getDescriptionForLevel(level);
-	this->seqLabel = CCLabelTTF::create(sDesc.c_str(), "Artial", 12,
+	this->seqDesc = CCLabelTTF::create(sDesc.c_str(), "Artial", 12,
 			CCSizeMake(winSize.width * 3 / 6, winSize.height * 1 / 2),
 			kCCTextAlignmentRight, kCCVerticalTextAlignmentCenter);
 	seqLabel->retain();
@@ -179,7 +179,7 @@ void LevelLoadingLayer::addLabels() {
 	this->addChild(seqLabel);
 
 	// add Protein
-	CCSprite* pProtein = CCSprite::create(
+	this->pProtein = CCSprite::create(
 			LevelHelper::getPathForLevel(level).c_str());
 
 	//scale it proportionally to 30% of the screen
