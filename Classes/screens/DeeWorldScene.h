@@ -16,7 +16,7 @@
 #include "../box2d/GLES-Render.h"
 #include "../ui_elements/AminoAcid.h"
 #include "../ui_elements/BoardAcid.h"
-#include "../ui_elements/CCBlade.h"
+#include "../ui_elements/cc-extensions/CCBlade.h"
 #include "../box2d/ContactListener.h"
 
 

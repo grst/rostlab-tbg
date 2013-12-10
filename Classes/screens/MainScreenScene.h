@@ -27,7 +27,7 @@
 #define MainScreen_H_
 
 #include "cocos2d.h"
-#include "../ui_elements/CCBlade.h"
+#include "../ui_elements/cc-extensions/CCBlade.h"
 #include "../helper/SoundEffectHelper.h"
 
 class MainScreenLayer : public cocos2d::CCLayer
