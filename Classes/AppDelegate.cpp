@@ -1,5 +1,4 @@
 #include "AppDelegate.h"
-#include "ui_elements/TouchTrailLayer.h"
 #include "screens/DeeWorldScene.h"
 #include "screens/MainScreenScene.h"
 #include "screens/SplashScreenScene.h"

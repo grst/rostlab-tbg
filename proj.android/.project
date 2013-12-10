@@ -55,12 +55,12 @@
 		<link>
 			<name>Classes</name>
 			<type>2</type>
-			<location>/home/xsebi/programs/frameworks/cocos2d-x-2.2.1/rostlab-tbg/Classes</location>
+			<location>/home/xsebi/programs/frameworks/cocos2d-x/projects/rostlab-tbg/Classes</location>
 		</link>
 		<link>
 			<name>Resources</name>
 			<type>2</type>
-			<location>/home/xsebi/programs/frameworks/cocos2d-x-2.2.1/rostlab-tbg/Resources</location>
+			<location>/home/xsebi/programs/frameworks/cocos2d-x/projects/rostlab-tbg/Resources</location>
 		</link>
 		<link>
 			<name>actions</name>

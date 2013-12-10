@@ -13,12 +13,14 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/box2d/ContactListener.cpp \
                    ../../Classes/box2d/GLES-Render.cpp \
                    ../../Classes/ui_elements/AminoAcid.cpp \
-             	   ../../Classes/ui_elements/AboutUsLayer.cpp \
+                   ../../Classes/ui_elements/AboutUsLayer.cpp \
                    ../../Classes/ui_elements/BoardAcid.cpp \
-                   ../../Classes/ui_elements/CCBlade.cpp \
                    ../../Classes/ui_elements/ImpressumLayer.cpp \
                    ../../Classes/ui_elements/PauseLayer.cpp \
-                   ../../Classes/ui_elements/TouchTrailLayer.cpp \
+                   ../../Classes/ui_elements/cc-extensions/TouchTrailLayer.cpp \
+                   ../../Classes/ui_elements/cc-extensions/CCBlade.cpp \
+                   ../../Classes/ui_elements/cc-extensions/CCSlider.cpp \
+                   ../../Classes/ui_elements/cc-extensions/CCRadioMenu.cpp \
                    ../../Classes/helper/DebugDraw.cpp  \
                    ../../Classes/helper/MatrixHelper.cpp  \
                    ../../Classes/helper/HelperFunctions.cpp  \
@@ -31,8 +33,10 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/screens/LevelEndScene.cpp \
                    ../../Classes/screens/MainScreenScene.cpp \
                    ../../Classes/screens/SettingsScreenScene.cpp \
-                   ../../Classes/screens/SplashScreenScene.cpp \
-				   
+                   ../../Classes/screens/SplashScreenScene.cpp 
+                  
+   
+               
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../Classes
 
 LOCAL_WHOLE_STATIC_LIBRARIES += cocos2dx_static

@@ -5,7 +5,7 @@
 #include "SplashScreenScene.h"
 #include "DeeWorldScene.h"
 #include "LevelLoadingScene.h"
-#include "../ui_elements/TouchTrailLayer.h"
+#include "../ui_elements/cc-extensions/TouchTrailLayer.h"
 #include "../ui_elements/ImpressumLayer.h"
 #include "../ui_elements/AboutUsLayer.h"
 

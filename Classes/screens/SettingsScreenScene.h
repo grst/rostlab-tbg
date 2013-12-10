@@ -38,6 +38,7 @@ public:
 
     void endScreen();
     void changeScene(CCObject* pSender) ;
+    void dummy(CCObject* pSender) ;
 
     CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _label, Label);
 
