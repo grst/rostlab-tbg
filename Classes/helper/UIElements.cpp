@@ -99,7 +99,7 @@ void UIElements::createNewAminoAcid(DeeWorld* scene) {
 		// Create the actions
 		CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 
-		CCLabelTTF * label = CCLabelTTF::create(str.c_str(), "Helvetica", 30,
+		CCLabelTTF * label = CCLabelTTF::create(str.c_str(), "Helvetica", 24,
 				CCSizeMake(100, 30),
 				kCCTextAlignmentRight);
 		acid->_label = label;

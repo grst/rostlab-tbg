@@ -332,11 +332,11 @@ void DeeWorld::initInfoUI() {
 	CCLog("setting score");
 	//score
 	// int -> str
-	this->_scoreLabel = CCLabelTTF::create("Score: 0", "Helvetica", 30,
-			CCSizeMake(100, 30), kCCTextAlignmentRight);
+	this->_scoreLabel = CCLabelTTF::create("Score: 0", "Helvetica", 24,
+			CCSizeMake(150, 30), kCCTextAlignmentRight);
 	this->_scoreLabel->retain();
 	this->_scoreLabel->setPosition(
-			ccp(layerSize.width - 60, layerSize.height - 20));
+			ccp(layerSize.width - 90, layerSize.height - 20));
 	this->_scoreLabel->setColor(ccc3(255, 255, 255));
     
     this->addChild(cornerRight);
@@ -456,7 +456,7 @@ int DeeWorld::detectCorner() {
 void DeeWorld::addTarget() {
 	AminoAcid *sTarget = AminoAcid::createRandom();
 	CCLog("Adding Target called: %c ", +sTarget->getType());
-	HelperFunctions::resizseSprite(sTarget, 64, 0);
+	sTarget->setScale(MatrixHelper::getRelativeScaleFactor(sTarget->getType()));
 	//Place target in a randomly picked corner.
 	int startX, startY;
 	int corner = detectCorner();
@@ -474,7 +474,7 @@ void DeeWorld::addTarget() {
 		break;
 	case 1:
 		//left top
-		startY = winSize.height - 60;
+		startY = winSize.height - 60; //due to corner
 		startX = 0;
 		break;
 	case 2:
@@ -500,7 +500,7 @@ void DeeWorld::addTarget() {
 	//row 1, col 1
 
 	b2Vec2 *verts = MatrixHelper::getVerticeData(sTarget->getType(),
-			1 / PTM_RATIO / 4);
+                                                 MatrixHelper::getRelativeScaleFactor(sTarget->getType())/PTM_RATIO/4);
 	int n = MatrixHelper::getVerticeNum(sTarget->getType());
 	//Move Target
 	//random direction, random velocity.
@@ -760,10 +760,9 @@ b2Body* DeeWorld::CreateBox2DBodyForSprite(cocos2d::CCSprite *sprite,
  */
 void DeeWorld::updateInfoUI() {
 	//update score
-	string temp =
-			static_cast<ostringstream*>(&(ostringstream() << score))->str();
-	//this->_scoreLabel->setString(("Score: " + temp).c_str());
-    this->_scoreLabel->setString(temp.c_str());
+    std::ostringstream out;
+    out << "Score: " << score;
+    this->_scoreLabel->setString(out.str().c_str());
 	this->_scoreLabel->draw();
 	this->_scoreLabel->update(0.5);
 }

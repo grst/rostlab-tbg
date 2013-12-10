@@ -73,7 +73,7 @@ bool MainScreenLayer::init() {
 	for (int i = 0; i < levels; i++) {
 
 		CCMenuItemImage *levelItem = CCMenuItemImage::create("white/levelitem.png",
-				"levelitem.png", this,
+				"white/levelitem.png", this,
 				menu_selector(MainScreenLayer::menuStartGameCallback));
 
 
