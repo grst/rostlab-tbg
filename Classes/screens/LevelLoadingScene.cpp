@@ -113,22 +113,20 @@ void LevelLoadingLayer::addLabels() {
 	this->levelLabel = CCLabelTTF::create(seqLevel.c_str(), "Artial", 18);
 	levelLabel->retain();
 	levelLabel->setColor(ccc3(255, 255, 255));
-	levelLabel->setPosition(ccp(winSize.width * 5 / 6, winSize.height * 1 / 5));
+	levelLabel->setPosition(ccp(winSize.width * 5 / 6, winSize.height * 1 / 6));
 	this->addChild(levelLabel);
 
 	// add Protein
-	/*
-	CCSprite* pProtein = CCSprite::create("levelscore_blank");
+	CCSprite* pPercentage = CCSprite::create("loading-bar-bg.png");
 
 	//scale it proportionally to 30% of the screen
-	float scale = 0.3;
-	CCSize logoSize = pProtein->getContentSize();
-	HelperFunctions::resizseSprite(pProtein, winSize.width * scale, 0.0);
-	pProtein->setPosition(
-			ccp(winSize.width - logoSize.width * scale - winSize.width * 5 / 6,
+	float scalePer = 0.3;
+	CCSize logoPercentageSize = pPercentage->getContentSize();
+	HelperFunctions::resizseSprite(pPercentage, winSize.width * scalePer, 0.0);
+	pPercentage->setPosition(
+			ccp(winSize.width - logoPercentageSize.width * scalePer - winSize.width * 5 / 6,
 					winSize.height * 2 / 3));
-	this->addChild(pProtein, 0);
-	*/
+	this->addChild(pPercentage, 0);
 
 	// name
 	this->seqLabel = CCLabelTTF::create(
@@ -147,7 +145,7 @@ void LevelLoadingLayer::addLabels() {
 			kCCTextAlignmentRight, kCCVerticalTextAlignmentCenter);
 	seqLabel->retain();
 	seqLabel->setColor(ccc3(255, 255, 255));
-	seqLabel->setPosition(ccp(winSize.width * 4 /6, winSize.height * 3 / 5));
+	seqLabel->setPosition(ccp(winSize.width * 4 /6, winSize.height * 2 / 4));
 	this->addChild(seqLabel);
 
 	// code
@@ -157,7 +155,7 @@ void LevelLoadingLayer::addLabels() {
 			kCCVerticalTextAlignmentCenter);
 	seqLabel->retain();
 	seqLabel->setColor(ccc3(255, 255, 255));
-	seqLabel->setPosition(ccp(winSize.width * 1 / 6, winSize.height * 1 / 5));
+	seqLabel->setPosition(ccp(winSize.width * 1 / 6, winSize.height * 1 / 6));
 	this->addChild(seqLabel);
 
 	// add Protein
