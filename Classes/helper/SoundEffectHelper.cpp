@@ -8,6 +8,7 @@
 
 
 #include "SoundEffectHelper.h"
+#include "HelperFunctions.h"
 
 USING_NS_CC;
 using namespace cocos2d;
@@ -61,26 +62,41 @@ void SoundEffectHelper::playTimerTickSound(){
 
 void SoundEffectHelper::playNegativeCollisionSound(){
 	if(isSoundEnabled()){
-		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("pew-pew-lei.wav");
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("poing.mp3");
 	}
 }
 
 void SoundEffectHelper::playNeutralCollisionSound(){
 	if(isSoundEnabled()){
-			CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("pew-pew-lei.wav");
-	}
+        CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("bing.mp3");
+    }
 }
 
 void SoundEffectHelper::playPositiveCollisionSound(){
 	if(isSoundEnabled()){
-			CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("pew-pew-lei.wav");
+			CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("bing.mp3");
 	}
 }
 
 void SoundEffectHelper::playLevelBackgroundMusic(int level){
 	stopBackgroundMusic();
+    char * bgmusic;
+    switch((int) HelperFunctions::randomValueBetween(0, 3)) {
+        case 0:
+            bgmusic = "bgmusic01.mp3";
+            break;
+        case 1:
+            bgmusic = "bgmusic02.mp3";
+            break;
+        case 2:
+            bgmusic = "bgmusic03.mp3";
+            break;
+        case 3:
+            bgmusic = "bgmusic04.mp3";
+            break;
+    }
 	if(isSoundEnabled()){
-		CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("background-music-aac.wav", true);
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic(bgmusic, true);
 	}
 }
 
@@ -88,7 +104,7 @@ void SoundEffectHelper::playLevelBackgroundMusic(int level){
 void SoundEffectHelper::playMainMenuBackgroundMusic(){
 	stopBackgroundMusic();
 	if(isSoundEnabled() && ! CocosDenshion::SimpleAudioEngine::sharedEngine()->isBackgroundMusicPlaying()){
-		CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("background-music-aac.wav", true);
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic("level-selection-bgmusic.mp3", true);
 	}
 }
 
