@@ -54,7 +54,7 @@ bool PauseLayer::init()
 
 		// settings
 		CCMenuItemImage *pSettingsItem = CCMenuItemImage::create(
-							"settings.png", "settings.png", this,
+							"grey/settings.png", "grey/settings.png", this,
 							menu_selector(PauseLayer::OnMenu));
 		pSettingsItem->setPosition(ccp(winSize.width * 1/ 5+ pSettingsItem->getContentSize().width ,
 						winSize.height -  pSettingsItem->getContentSize().height));
@@ -63,11 +63,11 @@ bool PauseLayer::init()
 
 		//music
 		CCMenuItemImage *	pMusicItemOn = CCMenuItemImage::create(
-										"volume_on.png", "volume_on.png", this,
+										"grey/volume_on.png", "grey/volume_on.png", this,
 										menu_selector(PauseLayer::OnMenu));
 
 		CCMenuItemImage*	pMusicItemOff = CCMenuItemImage::create(
-										"volume_muted.png", "volume_muted.png", this,
+										"grey/volume_muted.png", "grey/volume_muted.png", this,
 										menu_selector(PauseLayer::OnMenu));
 
 		CCMenuItemToggle * toggleMenu = CCMenuItemToggle::createWithTarget(this,menu_selector(PauseLayer::OnMenu), pMusicItemOn, pMusicItemOff, NULL );
@@ -85,7 +85,7 @@ bool PauseLayer::init()
 
 		// main menu
 		CCMenuItemImage *pMainMenu = CCMenuItemImage::create(
-							"mainmenu.png", "mainmenu.png", this,
+							"grey/mainmenu.png", "grey/mainmenu.png", this,
 							menu_selector(PauseLayer::OnMenu));
 		pMainMenu->setPosition(ccp(winSize.width * 1/5 + pMainMenu->getContentSize().width   * 9 / 2,
 						winSize.height - pMainMenu->getContentSize().height));
@@ -94,7 +94,7 @@ bool PauseLayer::init()
 
 		// close app
 		CCMenuItemImage *pCloseApp = CCMenuItemImage::create(
-							"closeapp.png", "closeapp.png", this,
+							"grey/closeapp.png", "grey/closeapp.png", this,
 							menu_selector(PauseLayer::OnMenu));
 		pCloseApp->setPosition(ccp(winSize.width * 1/ 5+ pCloseApp->getContentSize().width  * 13 / 2,
 						winSize.height - pCloseApp->getContentSize().height));
