@@ -214,6 +214,9 @@ void DeeWorld::initWorld() {
 	// Create edges around the entire screen
 	b2BodyDef groundBodyDef;
 	groundBodyDef.position.Set(0, 0);
+    CCSprite * emptySprite = new CCSprite();
+    emptySprite->setTag(3);
+    groundBodyDef.userData = emptySprite;
 
 	b2Body* groundBody = _b2dWorld->CreateBody(&groundBodyDef);
 	b2PolygonShape groundEdge;
@@ -639,19 +642,21 @@ void DeeWorld::BeginContact(b2Contact *contact) {
 			}
 			// Is sprite A a target and sprite B a wall?
 			else if (iTagA == 1 && iTagB == 3) {
+                CCLog("Collision: Wall on Target");
 				toRemove = (AminoAcid*) spriteA;
 			}
 			// Is sprite A a wall and sprite B a target?
 			else if (iTagA == 3 && iTagB == 1) {
+                CCLog("Collision: Target on Wall");
 				toRemove = (AminoAcid*) spriteB;
 			}
 
 			// if a target collides with a wall, we want to remove it with a certain probability
 			if (toRemove != NULL) {
-			//	if (HelperFunctions::randomValueBetween(0, this->getAARemProb())
-				//		< 1) {
+				if (HelperFunctions::randomValueBetween(0, this->getAARemProb())
+						< 1) {
 					toRemove->flagForDelete();
-			//	}
+				}
 			}
 		}
 	}
