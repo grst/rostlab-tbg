@@ -111,13 +111,13 @@ void LevelLoadingLayer::addLabels() {
 			static_cast<std::ostringstream*>(&(std::ostringstream() << score))->str();
 
 	std::string seqLevel = "Your Score: " + strScore+ "/1000";
-	this->levelLabel = CCLabelTTF::create(seqLevel.c_str(), "Artial", 18,
+	this->scoreLabel = CCLabelTTF::create(seqLevel.c_str(), "Artial", 18,
 			CCSizeMake(winSize.width * 3 / 6, 30), kCCTextAlignmentRight,
 			kCCVerticalTextAlignmentTop);
-	levelLabel->retain();
-	levelLabel->setColor(ccc3(255, 255, 255));
-	levelLabel->setPosition(ccp(winSize.width * 4 / 6, winSize.height * 1 / 8));
-	this->addChild(levelLabel);
+	scoreLabel->retain();
+	scoreLabel->setColor(ccc3(255, 255, 255));
+	scoreLabel->setPosition(ccp(winSize.width * 4 / 6, winSize.height * 1 / 8));
+	this->addChild(scoreLabel);
 
 	/* todo
 
@@ -148,34 +148,34 @@ void LevelLoadingLayer::addLabels() {
 */
 
 	// name
-	this->seqName= CCLabelTTF::create(
+	this->ttfName= CCLabelTTF::create(
 			LevelHelper::getNameForLevel(level).c_str(), "Artial", 20,
 			CCSizeMake(winSize.width * 3 / 6, 30), kCCTextAlignmentRight,
 			kCCVerticalTextAlignmentTop);
-	seqLabel->retain();
-	seqLabel->setColor(ccc3(255, 255, 255));
-	seqLabel->setPosition(ccp(winSize.width * 4 / 6, winSize.height * 6 / 7));
-	this->addChild(seqLabel);
+	ttfName->retain();
+	ttfName->setColor(ccc3(255, 255, 255));
+	ttfName->setPosition(ccp(winSize.width * 4 / 6, winSize.height * 6 / 7));
+	this->addChild(ttfName);
 
 	// desc
 	std::string sDesc = LevelHelper::getDescriptionForLevel(level);
-	this->seqDesc = CCLabelTTF::create(sDesc.c_str(), "Artial", 12,
+	this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "Artial", 12,
 			CCSizeMake(winSize.width * 3 / 6, winSize.height * 1 / 2),
 			kCCTextAlignmentRight, kCCVerticalTextAlignmentCenter);
-	seqLabel->retain();
-	seqLabel->setColor(ccc3(255, 255, 255));
-	seqLabel->setPosition(ccp(winSize.width * 4 / 6, winSize.height * 3 / 5));
-	this->addChild(seqLabel);
+	ttfDesc->retain();
+	ttfDesc->setColor(ccc3(255, 255, 255));
+	ttfDesc->setPosition(ccp(winSize.width * 4 / 6, winSize.height * 3 / 5));
+	this->addChild(ttfDesc);
 
 	// code
 	std::string seqCode = LevelHelper::getCodeForLevel(level);
-	this->seqLabel = CCLabelTTF::create(seqCode.c_str(), "Artial", 20,
+	this->ttfCode = CCLabelTTF::create(seqCode.c_str(), "Artial", 20,
 			CCSizeMake(80, 30), kCCTextAlignmentCenter,
 			kCCVerticalTextAlignmentCenter);
-	seqLabel->retain();
-	seqLabel->setColor(ccc3(255, 255, 255));
-	seqLabel->setPosition(ccp(winSize.width * 1 / 6, winSize.height * 1 / 8));
-	this->addChild(seqLabel);
+	ttfCode->retain();
+	ttfCode->setColor(ccc3(255, 255, 255));
+	ttfCode->setPosition(ccp(winSize.width * 1 / 6, winSize.height * 1 / 8));
+	this->addChild(ttfCode);
 
 	// add Protein
 	this->pProtein = CCSprite::create(
