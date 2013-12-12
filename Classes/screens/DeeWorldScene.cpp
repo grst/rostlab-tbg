@@ -151,11 +151,13 @@ void DeeWorld::onApplicationStatusChanged(CCObject* obj) {
 	CCBool* b = (CCBool*) obj;
 	if (b->getValue()) {
 		CCLog("app resumed");
-		CCMessageBox("Application resumed", "Debug by us");
+	//	CCMessageBox("Application resumed", "Debug by us");
 		pauseAction(2);
 	} else {
 		CCLog("app went into background");
-		pauseAction(1);
+		if (!pausedGame ){
+			pauseAction(1);
+		}
 	}
 
 }
