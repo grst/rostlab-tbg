@@ -94,7 +94,7 @@ bool LevelLoadingLayer::init() {
 
 	// set a delay for three seconds
 	this->runAction(
-			CCSequence::create(CCDelayTime::create(5),
+			CCSequence::create(CCDelayTime::create(7),
 					CCCallFunc::create(this,
 							callfunc_selector(LevelLoadingLayer::endScreen)),
 					NULL));
@@ -106,11 +106,16 @@ bool LevelLoadingLayer::init() {
 void LevelLoadingLayer::addLabels() {
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
-	int score = 0;
+	std::string strLevel =
+				static_cast<std::ostringstream*>(&(std::ostringstream() << level))->str();
+	int score =cocos2d::CCUserDefault::sharedUserDefault()->getIntegerForKey(
+					("level_"+strLevel).c_str(), 0);
+
+
 	std::string strScore =
 			static_cast<std::ostringstream*>(&(std::ostringstream() << score))->str();
 
-	std::string seqLevel = "Your Score: " + strScore+ "/1000";
+	std::string seqLevel = "Highscore: " + strScore+ "/1000";
 	this->scoreLabel = CCLabelTTF::create(seqLevel.c_str(), "Artial", 18,
 			CCSizeMake(winSize.width * 3 / 6, 30), kCCTextAlignmentRight,
 			kCCVerticalTextAlignmentTop);
@@ -154,7 +159,7 @@ void LevelLoadingLayer::addLabels() {
 			kCCVerticalTextAlignmentTop);
 	ttfName->retain();
 	ttfName->setColor(ccc3(255, 255, 255));
-	ttfName->setPosition(ccp(winSize.width * 4 / 6, winSize.height * 6 / 7));
+	ttfName->setPosition(ccp(winSize.width * 4 / 6, winSize.height * 7 / 8));
 	this->addChild(ttfName);
 
 	// desc

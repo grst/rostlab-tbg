@@ -90,7 +90,7 @@ bool LevelEndLayer::init() {
 
 	// set a delay for three seconds
 	this->runAction(
-			CCSequence::create(CCDelayTime::create(3),
+			CCSequence::create(CCDelayTime::create(6),
 					CCCallFunc::create(this,
 							callfunc_selector(LevelEndLayer::endScreen)),
 					NULL));
@@ -101,6 +101,24 @@ bool LevelEndLayer::init() {
 
 void LevelEndLayer::addLabels() {
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+
+	std::string strLevel =
+			static_cast<std::ostringstream*>(&(std::ostringstream() << level))->str();
+	int scoreOld =
+			cocos2d::CCUserDefault::sharedUserDefault()->getIntegerForKey(
+					("level_" + strLevel).c_str(), 0);
+
+	if (score == scoreOld) {
+		// new high score
+		std::string seqLevel = "New Highscore";
+			this->scoreLabel = CCLabelTTF::create(seqLevel.c_str(), "Artial", 18,
+					CCSizeMake(winSize.width * 3 / 6, 30), kCCTextAlignmentRight,
+					kCCVerticalTextAlignmentTop);
+			scoreLabel->retain();
+			scoreLabel->setColor(ccc3(0, 255, 0));
+			scoreLabel->setPosition(ccp(winSize.width * 4 / 6, winSize.height * 1 / 4));
+			this->addChild(scoreLabel);
+	}
 
 	std::string strScore =
 			static_cast<std::ostringstream*>(&(std::ostringstream() << score))->str();
@@ -121,7 +139,7 @@ void LevelEndLayer::addLabels() {
 			kCCVerticalTextAlignmentTop);
 	ttfName->retain();
 	ttfName->setColor(ccc3(255, 255, 255));
-	ttfName->setPosition(ccp(winSize.width * 4 / 6, winSize.height * 6 / 7));
+	ttfName->setPosition(ccp(winSize.width * 4 / 6, winSize.height * 7 / 8));
 	this->addChild(ttfName);
 
 	// desc
@@ -170,7 +188,7 @@ void LevelEndLayer::endScreen() {
 	 */
 	CCScene *pScene = MainScreenScene::create();
 	CCDirector::sharedDirector()->replaceScene(
-			CCTransitionMoveInB::create(2.0f, pScene));
+			CCTransitionMoveInB::create(1.0, pScene));
 }
 
 LevelEndLayer::~LevelEndLayer() {
