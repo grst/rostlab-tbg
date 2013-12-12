@@ -18,40 +18,41 @@ UIElements::~UIElements() {
 	// TODO Auto-generated destructor stub
 }
 
-
-
-void UIElements::loadCache(DeeWorld* scene){
-	scene->_scoreNumber = CCLabelBMFont::create( "0", "Arial-num.fnt" );
+void UIElements::loadCache(DeeWorld* scene) {
+	scene->_scoreNumber = CCLabelBMFont::create("0", "Arial-num.fnt");
 	scene->_scoreNumber->setVisible(false);
 }
 
-void UIElements::runDestroyAcidEffect(cocos2d::CCLabelTTF* label){
+void UIElements::runDestroyAcidEffect(cocos2d::CCLabelTTF* label) {
 
-   CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
+	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 
-   CCFiniteTimeAction* actionMove = CCMoveTo::create((float) 0.8,ccp(80, visibleSize.height + 100));
+	CCFiniteTimeAction* actionMove = CCMoveTo::create((float) 0.8,
+			ccp(80, visibleSize.height + 100));
 
-   // Sebi: we have to add some dummy parameters otherwise it fails on Android
-   CCSequence *readySequence = CCSequence::create(actionMove, NULL, NULL);
-   label->runAction(readySequence);
+	// Sebi: we have to add some dummy parameters otherwise it fails on Android
+	CCSequence *readySequence = CCSequence::create(actionMove, NULL, NULL);
+	label->runAction(readySequence);
 }
 
 // TODO make it run more fluently
 void UIElements::displayScoreEffect(DeeWorld* scene, int scoring) {
 
-	std::string strScoring = static_cast<ostringstream*>(&(ostringstream()<< scoring))->str();
+	std::string strScoring = static_cast<ostringstream*>(&(ostringstream()
+			<< scoring))->str();
 	CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 
-	scene->_scoreNumber = CCLabelBMFont::create( strScoring.c_str(), "Arial-num.fnt" );
+	scene->_scoreNumber = CCLabelBMFont::create(strScoring.c_str(),
+			"Arial-num.fnt");
 	//scene->_scoreNumber->setScale(5);
 
-	scene->_scoreNumber->setPosition(ccp(visibleSize.width / 2, visibleSize.height / 2));
+	scene->_scoreNumber->setPosition(
+			ccp(visibleSize.width / 2, visibleSize.height / 2));
 
 	// generates a nice color according to the score
 	scene->_scoreNumber->setColor(UIElements::getColorForScore(scoring));
 
 	scene->addChild(scene->_scoreNumber);
-
 
 	CCActionInterval * tintToNumber;
 	if (scoring > 0) {
@@ -64,16 +65,11 @@ void UIElements::displayScoreEffect(DeeWorld* scene, int scoring) {
 		tintToNumber = CCTintTo::create(1.5, 0, 0, 0);
 	}
 
-
-
-
 	scene->_scoreNumber->runAction(tintToNumber);
 	CCActionInterval * scaleTo = CCScaleTo::create(1.0, 0.00);
 	scene->_scoreNumber->runAction(scaleTo);
 
 }
-
-
 
 void UIElements::createNewAminoAcid(DeeWorld* scene) {
 
@@ -100,8 +96,7 @@ void UIElements::createNewAminoAcid(DeeWorld* scene) {
 		CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 
 		CCLabelTTF * label = CCLabelTTF::create(str.c_str(), "Helvetica", 24,
-				CCSizeMake(100, 30),
-				kCCTextAlignmentRight);
+				CCSizeMake(100, 30), kCCTextAlignmentRight);
 		acid->_label = label;
 
 		acid->_label->setPosition(ccp(80, visibleSize.height - 20));
@@ -111,6 +106,16 @@ void UIElements::createNewAminoAcid(DeeWorld* scene) {
 	}
 
 	CCLog("moving AAs");
+
+	// color the first AA in red
+	if (!scene->_code.empty()) {
+		BoardAcid* elRed = scene->_code.front();
+		CCFiniteTimeAction* actionMove = CCTintTo::create(1.5, 255, 0, 0);
+		// Sebi: we have to add some dummy parameters otherwise it fails on Android
+		CCSequence *readySequence = CCSequence::create(actionMove, NULL,
+		NULL);
+		elRed->_label->runAction(readySequence);
+	}
 
 	// move all elements a bit
 	std::queue<BoardAcid*> tmpQueue;

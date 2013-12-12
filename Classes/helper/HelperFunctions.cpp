@@ -104,3 +104,13 @@ void HelperFunctions::toggleMusic(){
 		cocos2d::CCUserDefault::sharedUserDefault()->setBoolForKey("music_enable", true);
 	}
 }
+
+bool HelperFunctions::isFirstStart(){
+	cocos2d::CCLog("looking for first Start -> off");
+	bool start = cocos2d::CCUserDefault::sharedUserDefault()->getBoolForKey(
+						"firstStart", true);
+	if (start) {
+		cocos2d::CCUserDefault::sharedUserDefault()->setBoolForKey("firstStart", false);
+	}
+	return start;
+}

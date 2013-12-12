@@ -16,8 +16,7 @@ std::string LevelHelper::getDescriptionForLevel(int level) {
 				"While recovering from the excesses of New Year's Eve, we might"
 						"ponder the enzyme that ceaselessly battles the champagne that we consume. "
 						"Alcohol dehydrogenase is our primary defense against alcohol, "
-						"a toxic molecule that compromises the function of our nervous system."
-						"Alcohol dehydrogenase";
+						"a toxic molecule that compromises the function of our nervous system.";
 		break;
 	case 1:
 		description =
@@ -175,7 +174,7 @@ std::string LevelHelper::getCodeForLevel(int level) {
 		sequence = "1KLN";
 		break;
 	case 6:
-		sequence = "2EI2I";
+		sequence = "2E2I";
 		break;
 
 	case 7:
@@ -217,11 +216,10 @@ std::string LevelHelper::getPathForLevel(int level) {
 		sequence = "1DGS.png";
 		break;
 	case 5:
-		// WARNING!!
 		sequence = "1KLN.png";
 		break;
 	case 6:
-		sequence = "2EI2I.png";
+		sequence = "2E2I.png";
 		break;
 
 	case 7:
@@ -233,7 +231,6 @@ std::string LevelHelper::getPathForLevel(int level) {
 		break;
 
 	case 9:
-		// WARNING !!
 		sequence = "1PPI.png";
 		break;
 	case 10:

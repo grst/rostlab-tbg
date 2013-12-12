@@ -21,14 +21,16 @@
 
 class HelperFunctions {
 public:
-    static int mod(int a, int b);
-    static float randomValueBetween(float low, float high);
-    static std::vector<std::string> split(const std::string &s, char delim);
-    static long nowInSeconds();
-    static long nowInMilliSeconds();
-    static void resizseSprite(cocos2d::CCSprite* sprite, float width, float height);
-    static void fitBackground(cocos2d::CCSprite* sprite);
-    static void toggleMusic();
+	static int mod(int a, int b);
+	static float randomValueBetween(float low, float high);
+	static std::vector<std::string> split(const std::string &s, char delim);
+	static long nowInSeconds();
+	static long nowInMilliSeconds();
+	static void resizseSprite(cocos2d::CCSprite* sprite, float width,
+			float height);
+	static void fitBackground(cocos2d::CCSprite* sprite);
+	static void toggleMusic();
+	static bool  isFirstStart();
 //    static cocos2d::CCSize getCurrentSpriteSize(cocos2d::CCSprite* sprite);
 };
 #endif /* defined(__tbg__HelperFunctions__) */

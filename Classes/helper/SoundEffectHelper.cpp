@@ -56,7 +56,7 @@ void SoundEffectHelper::playGameStartSound(){
 
 void SoundEffectHelper::playTimerTickSound(){
 	if(isSoundEnabled()){
-			CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("tick.mp3");
+		CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("boing.mp3");
 	}
 }
 
