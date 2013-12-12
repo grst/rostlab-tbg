@@ -129,6 +129,7 @@ private:
 	std::string aminoSequence;
 	bool isAminoAcidRemaining();
 	bool pausedGame;
+	bool startTimer;
 	int level;
 	int score;
 	bool togglePlayer;
