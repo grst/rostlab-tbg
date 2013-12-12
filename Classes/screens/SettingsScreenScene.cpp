@@ -43,7 +43,7 @@ bool SettingsScreenLayer::init() {
 	CCLog("settings: loading background");
 	// add "SettingsScreen" splash screen"
 	CCSprite* pSpriteBackground = CCSprite::create(
-			"NotificationScreenBackground.jpg");
+			"wood.jpg");
 
 	// position the sprite on the center of the screen
 	pSpriteBackground->setPosition(ccp(winSize.width / 2, winSize.height / 2));
