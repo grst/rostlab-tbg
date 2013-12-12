@@ -28,13 +28,15 @@ bool AboutUsLayer::init() {
 	do {
 		CC_BREAK_IF(!CCLayer::init());
 		this->setTouchEnabled(true);
-
-		CCLabelTTF* pauseLabel = CCLabelTTF::create("About us", "Arial", 24);
+		CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+		CCLabelTTF* pauseLabel = CCLabelTTF::create("HOW-TO", "Arial", 24,
+				CCSize(winSize.width / 4, 50), kCCTextAlignmentRight);
 		CC_BREAK_IF(!pauseLabel);
 
-		CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 		pauseLabel->setPosition(
-				ccp(pauseLabel->getContentSize().width / 2,
+				ccp(
+						winSize.width - pauseLabel->getContentSize().width / 2
+								- winSize.width * 1 / 16,
 						winSize.height
 								- pauseLabel->getContentSize().height / 2));
 
@@ -42,40 +44,33 @@ bool AboutUsLayer::init() {
 		this->addChild(pauseLabel, 11);
 
 		CCArray * menuIcons = CCArray::create();
+		/*
 
-		// main menu
-		CCMenuItemImage *pMainMenu = CCMenuItemImage::create(
-				"grey/mainmenu.png", "grey/mainmenu.png", this,
-				menu_selector(AboutUsLayer::OnMenu));
-		pMainMenu->setPosition(
-				ccp(winSize.width / 5 + pMainMenu->getContentSize().width,
-						winSize.height - pMainMenu->getContentSize().height));
-		pMainMenu->setTag(1);
-		menuIcons->addObject(pMainMenu);
-
-		// close layer
-		CCMenuItemImage *pCloseLayer = CCMenuItemImage::create(
-				"grey/closeapp.png", "grey/closeapp.png", this,
-				menu_selector(AboutUsLayer::OnMenu));
-		pCloseLayer->setPosition(
-				ccp(winSize.width * 2 / 5 + pCloseLayer->getContentSize().width,
-						winSize.height - pCloseLayer->getContentSize().height));
-		pCloseLayer->setTag(2);
-		menuIcons->addObject(pCloseLayer);
+		 // close layer
+		 CCMenuItemImage *pCloseLayer = CCMenuItemImage::create(
+		 "grey/closeapp.png", "grey/closeapp.png", this,
+		 menu_selector(AboutUsLayer::OnMenu));
+		 pCloseLayer->setPosition(
+		 ccp(winSize.width * 2 / 5 + pCloseLayer->getContentSize().width,
+		 winSize.height - pCloseLayer->getContentSize().height));
+		 pCloseLayer->setTag(2);
+		 menuIcons->addObject(pCloseLayer);
+		 */
 
 		// next Button
 		CCMenuItemImage *pNextButton = CCMenuItemImage::create(
-				"grey/ic_action_back.png", "grey/ic_action_back.png", this,
+				"grey/impressum.png", "grey/impressum.png", this,
 				menu_selector(AboutUsLayer::OnMenu));
 		pNextButton->setPosition(
-				ccp(winSize.width * 3 / 5 + pMainMenu->getContentSize().width,
+				ccp(winSize.width * 3 / 5 + pNextButton->getContentSize().width,
 						winSize.height - pNextButton->getContentSize().height));
 		pNextButton->setTag(3);
 		menuIcons->addObject(pNextButton);
 
 		// Create a menu with our menu items
 		levelMenu = CCMenu::createWithArray(menuIcons);
-		levelMenu->setPosition(CCPointZero);
+		levelMenu->setPosition(ccp(30, winSize.height - 25));
+		levelMenu->alignItemsHorizontallyWithPadding(15);
 
 		// Add the menu to TestWorld layer as a child layer.
 		this->addChild(levelMenu, 11);
@@ -86,7 +81,7 @@ bool AboutUsLayer::init() {
 		layer3->setStartColor(ccc3(100, 100, 100));
 		layer3->setEndColor(ccc3(120, 120, 120));
 		layer3->setStartOpacity(255);
-		layer3->setEndOpacity(255);
+		layer3->setEndOpacity(220);
 		ccBlendFunc blend;
 		blend.src = GL_SRC_ALPHA;
 		blend.dst = GL_ONE_MINUS_SRC_ALPHA;
@@ -105,17 +100,8 @@ bool AboutUsLayer::init() {
 
 void AboutUsLayer::initButt() {
 
-	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
-
 // add Protein
-	this->pImage = CCSprite::create("1ADC.png");
-
-//scale it proportionally to 30% of the screen
-	float scale = 0.7;
-	CCSize logoSize = pImage->getContentSize();
-	HelperFunctions::resizseSprite(pImage, winSize.width * scale, 0.0);
-	pImage->setPosition(ccp(winSize.width * 1 / 3, winSize.height / 2));
-	this->addChild(pImage, 1);
+	this->getNextImage();
 }
 
 void AboutUsLayer::keyBackClicked(void) {
@@ -130,29 +116,60 @@ void AboutUsLayer::getNextImage() {
 
 	MainScreenLayer *layer;
 
+	CCLOG("NextImage  %d", posImageCounter);
+
+	std::string title;
+
 	switch (posImageCounter) {
 	case 0:
-		img = "1ADC.png";
+		title = "0";
+		img = "5PEP.png";
 		break;
 	case 1:
+		title = "1";
 		img = "1ASZ.png";
 		break;
 	case 2:
+		title = "2";
 		img = "1DGS.png";
 		break;
 	case 3:
+		title = "3";
 		img = "1OLG.png";
 		break;
 	case 4:
 		// simulate close Button clicked
 		layer = (MainScreenLayer*) this->getParent();
 		layer->keyBackClicked();
-		break;
+		return;
 	default:
 		img = "loading-bar-bg.png";
 	}
 
-	this->pImage->create(img.c_str());
+	CCLOG("Starting remove");
+	if (pImage != NULL && posImageCounter > 0) {
+		pImage->removeFromParent();
+		pTitle->removeFromParent();
+	}
+	CCLOG("Remove survided");
+
+	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+	this->pImage = CCSprite::create(img.c_str());
+
+	//scale it proportionally to 70% of the screen
+	float scale = 0.7;
+	CCSize logoSize = pImage->getContentSize();
+	HelperFunctions::resizseSprite(pImage, 0.0, winSize.height * scale);
+	pImage->setPosition(ccp(winSize.width * 1 / 3, winSize.height / 2));
+	this->addChild(pImage, 12);
+
+	this->pTitle = CCLabelTTF::create(title.c_str(), "Artial", 20,
+			CCSizeMake(winSize.width * 4 / 6, 30), kCCTextAlignmentCenter,
+			kCCVerticalTextAlignmentTop);
+	this->pTitle->setColor(ccc3(0, 0, 0));
+	this->pTitle->setPosition(
+			ccp(winSize.width * 3 / 6, winSize.height * 11 / 12));
+	this->addChild(pTitle, 12);
 
 	posImageCounter = posImageCounter + 1;
 }

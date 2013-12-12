@@ -10,7 +10,7 @@
 
 #include "cocos2d.h"
 #include "../helper/SoundEffectHelper.h"
-
+#include <string>
 
 class ImpressumLayer : public cocos2d::CCLayer {
 public:
@@ -20,8 +20,12 @@ public:
 	void DrawHUD();
 	void OnMenu(CCObject* pSender);
 	CREATE_FUNC(ImpressumLayer);
+	void getNextText();
 private:
 	cocos2d::CCMenu* levelMenu;
+	int textCounter;
+	cocos2d::CCLabelTTF * ttfDesc;
+	cocos2d::CCLabelTTF * ttfTitle;
 };
 
 #endif /* ImpressumLayer_H_ */

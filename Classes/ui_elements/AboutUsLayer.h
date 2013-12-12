@@ -30,6 +30,7 @@ private:
 	cocos2d::CCMenu* levelMenu;
 	int posImageCounter;
 	cocos2d::CCSprite* pImage;
+	cocos2d::CCLabelTTF*  pTitle;
 };
 
 #endif /* AboutUsLayer_H_ */
