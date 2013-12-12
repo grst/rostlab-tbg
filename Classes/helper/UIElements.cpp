@@ -32,7 +32,17 @@ void UIElements::runDestroyAcidEffect(cocos2d::CCLabelTTF* label) {
 
 	// Sebi: we have to add some dummy parameters otherwise it fails on Android
 	CCSequence *readySequence = CCSequence::create(actionMove, NULL, NULL);
-	label->runAction(readySequence);
+
+	//label->runAction(readySequence);
+
+	// remove from display
+
+	CCSequence* seq = CCSequence::create(actionMove,
+	                                     CCCallFunc::create(label, callfunc_selector(CCSprite::removeFromParent)),
+	                                     NULL);
+	label->runAction(seq);
+
+
 }
 
 // TODO make it run more fluently
