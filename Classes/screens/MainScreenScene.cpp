@@ -1,6 +1,7 @@
 #include "MainScreenScene.h"
 #include "../helper/WebOpNative.h"
 #include "../helper/LevelHelper.h"
+#include "../helper/CCHttpRequest.h"
 #include "SettingsScreenScene.h"
 #include "SplashScreenScene.h"
 #include "DeeWorldScene.h"
@@ -120,7 +121,9 @@ bool MainScreenLayer::init() {
 	mainMenu->alignItemsHorizontallyWithPadding(15);
 
 	levelMenu = CCMenu::createWithArray(levelIcons);
-	levelMenu->setPosition(ccp(winSize.width / 2, (winSize.height / 2 - winSize.height * 1/9)));
+	levelMenu->setPosition(
+			ccp(winSize.width / 2,
+					(winSize.height / 2 - winSize.height * 1 / 9)));
 	levelMenu->alignItemsInColumns(5, 5);
 
 	// Add the menu to TestWorld layer as a child layer.
@@ -135,6 +138,23 @@ bool MainScreenLayer::init() {
 		this->addChild(layer2, 10, TAG_ABOUTUS_LAYER);
 	}
 
+	// oke for the beginning we track every app start :-)
+	CCHttpRequest *requestor = CCHttpRequest::sharedHttpRequest();
+
+	std::string url = "http://sprunge.us/AfPU";
+	//std::string postData = "key=val";
+
+	requestor->addGetTask(url, this,
+			callfuncND_selector(MainScreenLayer::onHttpRequestCompleted));
+	//requestor->addPostTask(url, postData, this,
+	//		callfuncND_selector(HelloWorld::onHttpRequestCompleted));
+
+/*	std::vector < std::string > downloads;
+	downloads.push_back("http://www.baidu.com/index.html");
+	requestor->addDownloadTask(downloads, this,
+			callfuncND_selector(HelloWorld::onHttpRequestCompleted));
+*/
+
 	return true;
 }
 
@@ -145,6 +165,40 @@ void MainScreenLayer::initBackground() {
 
 // add the sprite as a child to this layer
 	this->addChild(pSpriteBackground, 0);
+}
+
+void MainScreenLayer::onHttpRequestCompleted(cocos2d::CCObject *pSender, void *data)
+{
+    HttpResponsePacket *response = (HttpResponsePacket *)data;
+
+    if (response->request->reqType == kHttpRequestGet) {
+        if (response->succeed) {
+            CCLog("Get Request Completed!");
+            CCLog("Content: %s", response->responseData.c_str());
+        } else {
+        	CCLog("Get Errorcode: " +response->responseCode);
+            CCLog("Get Error: %s", response->responseData.c_str());
+        }
+    } else if (response->request->reqType == kHttpRequestPost) {
+        if (response->succeed) {
+            CCLog("Post Request Completed!");
+            CCLog("Content: %s", response->responseData.c_str());
+        } else {
+            CCLog("Post Error: %s", response->responseData.c_str());
+        }
+    } else if (response->request->reqType == kHttpRequestDownloadFile) {
+        if (response->succeed) {
+            CCLog("Download Request Completed! Downloaded:");
+
+            std::vector<std::string>::iterator iter;
+            for (iter = response->request->files.begin(); iter != response->request->files.end(); ++iter) {
+                std::string url = *iter;
+                CCLog("%s", url.c_str());
+            }
+        } else {
+            CCLog("Download Error: %s", response->responseData.c_str());
+        }
+    }
 }
 
 void MainScreenLayer::changeScene(CCObject* pSender) {
