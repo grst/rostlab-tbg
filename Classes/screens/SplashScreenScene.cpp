@@ -47,14 +47,12 @@ bool SplashScreenLayer::init() {
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
 	// add "SplashScreen" splash screen"
-	CCSprite* pSpriteBackground = CCSprite::create(
-			"splashscreen-vert.png");
+	CCSprite* pSpriteBackground = CCSprite::create("splashscreen-vert.png");
 
-    HelperFunctions::fitBackground(pSpriteBackground);
+	HelperFunctions::fitBackground(pSpriteBackground);
 
 	// add the sprite as a child to this layer
 	this->addChild(pSpriteBackground, 0);
-
 
 	// set a delay for two seconds
 	this->runAction(
@@ -66,12 +64,19 @@ bool SplashScreenLayer::init() {
 }
 
 void SplashScreenLayer::startGame() {
-    //start Game
-    CCScene *pScene = MainScreenScene::create();
-    CCDirector::sharedDirector()->replaceScene(
-    		CCTransitionMoveInT::create(1.0f, pScene));
+	if (start) {
+		//start Game
+		CCScene *pScene = MainScreenScene::create();
+		CCDirector::sharedDirector()->replaceScene(
+				CCTransitionMoveInT::create(0.7f, pScene));
+	} else {
+		// end Game
+		CCDirector::sharedDirector()->end();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+		exit(0);
+#endif
+	}
 }
-
 
 SplashScreenLayer::~SplashScreenLayer() {
 	if (_label) {
