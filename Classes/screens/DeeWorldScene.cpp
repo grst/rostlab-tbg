@@ -704,8 +704,7 @@ void DeeWorld::BeginContact(b2Contact *contact) {
 
 			// if a target collides with a wall, we want to remove it with a certain probability
 			if (toRemove != NULL) {
-				if (HelperFunctions::randomValueBetween(0, this->getAARemProb())
-						< 1) {
+				if (HelperFunctions::nowInMilliSeconds() - toRemove->getCreatedTime() > LevelHelper::getTimeToLive(level)) {
 					toRemove->flagForDelete();
 				}
 			}

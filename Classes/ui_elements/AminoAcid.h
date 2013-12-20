@@ -15,10 +15,12 @@ private:
 	// ISO C++ forbids in-class initialization of non-static member
     bool toDelete;
     char type;
+    long created; //timestamp
 public:
     char getType();
     static AminoAcid* createRandom();
     static AminoAcid* create(char type);
+    long getCreatedTime();
     void flagForDelete();
     bool isFlaggedForDelete();
 };
