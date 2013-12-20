@@ -29,6 +29,7 @@ public:
 	static char getRandomAminoAcid();
 	static int getScoreForAminoAcid(char c, char d);
 	static int getAcidInt(char c);
+    static char getIntAcid(int i);
     static ccColor3B getAcidColor(char c);
     static float getRelativeScaleFactor(char c);
     static b2Vec2* getVerticeData(char c, float scaleRatio);

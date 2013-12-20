@@ -81,6 +81,7 @@ bool DeeWorld::init() {
 	gameEnded = false;
 	cocos2d::CCLog("Hello World. App ist starting now");
 	AAcounter = 0;
+    acidCounter = new AcidCounter();
 
 	initBackground();
 	initBox2D();
@@ -460,12 +461,26 @@ int DeeWorld::detectCorner() {
 }
 
 /**
- * adds a target to the game (RANDIMLY chosen)
+ * adds a random target to the game
+ */
+void DeeWorld::addTarget() {
+    char targetToAdd = getCurrentAminoAcid();
+    char c;
+    if(acidCounter->hasAcid(targetToAdd)) {
+        c = MatrixHelper::getRandomAminoAcid();
+    } else {
+        c = targetToAdd;
+    }
+    addTarget(c);
+}
+
+/**
+ * adds a target to the game
  * creates the box2d body and the corresponding sprite
  * TODO: let the target drop into the screen from a random corner and start movement
  */
-void DeeWorld::addTarget() {
-	AminoAcid *sTarget = AminoAcid::createRandom();
+void DeeWorld::addTarget(char c) {
+	AminoAcid *sTarget = AminoAcid::create(c);
 	CCLog("Adding Target called: %c ", +sTarget->getType());
 	sTarget->setScale(MatrixHelper::getRelativeScaleFactor(sTarget->getType()));
 	//Place target in a randomly picked corner.
@@ -505,6 +520,7 @@ void DeeWorld::addTarget() {
 
 	AAcounter++;
 	this->addChild(sTarget);
+    acidCounter->incCounter(c);
 
 	//Temp: static polygon
 	//TODO: put in MatrixHelperClass or read from file
@@ -832,6 +848,7 @@ void DeeWorld::tick(float delta) {
 				AminoAcid* aSprite = dynamic_cast<AminoAcid*>(sprite);
 				if (aSprite != 0) {
 				/*	if (aSprite->isFlaggedForDelete()) {
+                        acidCounter->decCounter(aSprite->getType());
 						AAcounter--;
 						_b2dWorld->DestroyBody(b);
 						this->removeChild(aSprite, true);
@@ -866,6 +883,7 @@ void DeeWorld::tick(float delta) {
 				sprite->setRotation(-1 * CC_RADIANS_TO_DEGREES(b->GetAngle()));
 			}
 		}
+        
 		//if (isAminoAcidRemaining()) {
 		//add aminoAcids, if neccessary
 		while (AAcounter < this->getMinAA()) {
@@ -1080,19 +1098,36 @@ void DeeWorld::gameEnd() {
 			CCTransitionMoveInB::create(1.0f, pScene));
 }
 
+/**
+ * get the fourth amino Acid of the sequence in order to add it to the "pipeline"
+ */
 char DeeWorld::getNextAminoAcid() {
+	return popAcidFront();
+}
 
-	char end = '0';
+char DeeWorld::getCurrentAminoAcid() {
+    char end = '0';
+	if (this->doneSequence.size() > 2) {
+        return this->doneSequence.at(this->doneSequence.size() - 3);
+    }
+    return end;
+}
+
+/**
+ * removes and returns the first acid from the aminoSequence
+ */
+char DeeWorld::popAcidFront() {
+    char front = '0';
 	if (this->aminoSequence.size() > 0) {
-		end = this->aminoSequence[0];
-		this->aminoSequence = this->aminoSequence.erase(0, 1);
+		front = this->aminoSequence[0];
+        this->aminoSequence = this->aminoSequence.erase(0, 1);
+        this->doneSequence.append(&front);
 	}
-	CCLog("Next Acid is %c", end);
-	return end;
+	return front;
 }
 
 bool DeeWorld::isAminoAcidRemaining() {
-	if (this->aminoSequence.size() > 0) {
+	if (this->aminoSequence.size() > 3) {
 		return true;
 	}
 	return false;

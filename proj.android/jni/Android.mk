@@ -22,6 +22,7 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/ui_elements/cc-extensions/CCSlider.cpp \
                    ../../Classes/ui_elements/SlidingMenu.cpp \
                    ../../Classes/ui_elements/cc-extensions/CCRadioMenu.cpp \
+                   ../../Classes/helper/AcidCounter.cpp  \
                    ../../Classes/helper/CCHttpRequest.cpp  \
                    ../../Classes/helper/DebugDraw.cpp  \
                    ../../Classes/helper/MatrixHelper.cpp  \

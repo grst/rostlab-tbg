@@ -472,7 +472,11 @@ int MatrixHelper::getVerticeNum(char c) {
 }
 
 char MatrixHelper::getRandomAminoAcid() {
-	int i = arc4random() % 20;
+    int i = arc4random() % 20;
+    return getIntAcid(i);
+}
+
+char MatrixHelper::getIntAcid(int i) {
 	char a;
 	switch (i) {
 	case 0:

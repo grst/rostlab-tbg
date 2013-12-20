@@ -25,21 +25,19 @@ bool MainScreenScene::init() {
 		this->_layer->retain();
 		this->addChild(_layer);
 
-        
-        // load a user selected matrix - default is BLOSUM62.txt
-        std::string matrix =
-        cocos2d::CCUserDefault::sharedUserDefault()->getStringForKey(
-                                                                     "matrix", "BLOSUM62.txt");
-        
-        if (matrix.size() == 0) {
-            matrix = "BLOSUM62.txt";
-        }
-        
-        cocos2d::CCLog("Matrix %s loaded", matrix.c_str());
-        
-        //load the scoring matrix
-        MatrixHelper::loadMatrix(matrix);
+		// load a user selected matrix - default is BLOSUM62.txt
+		std::string matrix =
+				cocos2d::CCUserDefault::sharedUserDefault()->getStringForKey(
+						"matrix", "BLOSUM62.txt");
 
+		if (matrix.size() == 0) {
+			matrix = "BLOSUM62.txt";
+		}
+
+		cocos2d::CCLog("Matrix %s loaded", matrix.c_str());
+
+		//load the scoring matrix
+		MatrixHelper::loadMatrix(matrix);
 
 		//TouchTrailLayer * layer2 = TouchTrailLayer::create();
 		//this->addChild(layer2);
@@ -92,27 +90,23 @@ bool MainScreenLayer::init() {
 
 		std: string path = LevelHelper::getPathForLevel(i);
 
-
-		 CCMenuItemImage *levelItem = CCMenuItemImage::create("transparent.png",
-		 path.c_str(), this,
-		 menu_selector(MainScreenLayer::menuStartGameCallback));
-
-
-		 /*
-		CCTexture2D *tex = new CCTexture2D;
-		tex->initWithData(NULL, kCCTexture2DPixelFormat_RGB5A1, 200, 200, CCSize(200,200));
-		CCSprite* spr = CCSprite::createWithTexture(tex);
-		CCSprite* selspr =CCSprite::createWithTexture(tex);
-		CCSprite* dis = CCSprite::createWithTexture(tex);
-*/
+		CCMenuItemImage *levelItem = CCMenuItemImage::create("transparent.png",
+				path.c_str(), this,
+				menu_selector(MainScreenLayer::menuStartGameCallback));
 
 		/*
-		CCMenuItemSprite * levelItem = CCMenuItemSprite::create(this, spr,
-				selspr, dis,
-				menu_selector(MainScreenLayer::menuStartGameCallback));
-	*/
+		 CCTexture2D *tex = new CCTexture2D;
+		 tex->initWithData(NULL, kCCTexture2DPixelFormat_RGB5A1, 200, 200, CCSize(200,200));
+		 CCSprite* spr = CCSprite::createWithTexture(tex);
+		 CCSprite* selspr =CCSprite::createWithTexture(tex);
+		 CCSprite* dis = CCSprite::createWithTexture(tex);
+		 */
 
-
+		/*
+		 CCMenuItemSprite * levelItem = CCMenuItemSprite::create(this, spr,
+		 selspr, dis,
+		 menu_selector(MainScreenLayer::menuStartGameCallback));
+		 */
 
 		levelItem->setTag(i);
 
@@ -127,8 +121,9 @@ bool MainScreenLayer::init() {
 		float scale = 1;
 		spriteAA->setScale(scale);
 
-
-		spriteAA->setPosition(ccp(levelItem->getContentSize().height/2, levelItem->getContentSize().width/2));
+		spriteAA->setPosition(
+				ccp(levelItem->getContentSize().height / 2,
+						levelItem->getContentSize().width / 2));
 
 		//levelItem->setContentSize(spriteAA->getContentSize());
 		levelItem->addChild(spriteAA);
@@ -140,11 +135,12 @@ bool MainScreenLayer::init() {
 				CCSize(levelItem->getContentSize().width, 20),
 				kCCTextAlignmentCenter);
 
-		strLevelPID->setPosition(ccp( levelItem->getContentSize().width/2, -20));
+		strLevelPID->setPosition(
+				ccp(levelItem->getContentSize().width / 2, -20));
 		levelItem->addChild(strLevelPID);
 
 		CCSprite * spriteStar = CCSprite::create("stars-w0.png");
-		spriteStar->setPosition(ccp(levelItem->getContentSize().width/2, 0));
+		spriteStar->setPosition(ccp(levelItem->getContentSize().width / 2, 0));
 		levelItem->addChild(spriteStar);
 
 		levelIcons->addObject(levelItem);
@@ -363,10 +359,17 @@ void MainScreenLayer::menuStartGameCallback(CCObject* pSender) {
 
 //SoundEffectHelper::stopBackgroundMusic();
 
+	CCFiniteTimeAction* actionMove = CCScaleBy::create(1.0, 2.5);
+
+	// Sebi: we have to add some dummy parameters otherwise it fails on Android
+	CCSequence *readySequence = CCSequence::create(actionMove, NULL, NULL);
+
+	pMenuItem->runAction(readySequence);
+
 //transition to next scene for one sec
-	/*	CCDirector::sharedDirector()->replaceScene(
-	 CCTransitionMoveInB::create(0.7f, pScene));
-	 */
+	CCDirector::sharedDirector()->replaceScene(
+			CCTransitionMoveInB::create(0.7f, pScene));
+
 }
 
 void MainScreenLayer::keyBackClicked(void) {

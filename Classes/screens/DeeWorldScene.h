@@ -18,6 +18,7 @@
 #include "../ui_elements/BoardAcid.h"
 #include "../ui_elements/cc-extensions/CCBlade.h"
 #include "../box2d/ContactListener.h"
+#include "../helper/AcidCounter.h"
 
 
 class DeeWorld: public cocos2d::CCLayerColor, public b2ContactListener {
@@ -42,6 +43,8 @@ public:
 
 	void gameLogic(float dt);
     char getNextAminoAcid();
+    char getCurrentAminoAcid();
+    char popAcidFront();
     void gameEnd();
     
     int getEdge(CCSprite* wall);
@@ -79,7 +82,7 @@ protected:
     //the walls around the screen
     b2Fixture *left, *top, *right, *bottom;
 
-
+    void addTarget(char c);
 	void addTarget();
 
 private:
@@ -127,6 +130,8 @@ private:
 	double startTime;
 	long lastAminoHitTime;
 	std::string aminoSequence;
+    std::string doneSequence;
+    AcidCounter * acidCounter;
 	bool isAminoAcidRemaining();
 	bool pausedGame;
 	bool startTimer;
