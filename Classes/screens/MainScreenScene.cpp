@@ -2,6 +2,7 @@
 #include "../helper/WebOpNative.h"
 #include "../helper/LevelHelper.h"
 #include "../helper/CCHttpRequest.h"
+#include "../helper/MatrixHelper.h"
 #include "SettingsScreenScene.h"
 #include "SplashScreenScene.h"
 #include "DeeWorldScene.h"
@@ -22,6 +23,21 @@ bool MainScreenScene::init() {
 		this->_layer = MainScreenLayer::create();
 		this->_layer->retain();
 		this->addChild(_layer);
+        
+        // load a user selected matrix - default is BLOSUM62.txt
+        std::string matrix =
+        cocos2d::CCUserDefault::sharedUserDefault()->getStringForKey(
+                                                                     "matrix", "BLOSUM62.txt");
+        
+        if (matrix.size() == 0) {
+            matrix = "BLOSUM62.txt";
+        }
+        
+        cocos2d::CCLog("Matrix %s loaded", matrix.c_str());
+        
+        //load the scoring matrix
+        MatrixHelper::loadMatrix(matrix);
+
 
 		//TouchTrailLayer * layer2 = TouchTrailLayer::create();
 		//this->addChild(layer2);
@@ -72,7 +88,7 @@ bool MainScreenLayer::init() {
 
 	for (int i = 0; i < levels; i++) {
 
-		std: string path = "small/" + LevelHelper::getPathForLevel(i);
+		std: string path = "" + LevelHelper::getPathForLevel(i);
 
 		CCMenuItemImage *levelItem = CCMenuItemImage::create(path.c_str(),
 				path.c_str(), this,

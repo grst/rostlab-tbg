@@ -8,6 +8,8 @@
 #include "MatrixHelper.h"
 #include "HelperFunctions.h"
 
+USING_NS_CC;
+
 int ** MatrixHelper::scoringMatrix = new int*[20];
 bool MatrixHelper::firstTime = false;
 
@@ -542,6 +544,7 @@ char MatrixHelper::getRandomAminoAcid() {
 }
 
 int MatrixHelper::getScoreForAminoAcid(char c, char d) {
+    CCLog("getScore %c, %c", c, d);
 	int i = MatrixHelper::getAcidInt(c);
 	int j = MatrixHelper::getAcidInt(d);
 	if (j >= 0 && j <= 19 && i >= 0 && i <= 19) {

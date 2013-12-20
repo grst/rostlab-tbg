@@ -115,7 +115,7 @@ void LevelLoadingLayer::addLabels() {
 	std::string strScore =
 			static_cast<std::ostringstream*>(&(std::ostringstream() << score))->str();
 
-	std::string seqLevel = "Highscore: " + strScore+ "/1000";
+	std::string seqLevel = "Highscore: " + strScore+ "/" + static_cast<std::ostringstream*>(&(std::ostringstream() << LevelHelper::getHighscoreForLevel(this->level)))->str();
 	this->scoreLabel = CCLabelTTF::create(seqLevel.c_str(), "Artial", 18,
 			CCSizeMake(winSize.width * 3 / 6, 30), kCCTextAlignmentRight,
 			kCCVerticalTextAlignmentTop);

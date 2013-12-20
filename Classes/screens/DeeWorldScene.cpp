@@ -92,19 +92,6 @@ bool DeeWorld::init() {
 	initWorld();
 	initPlayer();
 
-	// load a user selected matrix - default is BLOSUM62.txt
-	std::string matrix =
-			cocos2d::CCUserDefault::sharedUserDefault()->getStringForKey(
-					"matrix", "BLOSUM62.txt");
-
-	if (matrix.size() == 0) {
-		matrix = "BLOSUM62.txt";
-	}
-
-	cocos2d::CCLog("Matrix %s loaded", matrix.c_str());
-
-	//load the scoring matrix
-	MatrixHelper::loadMatrix(matrix);
 
 	// enable Android back button
 	this->setKeypadEnabled(true);
