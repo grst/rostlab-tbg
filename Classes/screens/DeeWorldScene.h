@@ -99,7 +99,7 @@ private:
     int getMinAA();
     int getMaxAA();
     int getAAAddProb();
-    int getAARemProb();
+    int getOtherAAProp();
 
     bool gameEnded;
 

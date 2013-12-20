@@ -23,8 +23,9 @@ public:
 	static int getMaxSpeed(int level);
 	static int getMinAA(int level);
 	static int getMaxAA(int level);
-	static int getAARemProb(int level);
+	static int getOtherAAProp(int level);
 	static int getAAAddProb(int level);
+    static int getSequenceLength(int level);
 
 };
 

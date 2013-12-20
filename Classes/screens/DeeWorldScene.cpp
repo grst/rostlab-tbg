@@ -467,8 +467,8 @@ void DeeWorld::addTarget() {
     char targetToAdd = getCurrentAminoAcid();
     CCLog("Failig AA %c || test:A = %c", targetToAdd, 'A');
     char c;
-    if(acidCounter->hasAcid(targetToAdd)) {
-    	CCLog("Found AA in MatrixHelper");
+    if(acidCounter->hasAcid(targetToAdd) ||
+       HelperFunctions::randomValueBetween(0, this->getOtherAAProp()) > 1) {
         c = MatrixHelper::getRandomAminoAcid();
     } else {
     	CCLog("Did not Found AA in MatrixHelper");
@@ -483,12 +483,6 @@ void DeeWorld::addTarget() {
  * TODO: let the target drop into the screen from a random corner and start movement
  */
 void DeeWorld::addTarget(char c) {
-
-	if(MatrixHelper::getAcidInt(c) < 0){
-		CCLog("AA %c not valid", c);
-		return;
-	}
-
 	AminoAcid *sTarget = AminoAcid::create(c);
 	CCLog("Adding Target called: %c ", +sTarget->getType());
 	sTarget->setScale(MatrixHelper::getRelativeScaleFactor(sTarget->getType()));
@@ -628,8 +622,10 @@ void DeeWorld::ccTouchesMoved(cocos2d::CCSet* touches,
 	}
 
 	CCPoint pt = touch->getLocationInView();
-	float y = tempHeight - pt.y;
-	player->SetTransform(b2Vec2(pt.x / PTM_RATIO, y / PTM_RATIO), 0);
+    if(pt.y < 50 && (pt.x < 167 || pt.x > 313)) {
+        pt.y = 50;
+    }
+	player->SetTransform(b2Vec2(pt.x / PTM_RATIO, (tempHeight - pt.y) / PTM_RATIO), 0);
 
 	for (CCSetIterator it = touches->begin(); it != touches->end(); it++) {
 		CCTouch *touch = (CCTouch *) *it;
@@ -1190,9 +1186,9 @@ int DeeWorld::getMaxAA() {
 	return LevelHelper::getMaxAA(level);
 }
 
-int DeeWorld::getAARemProb() {
+int DeeWorld::getOtherAAProp() {
 	// TODO: add some code to speed up during game
-	return LevelHelper::getAARemProb(level);
+	return LevelHelper::getOtherAAProp(level);
 }
 
 int DeeWorld::getAAAddProb() {
