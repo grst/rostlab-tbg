@@ -41,7 +41,7 @@ bool PauseLayer::init()
         CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 		this->setTouchEnabled(true);
 
-		CCLabelTTF* pauseLabel = CCLabelTTF::create("Game paused", "Arial", 24);
+		CCLabelTTF* pauseLabel = CCLabelTTF::create("Game paused", "carrois", 24);
         pauseLabel->setPosition(ccp(winSize.width/2, winSize.height - 30));
 		CC_BREAK_IF(! pauseLabel);
 

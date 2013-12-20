@@ -29,7 +29,7 @@ bool AboutUsLayer::init() {
 		CC_BREAK_IF(!CCLayer::init());
 		this->setTouchEnabled(true);
 		CCSize winSize = CCDirector::sharedDirector()->getWinSize();
-		CCLabelTTF* pauseLabel = CCLabelTTF::create("HOW-TO", "Arial", 24,
+		CCLabelTTF* pauseLabel = CCLabelTTF::create("HOW-TO", "carrois", 24,
 				CCSize(winSize.width / 4, 50), kCCTextAlignmentRight);
 		CC_BREAK_IF(!pauseLabel);
 
@@ -163,7 +163,7 @@ void AboutUsLayer::getNextImage() {
 	pImage->setPosition(ccp(winSize.width * 1 / 3, winSize.height / 2));
 	this->addChild(pImage, 12);
 
-	this->pTitle = CCLabelTTF::create(title.c_str(), "Artial", 20,
+	this->pTitle = CCLabelTTF::create(title.c_str(), "carrois", 20,
 			CCSizeMake(winSize.width * 4 / 6, 30), kCCTextAlignmentCenter,
 			kCCVerticalTextAlignmentTop);
 	this->pTitle->setColor(ccc3(0, 0, 0));

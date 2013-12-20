@@ -51,7 +51,7 @@ bool SettingsScreenLayer::init() {
 	// add the sprite as a child to this layer
 	this->addChild(pSpriteBackground, 0);
 
-	this->_label = CCLabelTTF::create("", "Arial", 32);
+	this->_label = CCLabelTTF::create("", "carrois", 32);
 	_label->retain();
 	_label->setColor(ccc3(0, 0, 0));
 	_label->setPosition(ccp(winSize.width / 2, winSize.height / 2));
@@ -166,7 +166,7 @@ void SettingsScreenLayer::showCurrentMatrix() {
 	}
 
 	std::string strMatrix = "Sel. Matrix: " + matrix;
-	CCLabelTTF* pauseLabel = CCLabelTTF::create(strMatrix.c_str(), "Arial", 24);
+	CCLabelTTF* pauseLabel = CCLabelTTF::create(strMatrix.c_str(), "carrois", 24);
 
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 	pauseLabel->setPosition(

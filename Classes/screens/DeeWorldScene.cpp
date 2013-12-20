@@ -333,7 +333,7 @@ void DeeWorld::initInfoUI() {
 	CCLog("setting score");
 	//score
 	// int -> str
-	this->_scoreLabel = CCLabelTTF::create("Score: 0", "Helvetica", 24,
+	this->_scoreLabel = CCLabelTTF::create("Score: 0", "carrois", 24,
 			CCSizeMake(150, 30), kCCTextAlignmentRight);
 	this->_scoreLabel->retain();
 	this->_scoreLabel->setPosition(
@@ -358,7 +358,7 @@ void DeeWorld::showCountdown(int time) {
 	timer = time;
 
 	CCSize layerSize = this->getContentSize();
-	this->_timerLabel = CCLabelTTF::create("", "Helvetica",
+	this->_timerLabel = CCLabelTTF::create("", "carrois",
 			layerSize.height * 2 / 3, layerSize, kCCTextAlignmentCenter);
 	this->_timerLabel->retain();
 	this->_timerLabel->setPosition(

@@ -131,7 +131,7 @@ bool MainScreenLayer::init() {
 				spriteAA->getContentSize().width);
 
 		CCLabelTTF* strLevelPID = CCLabelTTF::create(
-				LevelHelper::getCodeForLevel(i).c_str(), "Arial", 14,
+				LevelHelper::getCodeForLevel(i).c_str(), "carrois", 14,
 				CCSize(levelItem->getContentSize().width, 20),
 				kCCTextAlignmentCenter);
 
