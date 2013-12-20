@@ -91,7 +91,7 @@ bool MainScreenLayer::init() {
 		std: string path = LevelHelper::getPathForLevel(i);
 
 		CCMenuItemImage *levelItem = CCMenuItemImage::create("transparent.png",
-				path.c_str(), this,
+				path.c_str()   , this,
 				menu_selector(MainScreenLayer::menuStartGameCallback));
 
 		/*

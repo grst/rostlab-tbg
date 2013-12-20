@@ -130,7 +130,7 @@ private:
 	double startTime;
 	long lastAminoHitTime;
 	std::string aminoSequence;
-    std::string doneSequence;
+    std::vector<char> doneSequence;
     AcidCounter * acidCounter;
 	bool isAminoAcidRemaining();
 	bool pausedGame;

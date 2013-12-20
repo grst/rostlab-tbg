@@ -465,10 +465,13 @@ int DeeWorld::detectCorner() {
  */
 void DeeWorld::addTarget() {
     char targetToAdd = getCurrentAminoAcid();
+    CCLog("Failig AA %c || test:A = %c", targetToAdd, 'A');
     char c;
     if(acidCounter->hasAcid(targetToAdd)) {
+    	CCLog("Found AA in MatrixHelper");
         c = MatrixHelper::getRandomAminoAcid();
     } else {
+    	CCLog("Did not Found AA in MatrixHelper");
         c = targetToAdd;
     }
     addTarget(c);
@@ -480,6 +483,12 @@ void DeeWorld::addTarget() {
  * TODO: let the target drop into the screen from a random corner and start movement
  */
 void DeeWorld::addTarget(char c) {
+
+	if(MatrixHelper::getAcidInt(c) < 0){
+		CCLog("AA %c not valid", c);
+		return;
+	}
+
 	AminoAcid *sTarget = AminoAcid::create(c);
 	CCLog("Adding Target called: %c ", +sTarget->getType());
 	sTarget->setScale(MatrixHelper::getRelativeScaleFactor(sTarget->getType()));
@@ -847,14 +856,14 @@ void DeeWorld::tick(float delta) {
 				//amino-Acid-specific-actions
 				AminoAcid* aSprite = dynamic_cast<AminoAcid*>(sprite);
 				if (aSprite != 0) {
-				/*	if (aSprite->isFlaggedForDelete()) {
+					if (aSprite->isFlaggedForDelete()) {
                         acidCounter->decCounter(aSprite->getType());
 						AAcounter--;
 						_b2dWorld->DestroyBody(b);
 						this->removeChild(aSprite, true);
 						continue;
 					}
-					*/
+
 
 					//update velocity to be within MIN_SPEED and MAX_SPEED
 					//TODO: accelearte gradually (?)
@@ -1107,6 +1116,9 @@ char DeeWorld::getNextAminoAcid() {
 
 char DeeWorld::getCurrentAminoAcid() {
     char end = '0';
+    for(int i=0; i++; i <3){
+    	CCLog("Current: %c", doneSequence[i]);
+    }
 	if (this->doneSequence.size() > 2) {
         return this->doneSequence.at(this->doneSequence.size() - 3);
     }
@@ -1121,7 +1133,7 @@ char DeeWorld::popAcidFront() {
 	if (this->aminoSequence.size() > 0) {
 		front = this->aminoSequence[0];
         this->aminoSequence = this->aminoSequence.erase(0, 1);
-        this->doneSequence.append(&front);
+        this->doneSequence.push_back(front);
 	}
 	return front;
 }
