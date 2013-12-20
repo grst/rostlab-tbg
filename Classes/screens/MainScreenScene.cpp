@@ -9,6 +9,7 @@
 #include "../ui_elements/cc-extensions/TouchTrailLayer.h"
 #include "../ui_elements/ImpressumLayer.h"
 #include "../ui_elements/AboutUsLayer.h"
+#include "../ui_elements/SlidingMenu.h"
 
 using namespace cocos2d;
 
@@ -72,13 +73,62 @@ bool MainScreenLayer::init() {
 
 	for (int i = 0; i < levels; i++) {
 
-		std: string path = "small/" + LevelHelper::getPathForLevel(i);
+		std: string path = LevelHelper::getPathForLevel(i);
 
-		CCMenuItemImage *levelItem = CCMenuItemImage::create(path.c_str(),
-				path.c_str(), this,
+
+		 CCMenuItemImage *levelItem = CCMenuItemImage::create("transparent.png",
+		 path.c_str(), this,
+		 menu_selector(MainScreenLayer::menuStartGameCallback));
+
+
+		 /*
+		CCTexture2D *tex = new CCTexture2D;
+		tex->initWithData(NULL, kCCTexture2DPixelFormat_RGB5A1, 200, 200, CCSize(200,200));
+		CCSprite* spr = CCSprite::createWithTexture(tex);
+		CCSprite* selspr =CCSprite::createWithTexture(tex);
+		CCSprite* dis = CCSprite::createWithTexture(tex);
+*/
+
+		/*
+		CCMenuItemSprite * levelItem = CCMenuItemSprite::create(this, spr,
+				selspr, dis,
 				menu_selector(MainScreenLayer::menuStartGameCallback));
+	*/
+
+
 
 		levelItem->setTag(i);
+
+		levelItem->setContentSize(CCSize(100, 100));
+
+		//	levelItem->setContentSize(CCSize(100,100));
+
+		// levelItem->setScale(0.5);
+
+		// add AA
+		CCSprite * spriteAA = CCSprite::create(path.c_str());
+		float scale = 1;
+		spriteAA->setScale(scale);
+
+
+		spriteAA->setPosition(ccp(levelItem->getContentSize().height/2, levelItem->getContentSize().width/2));
+
+		//levelItem->setContentSize(spriteAA->getContentSize());
+		levelItem->addChild(spriteAA);
+		CCLog("Width: %f, Height: %f", spriteAA->getContentSize().height,
+				spriteAA->getContentSize().width);
+
+		CCLabelTTF* strLevelPID = CCLabelTTF::create(
+				LevelHelper::getCodeForLevel(i).c_str(), "Arial", 14,
+				CCSize(levelItem->getContentSize().width, 20),
+				kCCTextAlignmentCenter);
+
+		strLevelPID->setPosition(ccp( levelItem->getContentSize().width/2, -20));
+		levelItem->addChild(strLevelPID);
+
+		CCSprite * spriteStar = CCSprite::create("stars-w0.png");
+		spriteStar->setPosition(ccp(levelItem->getContentSize().width/2, 0));
+		levelItem->addChild(spriteStar);
 
 		levelIcons->addObject(levelItem);
 	}
@@ -120,15 +170,41 @@ bool MainScreenLayer::init() {
 	mainMenu->setPosition(ccp(100, winSize.height - 25));
 	mainMenu->alignItemsHorizontallyWithPadding(15);
 
-	levelMenu = CCMenu::createWithArray(levelIcons);
-	levelMenu->setPosition(
-			ccp(winSize.width / 2,
-					(winSize.height / 2 - winSize.height * 1 / 9)));
-	levelMenu->alignItemsInColumns(5, 5);
+	/*
+	 levelMenu = CCMenu::createWithArray(levelIcons);
+	 levelMenu->setPosition(
+	 ccp(winSize.width / 2,
+	 (winSize.height / 2 - winSize.height * 1 / 9)));
+	 levelMenu->alignItemsInColumns(5, 5);
+	 */
+
+	int row = 1;
+	int col = 3;
+	// padding
+	CCPoint p = ccp(150, 100);
+	CCSize windowSize =
+			CCDirector::sharedDirector()->getOpenGLView()->getDesignResolutionSize();
+
+	//some trick to center menu
+	float w = 0;
+	float h = 0;
+	float eWidth = (col - 1) * (w + p.x);
+	float eHeight = (row - 1) * (h + p.y);
+
+	CCPoint menuPosition = ccp(windowSize.width / 2.0f - eWidth / 2.0f,
+			windowSize.height / 2.0f - eHeight / 2.0f);
+
+	// create Menu for icons
+	SlidingMenuGrid* sliderMenu = SlidingMenuGrid::menuWithArray(levelIcons,
+			col, row, menuPosition, p);
+
+	sliderMenu->setAnchorPoint(ccp(0.5, 3 / 9));
+
+	//    sliderMenu->setPosition(100,100);
 
 	// Add the menu to TestWorld layer as a child layer.
 	this->addChild(mainMenu, 1);
-	this->addChild(levelMenu, 1);
+	this->addChild(sliderMenu, 1);
 
 	SoundEffectHelper::playMainMenuBackgroundMusic();
 
@@ -139,21 +215,21 @@ bool MainScreenLayer::init() {
 	}
 
 	// oke for the beginning we track every app start :-)
-	CCHttpRequest *requestor = CCHttpRequest::sharedHttpRequest();
+	//CCHttpRequest *requestor = CCHttpRequest::sharedHttpRequest();
 
-	std::string url = "http://sprunge.us/AfPU";
+	//std::string url = "http://sprunge.us/AfPU";
 	//std::string postData = "key=val";
 
-	requestor->addGetTask(url, this,
-			callfuncND_selector(MainScreenLayer::onHttpRequestCompleted));
+	//requestor->addGetTask(url, this,			callfuncND_selector(MainScreenLayer::onHttpRequestCompleted));
+
 	//requestor->addPostTask(url, postData, this,
 	//		callfuncND_selector(HelloWorld::onHttpRequestCompleted));
 
-/*	std::vector < std::string > downloads;
-	downloads.push_back("http://www.baidu.com/index.html");
-	requestor->addDownloadTask(downloads, this,
-			callfuncND_selector(HelloWorld::onHttpRequestCompleted));
-*/
+	/*	std::vector < std::string > downloads;
+	 downloads.push_back("http://www.baidu.com/index.html");
+	 requestor->addDownloadTask(downloads, this,
+	 callfuncND_selector(HelloWorld::onHttpRequestCompleted));
+	 */
 
 	return true;
 }
@@ -167,38 +243,39 @@ void MainScreenLayer::initBackground() {
 	this->addChild(pSpriteBackground, 0);
 }
 
-void MainScreenLayer::onHttpRequestCompleted(cocos2d::CCObject *pSender, void *data)
-{
-    HttpResponsePacket *response = (HttpResponsePacket *)data;
+void MainScreenLayer::onHttpRequestCompleted(cocos2d::CCObject *pSender,
+		void *data) {
+	HttpResponsePacket *response = (HttpResponsePacket *) data;
 
-    if (response->request->reqType == kHttpRequestGet) {
-        if (response->succeed) {
-            CCLog("Get Request Completed!");
-            CCLog("Content: %s", response->responseData.c_str());
-        } else {
-        	CCLog("Get Errorcode: " +response->responseCode);
-            CCLog("Get Error: %s", response->responseData.c_str());
-        }
-    } else if (response->request->reqType == kHttpRequestPost) {
-        if (response->succeed) {
-            CCLog("Post Request Completed!");
-            CCLog("Content: %s", response->responseData.c_str());
-        } else {
-            CCLog("Post Error: %s", response->responseData.c_str());
-        }
-    } else if (response->request->reqType == kHttpRequestDownloadFile) {
-        if (response->succeed) {
-            CCLog("Download Request Completed! Downloaded:");
+	if (response->request->reqType == kHttpRequestGet) {
+		if (response->succeed) {
+			CCLog("Get Request Completed!");
+			CCLog("Content: %s", response->responseData.c_str());
+		} else {
+			CCLog("Get Errorcode: " + response->responseCode);
+			CCLog("Get Error: %s", response->responseData.c_str());
+		}
+	} else if (response->request->reqType == kHttpRequestPost) {
+		if (response->succeed) {
+			CCLog("Post Request Completed!");
+			CCLog("Content: %s", response->responseData.c_str());
+		} else {
+			CCLog("Post Error: %s", response->responseData.c_str());
+		}
+	} else if (response->request->reqType == kHttpRequestDownloadFile) {
+		if (response->succeed) {
+			CCLog("Download Request Completed! Downloaded:");
 
-            std::vector<std::string>::iterator iter;
-            for (iter = response->request->files.begin(); iter != response->request->files.end(); ++iter) {
-                std::string url = *iter;
-                CCLog("%s", url.c_str());
-            }
-        } else {
-            CCLog("Download Error: %s", response->responseData.c_str());
-        }
-    }
+			std::vector<std::string>::iterator iter;
+			for (iter = response->request->files.begin();
+					iter != response->request->files.end(); ++iter) {
+				std::string url = *iter;
+				CCLog("%s", url.c_str());
+			}
+		} else {
+			CCLog("Download Error: %s", response->responseData.c_str());
+		}
+	}
 }
 
 void MainScreenLayer::changeScene(CCObject* pSender) {
@@ -270,8 +347,9 @@ void MainScreenLayer::menuStartGameCallback(CCObject* pSender) {
 //SoundEffectHelper::stopBackgroundMusic();
 
 //transition to next scene for one sec
-	CCDirector::sharedDirector()->replaceScene(
-			CCTransitionMoveInB::create(0.7f, pScene));
+	/*	CCDirector::sharedDirector()->replaceScene(
+	 CCTransitionMoveInB::create(0.7f, pScene));
+	 */
 }
 
 void MainScreenLayer::keyBackClicked(void) {

@@ -845,12 +845,13 @@ void DeeWorld::tick(float delta) {
 				//amino-Acid-specific-actions
 				AminoAcid* aSprite = dynamic_cast<AminoAcid*>(sprite);
 				if (aSprite != 0) {
-					if (aSprite->isFlaggedForDelete()) {
+				/*	if (aSprite->isFlaggedForDelete()) {
 						AAcounter--;
 						_b2dWorld->DestroyBody(b);
 						this->removeChild(aSprite, true);
 						continue;
 					}
+					*/
 
 					//update velocity to be within MIN_SPEED and MAX_SPEED
 					//TODO: accelearte gradually (?)

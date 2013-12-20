@@ -64,7 +64,7 @@ void UIElements::displayScoreEffect(DeeWorld* scene, int scoring) {
 
 	scene->addChild(scene->_scoreNumber);
 
-	CCActionInterval * tintToNumber;
+	CCFiniteTimeAction* tintToNumber = CCTintTo::create(1.5, 255, 0, 0);
 	if (scoring > 0) {
 		tintToNumber = CCTintTo::create(1.0, 0, 255, 0);
 
@@ -75,9 +75,17 @@ void UIElements::displayScoreEffect(DeeWorld* scene, int scoring) {
 		tintToNumber = CCTintTo::create(1.5, 0, 0, 0);
 	}
 
-	scene->_scoreNumber->runAction(tintToNumber);
+
+
+	CCSequence* seq = CCSequence::create(tintToNumber,
+			CCCallFunc::create(scene->_scoreNumber, callfunc_selector(CCSprite::removeFromParent)),
+					 NULL);
+
+
 	CCActionInterval * scaleTo = CCScaleTo::create(1.0, 0.00);
 	scene->_scoreNumber->runAction(scaleTo);
+
+	scene->_scoreNumber->runAction(seq);
 
 }
 
