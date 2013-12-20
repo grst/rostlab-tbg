@@ -620,8 +620,10 @@ void DeeWorld::ccTouchesMoved(cocos2d::CCSet* touches,
 	}
 
 	CCPoint pt = touch->getLocationInView();
-	float y = tempHeight - pt.y;
-	player->SetTransform(b2Vec2(pt.x / PTM_RATIO, y / PTM_RATIO), 0);
+    if(pt.y < 50 && (pt.x < 167 || pt.x > 313)) {
+        pt.y = 50;
+    }
+	player->SetTransform(b2Vec2(pt.x / PTM_RATIO, (tempHeight - pt.y) / PTM_RATIO), 0);
 
 	for (CCSetIterator it = touches->begin(); it != touches->end(); it++) {
 		CCTouch *touch = (CCTouch *) *it;

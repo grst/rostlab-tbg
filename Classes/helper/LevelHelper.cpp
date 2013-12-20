@@ -149,7 +149,7 @@ std::string LevelHelper::getSequenceForLevel(int level) {
 	default:
 		sequence = "AAAAAAAAAAAAAAAAAAAAAAAAAA";
 	}
-	sequence = sequence.substr(0, 80);
+	sequence = sequence.substr(0, getSequenceLength(level));
 	return sequence;
 }
 
@@ -495,6 +495,37 @@ int LevelHelper::getOtherAAProp(int level) {
             return 6;
         case 10:
             return 8;
+        default:
+            return 10;
+	}
+}
+
+int LevelHelper::getSequenceLength(int level) {
+	switch (level) {
+        case 0:
+            return 20;
+        case 1:
+            return 20;
+        case 2:
+            return 30;
+        case 3:
+            return 30;
+        case 4:
+            return 30;
+        case 5:
+            return 40;
+        case 6:
+            return 50;
+        case 7:
+            return 50;
+            
+        case 8:
+            return 80;
+            
+        case 9:
+            return 80;
+        case 10:
+            return 80;
         default:
             return 10;
 	}

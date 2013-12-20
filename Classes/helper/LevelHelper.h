@@ -25,6 +25,7 @@ public:
 	static int getMaxAA(int level);
 	static int getOtherAAProp(int level);
 	static int getAAAddProb(int level);
+    static int getSequenceLength(int level);
 
 };
 
