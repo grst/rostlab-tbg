@@ -17,6 +17,8 @@ public:
 	static std::string getSequenceForLevel(int level);
 	static std::string getPathForLevel(int level);
 	static std::string getDescriptionForLevel(int level);
+    static int getTimeToLive(int level);
+    static int getHighscoreForLevel(int level);
 	static int getMinSpeed(int level);
 	static int getMaxSpeed(int level);
 	static int getMinAA(int level);

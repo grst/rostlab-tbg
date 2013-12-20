@@ -6,6 +6,7 @@
  */
 
 #include "LevelHelper.h"
+#include "MatrixHelper.h"
 
 std::string LevelHelper::getDescriptionForLevel(int level) {
 
@@ -152,6 +153,16 @@ std::string LevelHelper::getSequenceForLevel(int level) {
 	return sequence;
 }
 
+int LevelHelper::getHighscoreForLevel(int level) {
+    int score = 0;
+    std::string sequence = LevelHelper::getSequenceForLevel(level);
+    for(int i = 0; i < sequence.length(); i++) {
+        char aa = sequence.at(i);
+        score += MatrixHelper::getScoreForAminoAcid(aa, aa);
+    }
+    return score;
+}
+
 std::string LevelHelper::getCodeForLevel(int level) {
 	std::string sequence = "";
 	switch (level) {
@@ -288,20 +299,168 @@ std::string LevelHelper::getNameForLevel(int level) {
 	return sequence;
 }
 
+int LevelHelper::getTimeToLive(int level) {
+    return 8000;
+	switch (level) {
+        case 0:
+            return 4;
+        case 1:
+            return 4;
+        case 2:
+            return 5;
+        case 3:
+            return 5;
+        case 4:
+            return 5;
+        case 5:
+            return 5;
+        case 6:
+            return 6;
+            
+        case 7:
+            return 6;
+            
+        case 8:
+            return 7;
+            
+        case 9:
+            return 8;
+        case 10:
+            return 9;
+        default:
+            return 6;
+	}
+}
+
 int LevelHelper::getMaxSpeed(int level) {
-	return 6;
+	switch (level) {
+        case 0:
+            return 4;
+        case 1:
+            return 4;
+        case 2:
+            return 5;
+        case 3:
+            return 5;
+        case 4:
+            return 5;
+        case 5:
+            return 5;
+        case 6:
+            return 6;
+            
+        case 7:
+            return 6;
+            
+        case 8:
+            return 7;
+            
+        case 9:
+            return 8;
+        case 10:
+            return 9;
+        default:
+            return 6;
+	}
+
 }
 
 int LevelHelper::getMinSpeed(int level) {
-	return 4;
+	switch (level) {
+        case 0:
+            return 2;
+        case 1:
+            return 2;
+        case 2:
+            return 3;
+        case 3:
+            return 3;
+        case 4:
+            return 4;
+        case 5:
+            return 4;
+        case 6:
+            return 5;
+            
+        case 7:
+            return 5;
+            
+        case 8:
+            return 5;
+            
+        case 9:
+            return 6;
+        case 10:
+            return 7;
+        default:
+            return 4;
+	}
+
 }
 
 int LevelHelper::getMaxAA(int level) {
-	return 9;
+	switch (level) {
+        case 0:
+            return 6;
+        case 1:
+            return 6;
+        case 2:
+            return 7;
+        case 3:
+            return 8;
+        case 4:
+            return 8;
+        case 5:
+            return 8;
+        case 6:
+            return 9;
+            
+        case 7:
+            return 9;
+            
+        case 8:
+            return 9;
+            
+        case 9:
+            return 10;
+        case 10:
+            return 10;
+        default:
+            return 9;
+	}
+
 }
 
 int LevelHelper::getMinAA(int level) {
-	return 6;
+	switch (level) {
+        case 0:
+            return 4;
+        case 1:
+            return 4;
+        case 2:
+            return 5;
+        case 3:
+            return 5;
+        case 4:
+            return 6;
+        case 5:
+            return 6;
+        case 6:
+            return 7;
+        case 7:
+            return 7;
+            
+        case 8:
+            return 8;
+            
+        case 9:
+            return 9;
+        case 10:
+            return 9;
+        default:
+            return 6;
+	}
+
 }
 
 //Every n calls of tick, one additional amino acid is added (if withing MIN and MAX)

@@ -28,6 +28,7 @@ AminoAcid* AminoAcid::createRandom() {
  */
 AminoAcid* AminoAcid::create(char type){
     AminoAcid *pobSprite = new AminoAcid();
+    pobSprite->created = HelperFunctions::nowInMilliSeconds();
     const char *path = MatrixHelper::getImagePathForAcid(type);
     CCLog("Create AA: %s", path);
     if (pobSprite && pobSprite->initWithFile(path)) {
@@ -53,4 +54,8 @@ void AminoAcid::flagForDelete() {
 
 bool AminoAcid::isFlaggedForDelete() {
     return this->toDelete;
+}
+
+long AminoAcid::getCreatedTime() {
+    return this->created;
 }

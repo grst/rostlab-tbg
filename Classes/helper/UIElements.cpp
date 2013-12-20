@@ -6,6 +6,7 @@
  */
 
 #include "UIElements.h"
+#include "MatrixHelper.h"
 #include "../screens/DeeWorldScene.h"
 #include <queue>
 
@@ -114,26 +115,27 @@ void UIElements::createNewAminoAcid(DeeWorld* scene) {
 		CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
 
 		CCLabelTTF * label = CCLabelTTF::create(str.c_str(), "Helvetica", 24,
-				CCSizeMake(100, 30), kCCTextAlignmentRight);
+				CCSizeMake(100, 30), kCCTextAlignmentCenter);
 		acid->_label = label;
 
-		acid->_label->setPosition(ccp(80, visibleSize.height - 20));
-		acid->_label->setColor(ccc3(255, 255, 255));
+		acid->_label->setPosition(ccp(110, visibleSize.height - 20));
+        ccColor3B acidColor = MatrixHelper::getAcidColor(nextAcid);
+		acid->_label->setColor(acidColor);
 		scene->addChild(acid->_label);
 
 	}
 
 	CCLog("moving AAs");
 
-	// color the first AA in red
-	if (!scene->_code.empty()) {
-		BoardAcid* elRed = scene->_code.front();
-		CCFiniteTimeAction* actionMove = CCTintTo::create(1.5, 255, 0, 0);
-		// Sebi: we have to add some dummy parameters otherwise it fails on Android
-		CCSequence *readySequence = CCSequence::create(actionMove, NULL,
-		NULL);
-		elRed->_label->runAction(readySequence);
-	}
+//	// color the first AA in the specific color
+//	if (!scene->_code.empty()) {
+//		BoardAcid* elRed = scene->_code.front();
+//		CCFiniteTimeAction* actionMove = CCTintTo::create(1.5, 255, 0, 0);
+//		// Sebi: we have to add some dummy parameters otherwise it fails on Android
+//		CCSequence *readySequence = CCSequence::create(actionMove, NULL,
+//		NULL);
+//		elRed->_label->runAction(readySequence);
+//	}
 
 	// move all elements a bit
 	std::queue<BoardAcid*> tmpQueue;
