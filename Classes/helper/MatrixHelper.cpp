@@ -690,6 +690,37 @@ void MatrixHelper::loadMatrix(std::string name) {
 
 }
 
+ccColor3B MatrixHelper::getAcidColor(char c) {
+    switch (c) {
+        case 'A':
+        case 'P':
+        case 'G':
+        case 'I':
+        case 'L':
+        case 'M':
+        case 'F':
+        case 'W':
+        case 'V':
+            return ccc3(255, 255, 0);
+        case 'H':
+        case 'R':
+        case 'K':
+            return ccc3(0, 210, 255);
+        case 'D':
+        case 'E':
+            return ccc3(255, 0, 0);
+        case 'N':
+        case 'C':
+        case 'Q':
+        case 'S':
+        case 'T':
+        case 'Y':
+            return ccc3(0, 255, 0);
+        default: return ccc3(255, 255, 255);
+            
+    }
+}
+
 int MatrixHelper::getAcidInt(char c) {
 
 	int n = -1;
