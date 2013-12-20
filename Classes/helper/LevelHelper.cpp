@@ -468,8 +468,35 @@ int LevelHelper::getAAAddProb(int level) {
 	return 230;
 }
 
-//Every n wall collisions, remove one amino acid.
-int LevelHelper::getAARemProb(int level) {
-	return 15;
+//every n calls of addTarget, the aminoacid that is currently needed is added. 
+int LevelHelper::getOtherAAProp(int level) {
+	switch (level) {
+        case 0:
+            return 2;
+        case 1:
+            return 2;
+        case 2:
+            return 3;
+        case 3:
+            return 3;
+        case 4:
+            return 3;
+        case 5:
+            return 4;
+        case 6:
+            return 4;
+        case 7:
+            return 4;
+            
+        case 8:
+            return 4;
+            
+        case 9:
+            return 6;
+        case 10:
+            return 8;
+        default:
+            return 10;
+	}
 }
 

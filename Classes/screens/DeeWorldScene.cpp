@@ -466,7 +466,8 @@ int DeeWorld::detectCorner() {
 void DeeWorld::addTarget() {
     char targetToAdd = getCurrentAminoAcid();
     char c;
-    if(acidCounter->hasAcid(targetToAdd)) {
+    if(acidCounter->hasAcid(targetToAdd) ||
+       HelperFunctions::randomValueBetween(0, this->getOtherAAProp()) > 1) {
         c = MatrixHelper::getRandomAminoAcid();
     } else {
         c = targetToAdd;
@@ -1177,9 +1178,9 @@ int DeeWorld::getMaxAA() {
 	return LevelHelper::getMaxAA(level);
 }
 
-int DeeWorld::getAARemProb() {
+int DeeWorld::getOtherAAProp() {
 	// TODO: add some code to speed up during game
-	return LevelHelper::getAARemProb(level);
+	return LevelHelper::getOtherAAProp(level);
 }
 
 int DeeWorld::getAAAddProb() {
