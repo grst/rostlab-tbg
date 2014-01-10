@@ -154,7 +154,7 @@ void LevelLoadingLayer::addLabels() {
 
 	// name
 	this->ttfName= CCLabelTTF::create(
-			LevelHelper::getNameForLevel(level).c_str(), "Artial", 20,
+			LevelHelper::getNameForLevel(level).c_str(), "carrois-sc", 20,
 			CCSizeMake(winSize.width * 3 / 6, 30), kCCTextAlignmentRight,
 			kCCVerticalTextAlignmentTop);
 	ttfName->retain();
@@ -164,7 +164,7 @@ void LevelLoadingLayer::addLabels() {
 
 	// desc
 	std::string sDesc = LevelHelper::getDescriptionForLevel(level);
-	this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "Artial", 12,
+	this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "carrois", 12,
 			CCSizeMake(winSize.width * 3 / 6, winSize.height * 1 / 2),
 			kCCTextAlignmentRight, kCCVerticalTextAlignmentCenter);
 	ttfDesc->retain();
@@ -174,7 +174,7 @@ void LevelLoadingLayer::addLabels() {
 
 	// code
 	std::string seqCode = LevelHelper::getCodeForLevel(level);
-	this->ttfCode = CCLabelTTF::create(seqCode.c_str(), "Artial", 20,
+	this->ttfCode = CCLabelTTF::create(seqCode.c_str(), "carrois", 20,
 			CCSizeMake(80, 30), kCCTextAlignmentCenter,
 			kCCVerticalTextAlignmentCenter);
 	ttfCode->retain();

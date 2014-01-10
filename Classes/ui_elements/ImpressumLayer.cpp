@@ -30,7 +30,7 @@ bool ImpressumLayer::init() {
 		this->setTouchEnabled(true);
 
 		CCSize winSize = CCDirector::sharedDirector()->getWinSize();
-		CCLabelTTF* pauseLabel = CCLabelTTF::create("Imprint", "Arial", 24,
+		CCLabelTTF* pauseLabel = CCLabelTTF::create("Imprint", "carrois", 24,
 				CCSize(winSize.width / 4, 50), kCCTextAlignmentRight);
 		CC_BREAK_IF(!pauseLabel);
 
@@ -117,7 +117,7 @@ void ImpressumLayer::getNextText() {
 		sDesc =
 				"Proudly presented by Gregor Sturm & Sebastian Wilzbach.\n"
 						"For questions, suggestions or support please write to tbg@rostlab.org [TODO!]";
-		this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "Artial", 18,
+		this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "carrois", 18,
 				CCSizeMake(winSize.width * 4 / 6, winSize.height * 1 / 2),
 				kCCTextAlignmentCenter, kCCVerticalTextAlignmentCenter);
 		break;
@@ -128,7 +128,7 @@ void ImpressumLayer::getNextText() {
 				"TUM Fakultät für Informatik\n"
 				"Boltzmannstraße 3\n"
 				"85748 Garching";
-		this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "Artial", 18,
+		this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "carrois", 18,
 				CCSizeMake(winSize.width * 4 / 6, winSize.height * 1 / 2),
 				kCCTextAlignmentLeft, kCCVerticalTextAlignmentCenter);
 		break;
@@ -138,7 +138,7 @@ void ImpressumLayer::getNextText() {
 			sDesc = "Structure and Sequence of the Proteins is taken from http://pdb.org.\n\n"
 					"The descriptions texts are adapted from the PDB-101 \"Molecule of the Month\"-articles "
 					"(http://pdb.org/pdb/101/motm_archive.do)";
-			this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "Artial", 18,
+			this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "carrois", 18,
 					CCSizeMake(winSize.width * 5 / 6, winSize.height * 2 / 3),
 					kCCTextAlignmentCenter, kCCVerticalTextAlignmentCenter);
 			break;
@@ -146,7 +146,7 @@ void ImpressumLayer::getNextText() {
 	case 3:
 		title = "Graphics";
 		sDesc = "[CC-Icons, Google-Icons]";
-		this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "Artial", 18,
+		this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "carrois", 18,
 				CCSizeMake(winSize.width * 4 / 6, winSize.height * 1 / 2),
 				kCCTextAlignmentCenter, kCCVerticalTextAlignmentCenter);
 		break;
@@ -154,7 +154,7 @@ void ImpressumLayer::getNextText() {
 	case 4:
 		title = "Music";
 		sDesc = "Freesound.org";
-		this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "Artial", 18,
+		this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "carrois", 18,
 				CCSizeMake(winSize.width * 4 / 6, winSize.height * 1 / 2),
 				kCCTextAlignmentCenter, kCCVerticalTextAlignmentCenter);
 		break;
@@ -162,7 +162,7 @@ void ImpressumLayer::getNextText() {
 	case 5:
 		title = "Libraries";
 		sDesc =				"[cocos2dx, box2d, ccblade, …?]";
-		this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "Artial", 18,
+		this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "carrois", 18,
 				CCSizeMake(winSize.width * 4 / 6, winSize.height * 1 / 2),
 				kCCTextAlignmentCenter, kCCVerticalTextAlignmentCenter);
 		break;
@@ -186,7 +186,7 @@ void ImpressumLayer::getNextText() {
 				ccp(winSize.width * 3 / 6, winSize.height * 3 / 5));
 		this->addChild(ttfDesc, 12);
 
-		this->ttfTitle = CCLabelTTF::create(title.c_str(), "Artial", 20,
+		this->ttfTitle = CCLabelTTF::create(title.c_str(), "carrois", 20,
 				CCSizeMake(winSize.width * 4 / 6, 30), kCCTextAlignmentCenter,
 				kCCVerticalTextAlignmentTop);
 		this->ttfTitle->setColor(ccc3(0, 0, 0));

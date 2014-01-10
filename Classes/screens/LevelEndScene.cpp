@@ -111,7 +111,7 @@ void LevelEndLayer::addLabels() {
 	if (score == scoreOld) {
 		// new high score
 		std::string seqLevel = "New Highscore";
-		this->scoreLabel = CCLabelTTF::create(seqLevel.c_str(), "Artial", 18,
+			this->scoreLabel = CCLabelTTF::create(seqLevel.c_str(), "carrois", 18,
 				CCSizeMake(winSize.width * 3 / 6, 30), kCCTextAlignmentRight,
 				kCCVerticalTextAlignmentTop);
 		scoreLabel->retain();
@@ -164,7 +164,7 @@ void LevelEndLayer::addLabels() {
 			static_cast<std::ostringstream*>(&(std::ostringstream() << score))->str();
 
 	std::string seqLevel = "Your Score: " + strScore + "/1000";
-	this->scoreLabel = CCLabelTTF::create(seqLevel.c_str(), "Artial", 18,
+	this->scoreLabel = CCLabelTTF::create(seqLevel.c_str(), "carrois", 18,
 			CCSizeMake(winSize.width * 3 / 6, 30), kCCTextAlignmentRight,
 			kCCVerticalTextAlignmentTop);
 	scoreLabel->retain();
@@ -174,7 +174,7 @@ void LevelEndLayer::addLabels() {
 
 	// name
 	this->ttfName = CCLabelTTF::create(
-			LevelHelper::getNameForLevel(level).c_str(), "Artial", 20,
+			LevelHelper::getNameForLevel(level).c_str(), "carrois", 20,
 			CCSizeMake(winSize.width * 3 / 6, 30), kCCTextAlignmentRight,
 			kCCVerticalTextAlignmentTop);
 	ttfName->retain();
@@ -184,7 +184,7 @@ void LevelEndLayer::addLabels() {
 
 	// desc
 	std::string sDesc = LevelHelper::getDescriptionForLevel(level);
-	this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "Artial", 12,
+	this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "carrois", 12,
 			CCSizeMake(winSize.width * 3 / 6, winSize.height * 1 / 2),
 			kCCTextAlignmentRight, kCCVerticalTextAlignmentCenter);
 	ttfDesc->retain();
@@ -194,7 +194,7 @@ void LevelEndLayer::addLabels() {
 
 	// code
 	std::string seqCode = LevelHelper::getCodeForLevel(level);
-	this->ttfCode = CCLabelTTF::create(seqCode.c_str(), "Artial", 20,
+	this->ttfCode = CCLabelTTF::create(seqCode.c_str(), "carrois", 20,
 			CCSizeMake(80, 30), kCCTextAlignmentCenter,
 			kCCVerticalTextAlignmentCenter);
 	ttfCode->retain();
