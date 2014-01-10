@@ -42,6 +42,7 @@ public:
 
     void endScreen();
     void addLabels();
+    void didSwipe(CCObject * sender);
     CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _label, Label);
 
 

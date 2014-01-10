@@ -20,8 +20,14 @@ LOCAL_SRC_FILES := hellocpp/main.cpp \
                    ../../Classes/ui_elements/cc-extensions/TouchTrailLayer.cpp \
                    ../../Classes/ui_elements/cc-extensions/CCBlade.cpp \
                    ../../Classes/ui_elements/cc-extensions/CCSlider.cpp \
-                   ../../Classes/ui_elements/SlidingMenu.cpp \
                    ../../Classes/ui_elements/cc-extensions/CCRadioMenu.cpp \
+                   ../../Classes/ui_elements/cc-extensions/CCGestureRecognizer/CCGestureRecognizer.cpp \
+                   ../../Classes/ui_elements/cc-extensions/CCGestureRecognizer/CCLongPressGestureRecognizer.cpp \
+                   ../../Classes/ui_elements/cc-extensions/CCGestureRecognizer/CCPanGestureRecognizer.cpp \
+                   ../../Classes/ui_elements/cc-extensions/CCGestureRecognizer/CCPinchGestureRecognizer.cpp \
+                   ../../Classes/ui_elements/cc-extensions/CCGestureRecognizer/CCSwipeGestureRecognizer.cpp \
+                   ../../Classes/ui_elements/cc-extensions/CCGestureRecognizer/CCTapGestureRecognizer.cpp \
+                   ../../Classes/ui_elements/SlidingMenu.cpp \
                    ../../Classes/helper/AcidCounter.cpp  \
                    ../../Classes/helper/CCHttpRequest.cpp  \
                    ../../Classes/helper/DebugDraw.cpp  \

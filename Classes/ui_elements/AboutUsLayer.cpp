@@ -10,6 +10,7 @@
 #include "../screens/MainScreenScene.h"
 #include "../screens/SettingsScreenScene.h"
 #include "../Globals.h"
+#include "../ui_elements/cc-extensions/CCGestureRecognizer/CCSwipeGestureRecognizer.h"
 
 using namespace cocos2d;
 
@@ -23,6 +24,8 @@ AboutUsLayer::~AboutUsLayer() {
 }
 
 bool AboutUsLayer::init() {
+
+	CCLog("about us layer.");
 
 	bool bRet = false;
 	do {
@@ -91,11 +94,39 @@ bool AboutUsLayer::init() {
 		posImageCounter = 0;
 		initButt();
 
+		CCSwipeGestureRecognizer * swipe = CCSwipeGestureRecognizer::create();
+		swipe->setTarget(this, callfuncO_selector(AboutUsLayer::didSwipe));
+		swipe->setDirection(
+				kSwipeGestureRecognizerDirectionRight
+						| kSwipeGestureRecognizerDirectionLeft);
+		swipe->setCancelsTouchesInView(true);
+		this->addChild(swipe, 13);
+
 		bRet = true;
 	} while (0);
 
 	return bRet;
 
+}
+
+void AboutUsLayer::didSwipe(CCObject * pSender) {
+	CCSwipe * swipe = (CCSwipe *) pSender;
+	// recognize swipe to the left
+	CCLog("got swipe event");
+	if (swipe->direction == kSwipeGestureRecognizerDirectionLeft) {
+		if (posImageCounter == 8) {
+			// set a delay
+			this->runAction(CCSequence::create(CCDelayTime::create(0.1),
+							CCCallFunc::create(this,
+									callfunc_selector(
+											AboutUsLayer::getNextImage)),
+							NULL));
+		} else {
+			getNextImage();
+		}
+	} else if (swipe->direction == kSwipeGestureRecognizerDirectionRight) {
+		// get previous image
+	}
 }
 
 void AboutUsLayer::initButt() {
@@ -105,6 +136,7 @@ void AboutUsLayer::initButt() {
 }
 
 void AboutUsLayer::keyBackClicked(void) {
+	CCLog("key back clicked");
 	// simulate close Button clicked
 	MainScreenLayer * layer = (MainScreenLayer*) this->getParent();
 	layer->keyBackClicked();
@@ -123,21 +155,37 @@ void AboutUsLayer::getNextImage() {
 	switch (posImageCounter) {
 	case 0:
 		title = "0";
-		img = "5PEP.png";
+		img = "cards/00.png";
 		break;
 	case 1:
 		title = "1";
-		img = "1ASZ.png";
+		img = "cards/01.png";
 		break;
 	case 2:
 		title = "2";
-		img = "1DGS.png";
+		img = "cards/02.png";
 		break;
 	case 3:
 		title = "3";
-		img = "1OLG.png";
+		img = "cards/03.png";
 		break;
 	case 4:
+		title = "3";
+		img = "cards/04.png";
+		break;
+	case 5:
+		title = "3";
+		img = "cards/05.png";
+		break;
+	case 6:
+		title = "3";
+		img = "cards/06.png";
+		break;
+	case 7:
+		title = "3";
+		img = "cards/07.png";
+		break;
+	case 8:
 		// simulate close Button clicked
 		layer = (MainScreenLayer*) this->getParent();
 		layer->keyBackClicked();
@@ -149,27 +197,29 @@ void AboutUsLayer::getNextImage() {
 	CCLOG("Starting remove");
 	if (pImage != NULL && posImageCounter > 0) {
 		pImage->removeFromParent();
-		pTitle->removeFromParent();
+		// pTitle->removeFromParent();
 	}
 	CCLOG("Remove survided");
 
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 	this->pImage = CCSprite::create(img.c_str());
 
-	//scale it proportionally to 70% of the screen
-	float scale = 0.7;
+	//scale it proportionally to  the screen
+	float scale = 0.95;
 	CCSize logoSize = pImage->getContentSize();
 	HelperFunctions::resizseSprite(pImage, 0.0, winSize.height * scale);
-	pImage->setPosition(ccp(winSize.width * 1 / 3, winSize.height / 2));
+	pImage->setPosition(ccp(winSize.width * 1 / 2, winSize.height / 2));
 	this->addChild(pImage, 12);
 
-	this->pTitle = CCLabelTTF::create(title.c_str(), "carrois", 20,
-			CCSizeMake(winSize.width * 4 / 6, 30), kCCTextAlignmentCenter,
-			kCCVerticalTextAlignmentTop);
-	this->pTitle->setColor(ccc3(0, 0, 0));
-	this->pTitle->setPosition(
-			ccp(winSize.width * 3 / 6, winSize.height * 11 / 12));
-	this->addChild(pTitle, 12);
+	/*
+	 this->pTitle = CCLabelTTF::create(title.c_str(), "carrois", 20,
+	 CCSizeMake(winSize.width * 4 / 6, 30), kCCTextAlignmentCenter,
+	 kCCVerticalTextAlignmentTop);
+	 this->pTitle->setColor(ccc3(0, 0, 0));
+	 this->pTitle->setPosition(
+	 ccp(winSize.width * 3 / 6, winSize.height * 11 / 12));
+	 this->addChild(pTitle, 12);
+	 */
 
 	posImageCounter = posImageCounter + 1;
 }

@@ -3,6 +3,7 @@
 #include "MainScreenScene.h"
 #include "../helper/HelperFunctions.h"
 #include "../helper/LevelHelper.h"
+#include "../ui_elements/cc-extensions/CCGestureRecognizer/CCSwipeGestureRecognizer.h"
 
 using namespace cocos2d;
 
@@ -88,15 +89,37 @@ bool LevelEndLayer::init() {
 
 	 */
 
+
+	// add swipe
+	CCSwipeGestureRecognizer * swipe = CCSwipeGestureRecognizer::create();
+	swipe->setTarget(this, callfuncO_selector(LevelEndLayer::didSwipe));
+	swipe->setDirection(
+			kSwipeGestureRecognizerDirectionRight
+					| kSwipeGestureRecognizerDirectionLeft);
+	swipe->setCancelsTouchesInView(true);
+	this->addChild(swipe, 12);
+
+
 	// set a delay for three seconds
 	this->runAction(
-			CCSequence::create(CCDelayTime::create(6),
+			CCSequence::create(CCDelayTime::create(15),
 					CCCallFunc::create(this,
 							callfunc_selector(LevelEndLayer::endScreen)),
 					NULL));
 
 	return true;
 
+}
+
+void LevelEndLayer::didSwipe(CCObject* pSender) {
+	CCSwipe * swipe =  (CCSwipe *) pSender;
+	// recognize swipe to the left
+	CCLog("got swipe event");
+	if(swipe->direction == kSwipeGestureRecognizerDirectionLeft){
+		CCScene * pScene1 = MainScreenScene::create();
+				CCDirector::sharedDirector()->replaceScene(
+						CCTransitionMoveInR::create(0.5f, pScene1));
+	}
 }
 
 void LevelEndLayer::addLabels() {
@@ -112,13 +135,53 @@ void LevelEndLayer::addLabels() {
 		// new high score
 		std::string seqLevel = "New Highscore";
 			this->scoreLabel = CCLabelTTF::create(seqLevel.c_str(), "carrois", 18,
-					CCSizeMake(winSize.width * 3 / 6, 30), kCCTextAlignmentRight,
-					kCCVerticalTextAlignmentTop);
-			scoreLabel->retain();
-			scoreLabel->setColor(ccc3(0, 255, 0));
-			scoreLabel->setPosition(ccp(winSize.width * 4 / 6, winSize.height * 1 / 4));
-			this->addChild(scoreLabel);
+				CCSizeMake(winSize.width * 3 / 6, 30), kCCTextAlignmentRight,
+				kCCVerticalTextAlignmentTop);
+		scoreLabel->retain();
+		scoreLabel->setColor(ccc3(0, 255, 0));
+		scoreLabel->setPosition(
+				ccp(winSize.width * 4 / 6, winSize.height * 1 / 4));
+		this->addChild(scoreLabel);
 	}
+
+	// ask for stars
+
+
+	int currentScore =
+			cocos2d::CCUserDefault::sharedUserDefault()->getIntegerForKey(
+					("level_" + strLevel).c_str(), 0);
+
+	int stars = LevelHelper::getStarsForLevel(level, currentScore);
+
+	CCLog("stars: %i", stars);
+
+	std::string starPath;
+	switch (stars) {
+	case 0:
+		starPath = "stars-w3.png";
+		break;
+	case 1:
+		starPath = "stars-w2.png";
+		break;
+	case 2:
+		starPath = "stars-w1.png";
+		break;
+	case 3:
+		starPath = "stars-w0.png";
+		break;
+	default:
+		starPath = "stars-w3.png";
+		break;
+	}
+
+	CCLog("path %s", starPath.c_str());
+
+	CCSprite * spriteStar = CCSprite::create(starPath.c_str());
+
+	// stars created
+
+	spriteStar->setPosition(ccp(winSize.width * 4 /9 , winSize.height * 1 / 8));
+	this->addChild(spriteStar);
 
 	std::string strScore =
 			static_cast<std::ostringstream*>(&(std::ostringstream() << score))->str();

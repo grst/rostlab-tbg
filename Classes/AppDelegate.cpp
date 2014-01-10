@@ -29,6 +29,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 		searchPaths.push_back("hd/buttons");
 		searchPaths.push_back("hd/buttons/stars");
 		searchPaths.push_back("hd/backgrounds");
+		searchPaths.push_back("hd/cards");
 		searchPaths.push_back("hd/fonts");
 		searchPaths.push_back("hd/proteins");
 		pDirector->setContentScaleFactor(640.0f / designSize.height);
@@ -38,6 +39,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 		searchPaths.push_back("sd/buttons");
 		searchPaths.push_back("sd/buttons/stars");
 		searchPaths.push_back("sd/backgrounds");
+		searchPaths.push_back("sd/cards");
 		searchPaths.push_back("sd/fonts");
 		searchPaths.push_back("sd/proteins");
 		pDirector->setContentScaleFactor(320.0f / designSize.height);

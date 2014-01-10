@@ -3,6 +3,7 @@
 #include "../helper/LevelHelper.h"
 #include "MainScreenScene.h"
 #include "DeeWorldScene.h"
+#include "../ui_elements/cc-extensions/CCGestureRecognizer/CCSwipeGestureRecognizer.h"
 
 using namespace cocos2d;
 
@@ -59,10 +60,44 @@ bool LevelLoadingLayer::init() {
 	CCSprite* pSpriteBackground = CCSprite::create("wood-grunge.jpg");
 	HelperFunctions::fitBackground(pSpriteBackground);
 
-    HelperFunctions::fitBackground(pSpriteBackground);
+	HelperFunctions::fitBackground(pSpriteBackground);
 
 	// add the sprite as a child to this layer
 	this->addChild(pSpriteBackground, 0);
+
+	CCMenuItemImage *pCloseApp = CCMenuItemImage::create("white/closeapp.png",
+			"white/closeapp.png", this,
+			menu_selector(LevelLoadingLayer::changeScene));
+	pCloseApp->setPosition(0, 0);
+	pCloseApp->setTag(1);
+
+	CCMenuItemImage *pStartButton = CCMenuItemImage::create("start-button.png",
+			"start-button.png", this,
+			menu_selector(LevelLoadingLayer::changeScene));
+	pStartButton->setPosition(0, 0);
+	pStartButton->setTag(2);
+
+	// Create a menu with our menu items
+	cocos2d::CCMenu* backMenu = CCMenu::createWithItem(pCloseApp);
+	backMenu->setPosition(ccp(20, winSize.height - 25));
+	backMenu->alignItemsHorizontally();
+	this->addChild(backMenu, 11);
+	cocos2d::CCMenu* startMenu = CCMenu::createWithItem(pStartButton);
+	// align in the middle
+	startMenu->setPosition(
+			(ccp(winSize.width / 2 - pStartButton->getContentSize().width / 4,
+					winSize.height * 1 / 7)));
+	startMenu->alignItemsHorizontally();
+	this->addChild(startMenu, 10);
+
+	// add swipe
+	CCSwipeGestureRecognizer * swipe = CCSwipeGestureRecognizer::create();
+	swipe->setTarget(this, callfuncO_selector(LevelLoadingLayer::didSwipe));
+	swipe->setDirection(
+			kSwipeGestureRecognizerDirectionRight
+					| kSwipeGestureRecognizerDirectionLeft);
+	swipe->setCancelsTouchesInView(true);
+	this->addChild(swipe, 12);
 
 	/*
 	 CCString labelText = "You will fight for ";
@@ -93,13 +128,51 @@ bool LevelLoadingLayer::init() {
 	 */
 
 	// set a delay for three seconds
-	this->runAction(
-			CCSequence::create(CCDelayTime::create(7),
-					CCCallFunc::create(this,
-							callfunc_selector(LevelLoadingLayer::endScreen)),
-					NULL));
+	/*
+	 this->runAction(
+	 CCSequence::create(CCDelayTime::create(7),
+	 CCCallFunc::create(this,
+	 callfunc_selector(LevelLoadingLayer::endScreen)),
+	 NULL));
+	 */
 
 	return true;
+
+}
+
+void LevelLoadingLayer::didSwipe(CCObject* pSender) {
+	CCSwipe * swipe =  (CCSwipe *) pSender;
+	// recognize swipe to the left
+	CCLog("got swipe event");
+	if(swipe->direction == kSwipeGestureRecognizerDirectionLeft){
+		CCScene * pScene1 = DeeWorld::scene(seq, level);
+				CCDirector::sharedDirector()->replaceScene(
+						CCTransitionMoveInR::create(0.2f, pScene1));
+	}
+}
+
+void LevelLoadingLayer::changeScene(CCObject* pSender) {
+
+	SoundEffectHelper::playClickSound();
+
+	CCScene *pScene1;
+
+	CCMenuItem* pMenuItem = (CCMenuItem *) (pSender);
+	int tag = (int) pMenuItem->getTag();
+	CCLOG("Levelloading: Changing to scene ", tag);
+
+	switch (tag) {
+	case 1:
+		pScene1 = MainScreenScene::create();
+		CCDirector::sharedDirector()->replaceScene(
+				CCTransitionFade::create(1.0f, pScene1));
+		break;
+	case 2:
+		pScene1 = DeeWorld::scene(seq, level);
+		CCDirector::sharedDirector()->replaceScene(
+				CCTransitionFade::create(1.0f, pScene1));
+		break;
+	}
 
 }
 
@@ -107,15 +180,16 @@ void LevelLoadingLayer::addLabels() {
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
 	std::string strLevel =
-				static_cast<std::ostringstream*>(&(std::ostringstream() << level))->str();
-	int score =cocos2d::CCUserDefault::sharedUserDefault()->getIntegerForKey(
-					("level_"+strLevel).c_str(), 0);
-
+			static_cast<std::ostringstream*>(&(std::ostringstream() << level))->str();
+	int score = cocos2d::CCUserDefault::sharedUserDefault()->getIntegerForKey(
+			("level_" + strLevel).c_str(), 0);
 
 	std::string strScore =
 			static_cast<std::ostringstream*>(&(std::ostringstream() << score))->str();
 
-	std::string seqLevel = "Highscore: " + strScore+ "/" + static_cast<std::ostringstream*>(&(std::ostringstream() << LevelHelper::getHighscoreForLevel(this->level)))->str();
+	std::string seqLevel = "Highscore: " + strScore + "/"
+			+ static_cast<std::ostringstream*>(&(std::ostringstream()
+					<< LevelHelper::getHighscoreForLevel(this->level)))->str();
 	this->scoreLabel = CCLabelTTF::create(seqLevel.c_str(), "Artial", 18,
 			CCSizeMake(winSize.width * 3 / 6, 30), kCCTextAlignmentRight,
 			kCCVerticalTextAlignmentTop);
@@ -126,34 +200,34 @@ void LevelLoadingLayer::addLabels() {
 
 	/* todo
 
-	// add Loading bar BG
-	CCSprite* pPercentageBG = CCSprite::create("loading-bar-bg.png");
+	 // add Loading bar BG
+	 CCSprite* pPercentageBG = CCSprite::create("loading-bar-bg.png");
 
-	//scale it proportionally to 30% of the screen
-	float scalePerBG = 0.4;
-	CCSize logoPercentageBGSize = pPercentageBG->getContentSize();
-	HelperFunctions::resizseSprite(pPercentageBG, winSize.width * scalePerBG, 0.0);
-	pPercentageBG->setPosition(
-			ccp(
-					winSize.width  * 2 /3, winSize.height * 1 / 4));
-	this->addChild(pPercentageBG, 0);
+	 //scale it proportionally to 30% of the screen
+	 float scalePerBG = 0.4;
+	 CCSize logoPercentageBGSize = pPercentageBG->getContentSize();
+	 HelperFunctions::resizseSprite(pPercentageBG, winSize.width * scalePerBG, 0.0);
+	 pPercentageBG->setPosition(
+	 ccp(
+	 winSize.width  * 2 /3, winSize.height * 1 / 4));
+	 this->addChild(pPercentageBG, 0);
 
-	// add Loading bar
-	CCSprite* pPercentage = CCSprite::create("loading-bar.png");
+	 // add Loading bar
+	 CCSprite* pPercentage = CCSprite::create("loading-bar.png");
 
-	//scale it proportionally to 30% of the screen
-	float scalePer = 0.38;
-	CCSize logoPercentageSize = pPercentage->getContentSize();
-	HelperFunctions::resizseSprite(pPercentage, winSize.width * scalePer, 0.0);
-	pPercentage->setPosition(
-			ccp(
-					winSize.width  * 2 / 3, winSize.height * 1 / 4));
-	this->addChild(pPercentage, 1);
+	 //scale it proportionally to 30% of the screen
+	 float scalePer = 0.38;
+	 CCSize logoPercentageSize = pPercentage->getContentSize();
+	 HelperFunctions::resizseSprite(pPercentage, winSize.width * scalePer, 0.0);
+	 pPercentage->setPosition(
+	 ccp(
+	 winSize.width  * 2 / 3, winSize.height * 1 / 4));
+	 this->addChild(pPercentage, 1);
 
-*/
+	 */
 
 	// name
-	this->ttfName= CCLabelTTF::create(
+	this->ttfName = CCLabelTTF::create(
 			LevelHelper::getNameForLevel(level).c_str(), "carrois-sc", 20,
 			CCSizeMake(winSize.width * 3 / 6, 30), kCCTextAlignmentRight,
 			kCCVerticalTextAlignmentTop);
