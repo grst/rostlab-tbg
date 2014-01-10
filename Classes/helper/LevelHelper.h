@@ -19,6 +19,8 @@ public:
 	static std::string getDescriptionForLevel(int level);
     static int getTimeToLive(int level);
     static int getHighscoreForLevel(int level);
+    static int getStarsForLevel(int level, int score);
+
 	static int getMinSpeed(int level);
 	static int getMaxSpeed(int level);
 	static int getMinAA(int level);

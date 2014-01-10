@@ -111,14 +111,54 @@ void LevelEndLayer::addLabels() {
 	if (score == scoreOld) {
 		// new high score
 		std::string seqLevel = "New Highscore";
-			this->scoreLabel = CCLabelTTF::create(seqLevel.c_str(), "Artial", 18,
-					CCSizeMake(winSize.width * 3 / 6, 30), kCCTextAlignmentRight,
-					kCCVerticalTextAlignmentTop);
-			scoreLabel->retain();
-			scoreLabel->setColor(ccc3(0, 255, 0));
-			scoreLabel->setPosition(ccp(winSize.width * 4 / 6, winSize.height * 1 / 4));
-			this->addChild(scoreLabel);
+		this->scoreLabel = CCLabelTTF::create(seqLevel.c_str(), "Artial", 18,
+				CCSizeMake(winSize.width * 3 / 6, 30), kCCTextAlignmentRight,
+				kCCVerticalTextAlignmentTop);
+		scoreLabel->retain();
+		scoreLabel->setColor(ccc3(0, 255, 0));
+		scoreLabel->setPosition(
+				ccp(winSize.width * 4 / 6, winSize.height * 1 / 4));
+		this->addChild(scoreLabel);
 	}
+
+	// ask for stars
+
+
+	int currentScore =
+			cocos2d::CCUserDefault::sharedUserDefault()->getIntegerForKey(
+					("level_" + strLevel).c_str(), 0);
+
+	int stars = LevelHelper::getStarsForLevel(level, currentScore);
+
+	CCLog("stars: %i", stars);
+
+	std::string starPath;
+	switch (stars) {
+	case 0:
+		starPath = "stars-w3.png";
+		break;
+	case 1:
+		starPath = "stars-w2.png";
+		break;
+	case 2:
+		starPath = "stars-w1.png";
+		break;
+	case 3:
+		starPath = "stars-w0.png";
+		break;
+	default:
+		starPath = "stars-w3.png";
+		break;
+	}
+
+	CCLog("path %s", starPath.c_str());
+
+	CCSprite * spriteStar = CCSprite::create(starPath.c_str());
+
+	// stars created
+
+	spriteStar->setPosition(ccp(winSize.width * 4 /9 , winSize.height * 1 / 8));
+	this->addChild(spriteStar);
 
 	std::string strScore =
 			static_cast<std::ostringstream*>(&(std::ostringstream() << score))->str();

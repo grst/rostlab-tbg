@@ -70,6 +70,9 @@ bool PauseLayer::init()
 
 		CCMenuItemToggle * toggleMenu = CCMenuItemToggle::createWithTarget(this,menu_selector(PauseLayer::OnMenu), pMusicItemOn, pMusicItemOff, NULL );
 				toggleMenu->setTag(2);
+
+
+
 		// add current value
 		if( !	cocos2d::CCUserDefault::sharedUserDefault()->getBoolForKey(
 					"music_enable", true)){
