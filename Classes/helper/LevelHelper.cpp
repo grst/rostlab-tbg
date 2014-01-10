@@ -161,6 +161,18 @@ int LevelHelper::getHighscoreForLevel(int level) {
     return score;
 }
 
+int LevelHelper::getStarsForLevel(int level, int score) {
+    int maxScore = getHighscoreForLevel(level);
+    if(score/maxScore > 0.7) {
+        return 3;
+    } else if(score /maxScore > 0.5){
+        return 2;
+    } else if(score /maxScore > 0.3) {
+        return 1;
+    }
+    return 0;
+}
+
 std::string LevelHelper::getCodeForLevel(int level) {
 	std::string sequence = "";
 	switch (level) {
