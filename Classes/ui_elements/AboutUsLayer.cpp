@@ -123,21 +123,37 @@ void AboutUsLayer::getNextImage() {
 	switch (posImageCounter) {
 	case 0:
 		title = "0";
-		img = "5PEP.png";
+		img = "cards/00.png";
 		break;
 	case 1:
 		title = "1";
-		img = "1ASZ.png";
+		img = "cards/01.png";
 		break;
 	case 2:
 		title = "2";
-		img = "1DGS.png";
+		img = "cards/02.png";
 		break;
 	case 3:
 		title = "3";
-		img = "1OLG.png";
+		img = "cards/03.png";
 		break;
 	case 4:
+		title = "3";
+		img = "cards/04.png";
+		break;
+	case 5:
+		title = "3";
+		img = "cards/05.png";
+		break;
+	case 6:
+		title = "3";
+		img = "cards/06.png";
+		break;
+	case 7:
+		title = "3";
+		img = "cards/07.png";
+		break;
+	case 8:
 		// simulate close Button clicked
 		layer = (MainScreenLayer*) this->getParent();
 		layer->keyBackClicked();
@@ -149,20 +165,21 @@ void AboutUsLayer::getNextImage() {
 	CCLOG("Starting remove");
 	if (pImage != NULL && posImageCounter > 0) {
 		pImage->removeFromParent();
-		pTitle->removeFromParent();
+		// pTitle->removeFromParent();
 	}
 	CCLOG("Remove survided");
 
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 	this->pImage = CCSprite::create(img.c_str());
 
-	//scale it proportionally to 70% of the screen
-	float scale = 0.7;
+	//scale it proportionally to  the screen
+	float scale = 0.95;
 	CCSize logoSize = pImage->getContentSize();
 	HelperFunctions::resizseSprite(pImage, 0.0, winSize.height * scale);
-	pImage->setPosition(ccp(winSize.width * 1 / 3, winSize.height / 2));
+	pImage->setPosition(ccp(winSize.width * 1 / 2, winSize.height / 2));
 	this->addChild(pImage, 12);
 
+	/*
 	this->pTitle = CCLabelTTF::create(title.c_str(), "carrois", 20,
 			CCSizeMake(winSize.width * 4 / 6, 30), kCCTextAlignmentCenter,
 			kCCVerticalTextAlignmentTop);
@@ -170,6 +187,7 @@ void AboutUsLayer::getNextImage() {
 	this->pTitle->setPosition(
 			ccp(winSize.width * 3 / 6, winSize.height * 11 / 12));
 	this->addChild(pTitle, 12);
+	 */
 
 	posImageCounter = posImageCounter + 1;
 }
