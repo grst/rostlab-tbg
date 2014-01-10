@@ -62,7 +62,7 @@ bool AboutUsLayer::init() {
 
 		// next Button
 		CCMenuItemImage *pNextButton = CCMenuItemImage::create(
-				"grey/impressum.png", "grey/impressum.png", this,
+				"grey/next.png", "grey/next.png", this,
 				menu_selector(AboutUsLayer::OnMenu));
 		pNextButton->setPosition(
 				ccp(winSize.width * 3 / 5 + pNextButton->getContentSize().width,
@@ -191,7 +191,7 @@ void AboutUsLayer::getNextImage() {
 		layer->keyBackClicked();
 		return;
 	default:
-		img = "loading-bar-bg.png";
+		img = "transparent.png";
 	}
 
 	CCLOG("Starting remove");

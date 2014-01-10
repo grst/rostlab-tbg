@@ -65,8 +65,8 @@ bool LevelLoadingLayer::init() {
 	// add the sprite as a child to this layer
 	this->addChild(pSpriteBackground, 0);
 
-	CCMenuItemImage *pCloseApp = CCMenuItemImage::create("white/closeapp.png",
-			"white/closeapp.png", this,
+	CCMenuItemImage *pCloseApp = CCMenuItemImage::create("white/exit.png",
+			"white/exit.png", this,
 			menu_selector(LevelLoadingLayer::changeScene));
 	pCloseApp->setPosition(0, 0);
 	pCloseApp->setTag(1);
@@ -198,33 +198,6 @@ void LevelLoadingLayer::addLabels() {
 	scoreLabel->setPosition(ccp(winSize.width * 4 / 6, winSize.height * 1 / 8));
 	this->addChild(scoreLabel);
 
-	/* todo
-
-	 // add Loading bar BG
-	 CCSprite* pPercentageBG = CCSprite::create("loading-bar-bg.png");
-
-	 //scale it proportionally to 30% of the screen
-	 float scalePerBG = 0.4;
-	 CCSize logoPercentageBGSize = pPercentageBG->getContentSize();
-	 HelperFunctions::resizseSprite(pPercentageBG, winSize.width * scalePerBG, 0.0);
-	 pPercentageBG->setPosition(
-	 ccp(
-	 winSize.width  * 2 /3, winSize.height * 1 / 4));
-	 this->addChild(pPercentageBG, 0);
-
-	 // add Loading bar
-	 CCSprite* pPercentage = CCSprite::create("loading-bar.png");
-
-	 //scale it proportionally to 30% of the screen
-	 float scalePer = 0.38;
-	 CCSize logoPercentageSize = pPercentage->getContentSize();
-	 HelperFunctions::resizseSprite(pPercentage, winSize.width * scalePer, 0.0);
-	 pPercentage->setPosition(
-	 ccp(
-	 winSize.width  * 2 / 3, winSize.height * 1 / 4));
-	 this->addChild(pPercentage, 1);
-
-	 */
 
 	// name
 	this->ttfName = CCLabelTTF::create(

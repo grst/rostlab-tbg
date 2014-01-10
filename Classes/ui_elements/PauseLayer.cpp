@@ -60,11 +60,11 @@ bool PauseLayer::init() {
 
 		//music
 		CCMenuItemImage * pMusicItemOn = CCMenuItemImage::create(
-				"grey/volume_on.png", "grey/volume_on.png", this,
+				"grey/mute.png", "grey/mute.png", this,
 				menu_selector(PauseLayer::OnMenu));
 
 		CCMenuItemImage* pMusicItemOff = CCMenuItemImage::create(
-				"grey/volume_muted.png", "grey/volume_muted.png", this,
+				"grey/unmute.png", "grey/unmute.png", this,
 				menu_selector(PauseLayer::OnMenu));
 
 		CCMenuItemToggle * toggleMenu = CCMenuItemToggle::createWithTarget(this,
@@ -81,15 +81,15 @@ bool PauseLayer::init() {
 
 		// main menu
 		CCMenuItemImage *pMainMenu = CCMenuItemImage::create(
-				"grey/mainmenu.png", "grey/mainmenu.png", this,
+				"grey/exit.png", "grey/exit.png", this,
 				menu_selector(PauseLayer::OnMenu));
 
 		pMainMenu->setTag(1);
 		menuIcons->addObject(pMainMenu);
 
-		// close app
+		// resume
 		CCMenuItemImage *pCloseApp = CCMenuItemImage::create(
-				"grey/closeapp.png", "grey/closeapp.png", this,
+				"grey/play.png", "grey/play.png", this,
 				menu_selector(PauseLayer::OnMenu));
 
 		pCloseApp->setTag(4);
