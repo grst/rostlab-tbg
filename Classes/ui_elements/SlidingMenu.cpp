@@ -195,42 +195,46 @@ bool SlidingMenuGrid::ccTouchBegan(CCTouch* touch, CCEvent* event)
 
 void SlidingMenuGrid::ccTouchCancelled(CCTouch* touch, CCEvent* event)
 {
-	if(selectedItem)
-	{
-		selectedItem->unselected();
-		selectedItem = NULL;
-		state = kCCMenuStateWaiting;
+	if(!bFreezed){
+		if(selectedItem)
+		{
+			selectedItem->unselected();
+			selectedItem = NULL;
+			state = kCCMenuStateWaiting;
+		}
 	}
 }
 
 void SlidingMenuGrid::ccTouchMoved(CCTouch* touch, CCEvent* event)
 {
+	if(!bFreezed){
 	if(GetItemWithinTouch(touch) == NULL && selectedItem)
-	{
-		//Touch Cancelled
-		if(selectedItem->isEnabled())
 		{
-			selectedItem->unselected();
+			//Touch Cancelled
+			if(selectedItem->isEnabled())
+			{
+				selectedItem->unselected();
+			}
+			selectedItem = NULL;
+			state = kCCMenuStateWaiting;
+			return;
 		}
-		selectedItem = NULL;
-		state = kCCMenuStateWaiting;
-		return;
+
+		if(GetItemWithinTouch(touch) != NULL && selectedItem)
+		{
+			return;
+		}
+		// Calculate the current touch point during the move.
+		touchStop = CCDirector::sharedDirector()->convertToGL(touch->getLocationInView());// Distance between the origin of the touch and current touch point.
+		fMoveDelta = (bVerticalPaging) ? (touchStop.y - touchOrigin.y) : (touchStop.x - touchOrigin.x);// Set our position.
+		setPosition(GetPositionOfCurrentPageWithOffset(fMoveDelta));
+		bMoving = true;
 	}
-    
-	if(GetItemWithinTouch(touch) != NULL && selectedItem)
-	{
-		return;
-	}
-	// Calculate the current touch point during the move.
-    touchStop = CCDirector::sharedDirector()->convertToGL(touch->getLocationInView());// Distance between the origin of the touch and current touch point.
-	fMoveDelta = (bVerticalPaging) ? (touchStop.y - touchOrigin.y) : (touchStop.x - touchOrigin.x);// Set our position.
-	setPosition(GetPositionOfCurrentPageWithOffset(fMoveDelta));
-	bMoving = true;
 }
 
 void SlidingMenuGrid::ccTouchEnded(CCTouch* touch, CCEvent* event)
 {
-	if( bMoving )
+	if( bMoving && !bFreezed )
 	{
 		bMoving = false;
 		{
@@ -400,4 +404,14 @@ void SlidingMenuGrid::setPageLabel( int iPage,CCNode * pLabel)
 	else
 		pt=CCPointMake(menuOrigin.x+(iSetPage-1)*winSize.width+labelSize.width/2,winSize.height-menuOrigin.y-iMenuRows*padding.y-labelSize.height/2);
 	pLabel->setPosition(pt);
+}
+
+void SlidingMenuGrid::freeze(){
+	//this->setTouchEnabled(false);
+	this->bFreezed = true;
+}
+
+void SlidingMenuGrid::unfreeze(){
+	//this->setTouchEnabled(true);
+	this->bFreezed = false;
 }

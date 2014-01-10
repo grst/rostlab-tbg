@@ -53,6 +53,8 @@ protected:
 	float fMoveDeadZone; // Amount they need to slide the grid in order to move to a new page.
 	float fAnimSpeed; // 0.0-1.0 value determining how slow/fast to animate the paging.
     
+	bool bFreezed; // disables all touch events
+
 	int iMenuRows;
 	CCMenu * pMenu;
 public:
@@ -71,5 +73,8 @@ public:
     
 	void gotoPage(int iPage=0, bool animated = true);
 	void setPageLabel(int,CCNode *);//Add label on the page
+
+	void freeze();
+	void unfreeze();
 };
 #endif

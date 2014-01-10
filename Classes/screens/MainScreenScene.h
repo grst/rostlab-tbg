@@ -29,6 +29,8 @@
 #include "cocos2d.h"
 #include "../ui_elements/cc-extensions/CCBlade.h"
 #include "../helper/SoundEffectHelper.h"
+#include "../ui_elements/SlidingMenu.h"
+
 
 class MainScreenLayer : public cocos2d::CCLayer
 {
@@ -60,6 +62,7 @@ private:
     cocos2d::CCMenu* levelMenu;
     cocos2d::CCMenu* mainMenu;
     std::map< cocos2d::CCTouch *, CCBlade * >  _map;
+    SlidingMenuGrid* sliderMenu;
 };
 
 class MainScreenScene : public cocos2d::CCScene

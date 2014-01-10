@@ -19,6 +19,7 @@ public:
 	virtual bool init();
 	void DrawHUD();
 	void OnMenu(CCObject* pSender);
+	void didSwipe(CCObject* pSender);
 	void initButt();
 	void getNextImage();
 	CREATE_FUNC(AboutUsLayer);

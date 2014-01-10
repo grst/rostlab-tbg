@@ -12,6 +12,7 @@
 #include "../helper/SoundEffectHelper.h"
 
 
+
 class PauseLayer : public cocos2d::CCLayer {
 public:
 	PauseLayer();
@@ -22,9 +23,12 @@ public:
 	virtual bool init();
 	void DrawHUD();
 	void OnMenu(CCObject* pSender);
+	void didSwipe(CCObject* sender);
 	CREATE_FUNC(PauseLayer);
 private:
 	cocos2d::CCMenu* levelMenu;
 };
+
+
 
 #endif /* PAUSELAYER_H_ */

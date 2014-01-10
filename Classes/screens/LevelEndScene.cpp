@@ -3,6 +3,7 @@
 #include "MainScreenScene.h"
 #include "../helper/HelperFunctions.h"
 #include "../helper/LevelHelper.h"
+#include "../ui_elements/cc-extensions/CCGestureRecognizer/CCSwipeGestureRecognizer.h"
 
 using namespace cocos2d;
 
@@ -88,15 +89,37 @@ bool LevelEndLayer::init() {
 
 	 */
 
+
+	// add swipe
+	CCSwipeGestureRecognizer * swipe = CCSwipeGestureRecognizer::create();
+	swipe->setTarget(this, callfuncO_selector(LevelEndLayer::didSwipe));
+	swipe->setDirection(
+			kSwipeGestureRecognizerDirectionRight
+					| kSwipeGestureRecognizerDirectionLeft);
+	swipe->setCancelsTouchesInView(true);
+	this->addChild(swipe, 12);
+
+
 	// set a delay for three seconds
 	this->runAction(
-			CCSequence::create(CCDelayTime::create(6),
+			CCSequence::create(CCDelayTime::create(15),
 					CCCallFunc::create(this,
 							callfunc_selector(LevelEndLayer::endScreen)),
 					NULL));
 
 	return true;
 
+}
+
+void LevelEndLayer::didSwipe(CCObject* pSender) {
+	CCSwipe * swipe =  (CCSwipe *) pSender;
+	// recognize swipe to the left
+	CCLog("got swipe event");
+	if(swipe->direction == kSwipeGestureRecognizerDirectionLeft){
+		CCScene * pScene1 = MainScreenScene::create();
+				CCDirector::sharedDirector()->replaceScene(
+						CCTransitionMoveInR::create(0.5f, pScene1));
+	}
 }
 
 void LevelEndLayer::addLabels() {

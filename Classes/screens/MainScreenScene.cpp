@@ -11,7 +11,7 @@
 #include "../ui_elements/cc-extensions/TouchTrailLayer.h"
 #include "../ui_elements/ImpressumLayer.h"
 #include "../ui_elements/AboutUsLayer.h"
-#include "../ui_elements/SlidingMenu.h"
+#include "../ui_elements/cc-extensions/CCGestureRecognizer/CCSwipeGestureRecognizer.h"
 
 using namespace cocos2d;
 
@@ -72,6 +72,8 @@ bool MainScreenLayer::init() {
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
 	initBackground();
+
+
 //
 //	this->_label = CCLabelTTF::create("Select your level", "Arial", 24);
 //	_label->retain();
@@ -213,7 +215,8 @@ bool MainScreenLayer::init() {
 			menu_selector(MainScreenLayer::changeScene));
 
 	CCMenuItemToggle * toggleMenu = CCMenuItemToggle::createWithTarget(this,
-			menu_selector(MainScreenLayer::changeScene), pMusicItemOn, pMusicItemOff,
+			menu_selector(MainScreenLayer::changeScene), pMusicItemOn,
+			pMusicItemOff,
 			NULL);
 	toggleMenu->setTag(15);
 	menuIcons->addObject(toggleMenu);
@@ -264,7 +267,7 @@ bool MainScreenLayer::init() {
 			windowSize.height / 2.0f - eHeight / 2.0f);
 
 	// create Menu for icons
-	SlidingMenuGrid* sliderMenu = SlidingMenuGrid::menuWithArray(levelIcons,
+	sliderMenu = SlidingMenuGrid::menuWithArray(levelIcons,
 			col, row, menuPosition, p);
 
 	sliderMenu->setAnchorPoint(ccp(0.5, 3 / 9));
@@ -302,6 +305,7 @@ bool MainScreenLayer::init() {
 
 	return true;
 }
+
 
 void MainScreenLayer::initBackground() {
 
@@ -360,7 +364,7 @@ void MainScreenLayer::changeScene(CCObject* pSender) {
 
 	CCMenuItem* pMenuItem = (CCMenuItem *) (pSender);
 	int tag = (int) pMenuItem->getTag();
-	CCLOG("Changing to settings", tag);
+	CCLOG("Changing to settings %d", tag);
 
 	CCLayer * layer2;
 
@@ -372,19 +376,31 @@ void MainScreenLayer::changeScene(CCObject* pSender) {
 				CCTransitionFade::create(1.0f, pScene1));
 		break;
 	case 11:
+		/*
+		pScene1 = PauseLayerScene::create();
+		//transition to next scene for one sec
+		CCDirector::sharedDirector()->replaceScene(
+				CCTransitionFade::create(1.0f, pScene1));
+		*/
+
 		if (this->getChildByTag(TAG_ABOUTUS_LAYER) != NULL) {
 			this->removeChildByTag(TAG_ABOUTUS_LAYER, true);
+			this->sliderMenu->unfreeze();
 		} else {
 			layer2 = AboutUsLayer::create();
 			this->addChild(layer2, 10, TAG_ABOUTUS_LAYER);
+			this->sliderMenu->freeze();
 		}
 		break;
+
 	case 12:
 		if (this->getChildByTag(TAG_IMPRESSUM_LAYER) != NULL) {
 			this->removeChildByTag(TAG_IMPRESSUM_LAYER, true);
+			this->sliderMenu->unfreeze();
 		} else {
 			layer2 = ImpressumLayer::create();
 			this->addChild(layer2, 10, TAG_IMPRESSUM_LAYER);
+			this->sliderMenu->freeze();
 		}
 		break;
 	case 13:
@@ -427,7 +443,7 @@ void MainScreenLayer::menuStartGameCallback(CCObject* pSender) {
 
 //SoundEffectHelper::stopBackgroundMusic();
 
-	CCFiniteTimeAction* actionMove = CCScaleBy::create(1.0, 4.0);
+	CCFiniteTimeAction* actionMove = CCFadeOut::create(0.4);
 
 	// Sebi: we have to add some dummy parameters otherwise it fails on Android
 	CCSequence *readySequence = CCSequence::create(actionMove, NULL, NULL);
@@ -436,7 +452,7 @@ void MainScreenLayer::menuStartGameCallback(CCObject* pSender) {
 
 //transition to next scene for one sec
 	CCDirector::sharedDirector()->replaceScene(
-			CCTransitionMoveInB::create(2.0f, pScene));
+			CCTransitionFadeDown::create(0.8f, pScene));
 
 }
 

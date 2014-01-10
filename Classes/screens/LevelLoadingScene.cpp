@@ -3,6 +3,7 @@
 #include "../helper/LevelHelper.h"
 #include "MainScreenScene.h"
 #include "DeeWorldScene.h"
+#include "../ui_elements/cc-extensions/CCGestureRecognizer/CCSwipeGestureRecognizer.h"
 
 using namespace cocos2d;
 
@@ -64,14 +65,11 @@ bool LevelLoadingLayer::init() {
 	// add the sprite as a child to this layer
 	this->addChild(pSpriteBackground, 0);
 
-
-
 	CCMenuItemImage *pCloseApp = CCMenuItemImage::create("white/closeapp.png",
 			"white/closeapp.png", this,
 			menu_selector(LevelLoadingLayer::changeScene));
-	pCloseApp->setPosition(0,0);
+	pCloseApp->setPosition(0, 0);
 	pCloseApp->setTag(1);
-
 
 	CCMenuItemImage *pStartButton = CCMenuItemImage::create("start-button.png",
 			"start-button.png", this,
@@ -79,18 +77,27 @@ bool LevelLoadingLayer::init() {
 	pStartButton->setPosition(0, 0);
 	pStartButton->setTag(2);
 
-
 	// Create a menu with our menu items
-	cocos2d::CCMenu*  backMenu = CCMenu::createWithItem(pCloseApp );
+	cocos2d::CCMenu* backMenu = CCMenu::createWithItem(pCloseApp);
 	backMenu->setPosition(ccp(20, winSize.height - 25));
 	backMenu->alignItemsHorizontally();
 	this->addChild(backMenu, 11);
-	cocos2d::CCMenu*  startMenu = CCMenu::createWithItem(pStartButton);
+	cocos2d::CCMenu* startMenu = CCMenu::createWithItem(pStartButton);
 	// align in the middle
-	startMenu->setPosition((ccp(winSize.width / 2 -pStartButton->getContentSize().width/4 , winSize.height  * 1/ 7)));
+	startMenu->setPosition(
+			(ccp(winSize.width / 2 - pStartButton->getContentSize().width / 4,
+					winSize.height * 1 / 7)));
 	startMenu->alignItemsHorizontally();
 	this->addChild(startMenu, 10);
 
+	// add swipe
+	CCSwipeGestureRecognizer * swipe = CCSwipeGestureRecognizer::create();
+	swipe->setTarget(this, callfuncO_selector(LevelLoadingLayer::didSwipe));
+	swipe->setDirection(
+			kSwipeGestureRecognizerDirectionRight
+					| kSwipeGestureRecognizerDirectionLeft);
+	swipe->setCancelsTouchesInView(true);
+	this->addChild(swipe, 12);
 
 	/*
 	 CCString labelText = "You will fight for ";
@@ -133,6 +140,17 @@ bool LevelLoadingLayer::init() {
 
 }
 
+void LevelLoadingLayer::didSwipe(CCObject* pSender) {
+	CCSwipe * swipe =  (CCSwipe *) pSender;
+	// recognize swipe to the left
+	CCLog("got swipe event");
+	if(swipe->direction == kSwipeGestureRecognizerDirectionLeft){
+		CCScene * pScene1 = DeeWorld::scene(seq, level);
+				CCDirector::sharedDirector()->replaceScene(
+						CCTransitionMoveInR::create(0.2f, pScene1));
+	}
+}
+
 void LevelLoadingLayer::changeScene(CCObject* pSender) {
 
 	SoundEffectHelper::playClickSound();
@@ -142,7 +160,6 @@ void LevelLoadingLayer::changeScene(CCObject* pSender) {
 	CCMenuItem* pMenuItem = (CCMenuItem *) (pSender);
 	int tag = (int) pMenuItem->getTag();
 	CCLOG("Levelloading: Changing to scene ", tag);
-
 
 	switch (tag) {
 	case 1:
