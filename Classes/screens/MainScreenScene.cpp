@@ -207,12 +207,14 @@ bool MainScreenLayer::init() {
 
 	//music
 	CCMenuItemImage * pMusicItemOn = CCMenuItemImage::create(
-			"grey/mute.png", "grey/mute.png", this,
+			"white/mute.png", "white/mute.png", this,
 			menu_selector(MainScreenLayer::changeScene));
+    pMusicItemOn->setScale(MENU_ITEM_SCALE);
 
 	CCMenuItemImage* pMusicItemOff = CCMenuItemImage::create(
-			"grey/unmute.png", "grey/unmute.png", this,
+			"white/unmute.png", "white/unmute.png", this,
 			menu_selector(MainScreenLayer::changeScene));
+    pMusicItemOn->setScale(MENU_ITEM_SCALE);
 
 	CCMenuItemToggle * toggleMenu = CCMenuItemToggle::createWithTarget(this,
 			menu_selector(MainScreenLayer::changeScene), pMusicItemOn,
@@ -239,7 +241,7 @@ bool MainScreenLayer::init() {
 
 	// Create a menu with our menu items
 	mainMenu = CCMenu::createWithArray(menuIcons);
-	mainMenu->setPosition(ccp(100, winSize.height - 25));
+	mainMenu->setPosition(ccp(115, winSize.height - 25));
 	mainMenu->alignItemsHorizontallyWithPadding(15);
 
 	/*

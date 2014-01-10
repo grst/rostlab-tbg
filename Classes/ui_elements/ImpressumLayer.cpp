@@ -57,7 +57,7 @@ bool ImpressumLayer::init() {
 
 		// next Button
 		CCMenuItemImage *pNextButton = CCMenuItemImage::create(
-				"grey/next.png", "grey/next.png", this,
+				"grey/forward.png", "grey/forward.png", this,
 				menu_selector(ImpressumLayer::OnMenu));
 		pNextButton->setPosition(
 				ccp(winSize.width * 3 / 5 + pNextButton->getContentSize().width,

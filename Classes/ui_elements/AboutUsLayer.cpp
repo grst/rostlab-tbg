@@ -47,22 +47,22 @@ bool AboutUsLayer::init() {
 		this->addChild(pauseLabel, 11);
 
 		CCArray * menuIcons = CCArray::create();
-		/*
+		
 
-		 // close layer
-		 CCMenuItemImage *pCloseLayer = CCMenuItemImage::create(
-		 "grey/closeapp.png", "grey/closeapp.png", this,
-		 menu_selector(AboutUsLayer::OnMenu));
-		 pCloseLayer->setPosition(
-		 ccp(winSize.width * 2 / 5 + pCloseLayer->getContentSize().width,
-		 winSize.height - pCloseLayer->getContentSize().height));
-		 pCloseLayer->setTag(2);
-		 menuIcons->addObject(pCloseLayer);
-		 */
+//		 // close layer
+//		 CCMenuItemImage *pCloseLayer = CCMenuItemImage::create(
+//		 "grey/exit.png", "grey/exit.png", this,
+//		 menu_selector(AboutUsLayer::OnMenu));
+//		 pCloseLayer->setPosition(
+//		 ccp(winSize.width * 2 / 5 + pCloseLayer->getContentSize().width,
+//		 winSize.height - pCloseLayer->getContentSize().height));
+//		 pCloseLayer->setTag(2);
+//		 menuIcons->addObject(pCloseLayer);
+		 
 
 		// next Button
 		CCMenuItemImage *pNextButton = CCMenuItemImage::create(
-				"grey/next.png", "grey/next.png", this,
+				"grey/forward.png", "grey/forward.png", this,
 				menu_selector(AboutUsLayer::OnMenu));
 		pNextButton->setPosition(
 				ccp(winSize.width * 3 / 5 + pNextButton->getContentSize().width,
@@ -184,14 +184,13 @@ void AboutUsLayer::getNextImage() {
 	case 7:
 		title = "3";
 		img = "cards/07.png";
-		break;
-	case 8:
+        break;
+    default:
 		// simulate close Button clicked
 		layer = (MainScreenLayer*) this->getParent();
 		layer->keyBackClicked();
 		return;
-	default:
-		img = "transparent.png";
+
 	}
 
 	CCLOG("Starting remove");
@@ -207,8 +206,8 @@ void AboutUsLayer::getNextImage() {
 	//scale it proportionally to  the screen
 	float scale = 0.95;
 	CCSize logoSize = pImage->getContentSize();
-	HelperFunctions::resizseSprite(pImage, 0.0, winSize.height * scale);
-	pImage->setPosition(ccp(winSize.width * 1 / 2, winSize.height / 2));
+	HelperFunctions::fitImage(pImage);
+	//pImage->setPosition(ccp(winSize.width * 1 / 2, winSize.height / 2));
 	this->addChild(pImage, 12);
 
 	/*
