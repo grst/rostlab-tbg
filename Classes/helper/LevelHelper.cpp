@@ -21,13 +21,11 @@ std::string LevelHelper::getDescriptionForLevel(int level) {
 		break;
 	case 1:
 		description =
-				"p53 tumor suppressor is a transcription factor that mobilizes genes involved "
-				"in sensing and responding to cell damage. It is a large, flexible molecule composed of four chains. This structure includes the portion that links the four chains together.";
+				"Our cells face many dangers, including chemicals, viruses, and ionizing radiation. If cells are damaged in sensitive places by these attackers, the effects can be disastrous. For instance, if key regulatory elements are damaged, the normal controls on cell growth may be blocked and the cell will rapidly multiply and grow into a tumor. p53 tumor suppressor is one of our defenses against this type of damage.";
 		break;
 	case 2:
 		description =
-				"Carbon is essential to life. All of our molecular machines are built "
-				"around a central scaffolding of organic carbon. Unfortunately, carbon in the earth and atmosphere is locked in highly oxidized forms, such as carbonate minerals and carbon dioxide gas.";
+            "Inside plant cells, the enzyme ribulose bisphosphate carboxylase/oxygenase (rubisco) forms the bridge between life and the lifeless, creating organic carbon from the inorganic carbon dioxide in the air.";
 		break;
 	case 3:
 		description =
