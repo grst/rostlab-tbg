@@ -35,23 +35,22 @@ bool AboutUsLayer::init() {
 		this->setTouchEnabled(true);
 		CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 		/*
-		CCLabelTTF* pauseLabel = CCLabelTTF::create("HOW-TO", "carrois", 24,
-				CCSize(winSize.width / 4, 50), kCCTextAlignmentRight);
-		CC_BREAK_IF(!pauseLabel);
+		 CCLabelTTF* pauseLabel = CCLabelTTF::create("HOW-TO", "carrois", 24,
+		 CCSize(winSize.width / 4, 50), kCCTextAlignmentRight);
+		 CC_BREAK_IF(!pauseLabel);
 
-		pauseLabel->setPosition(
-				ccp(
-						winSize.width - pauseLabel->getContentSize().width / 2
-								- winSize.width * 1 / 16,
-						winSize.height
-								- pauseLabel->getContentSize().height / 2));
+		 pauseLabel->setPosition(
+		 ccp(
+		 winSize.width - pauseLabel->getContentSize().width / 2
+		 - winSize.width * 1 / 16,
+		 winSize.height
+		 - pauseLabel->getContentSize().height / 2));
 
-		// add this to the layer
-		this->addChild(pauseLabel, 11);
-		*/
+		 // add this to the layer
+		 this->addChild(pauseLabel, 11);
+		 */
 
 		CCArray * menuIcons = CCArray::create();
-		
 
 //		 // close layer
 //		 CCMenuItemImage *pCloseLayer = CCMenuItemImage::create(
@@ -62,12 +61,11 @@ bool AboutUsLayer::init() {
 //		 winSize.height - pCloseLayer->getContentSize().height));
 //		 pCloseLayer->setTag(2);
 //		 menuIcons->addObject(pCloseLayer);
-		 
 
 		/*
 		 // next Button
 		 CCMenuItemImage *pNextButton = CCMenuItemImage::create(
-				"grey/forward.png", "grey/forward.png", this,
+		 "grey/forward.png", "grey/forward.png", this,
 		 menu_selector(AboutUsLayer::OnMenu));
 		 pNextButton->setPosition(
 		 ccp(winSize.width * 3 / 5 + pNextButton->getContentSize().width,
@@ -76,10 +74,11 @@ bool AboutUsLayer::init() {
 		 menuIcons->addObject(pNextButton);
 		 */
 
-		// music toggle
+// music toggle
 		menuIcons->addObject(
 				SoundEffectHelper::getVolumeMenu(15,
-						menu_selector(AboutUsLayer::OnMenu), this, 1.0, "grey"));
+						menu_selector(AboutUsLayer::OnMenu), this, 1.0,
+						"grey"));
 
 		// Create a menu with our menu items
 		levelMenu = CCMenu::createWithArray(menuIcons);
@@ -172,7 +171,7 @@ void AboutUsLayer::updateImg(int pos, bool direction) {
 
 	CCLOG("NextImage  %d", posImageCounter);
 
-	if(posImageCounter >= 8){
+	if (posImageCounter >= 8) {
 		// simulate close Button clicked
 		MainScreenLayer * layer = (MainScreenLayer*) this->getParent();
 		layer->keyBackClicked();
@@ -181,16 +180,17 @@ void AboutUsLayer::updateImg(int pos, bool direction) {
 
 	std::string img = this->getImg(posImageCounter);
 
-
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
 	float slideTime = 0.4;
 	float bondary = winSize.width * 1 / 2;
 
 	// removing old image via swipe
-	if (pImage != NULL && (posImageCounter > 0 || posImageCounter == 0 && direction == false) ) {
+	if (pImage != NULL
+			&& (posImageCounter > 0
+					|| posImageCounter == 0 && direction == false)) {
 		CCLOG("Doing a swipe");
-		CCFiniteTimeAction* actionMove ;
+		CCFiniteTimeAction* actionMove;
 		if (direction) {
 			actionMove = CCMoveTo::create((float) slideTime,
 					ccp(-bondary, winSize.height / 2));
@@ -219,7 +219,7 @@ void AboutUsLayer::updateImg(int pos, bool direction) {
 	} else {
 		//previous
 		CCLog("previous call.");
-		pImage->setPosition(ccp(- bondary, winSize.height / 2));
+		pImage->setPosition(ccp(-bondary, winSize.height / 2));
 	}
 	this->addChild(pImage, 12);
 
@@ -231,36 +231,36 @@ void AboutUsLayer::updateImg(int pos, bool direction) {
 
 }
 
-std::string AboutUsLayer::getImg(int tag){
+std::string AboutUsLayer::getImg(int tag) {
 	std::string img;
 	switch (tag) {
-		case 0:
-			img = "cards/00.png";
-			break;
-		case 1:
-			img = "cards/01.png";
-			break;
-		case 2:
-			img = "cards/02.png";
-			break;
-		case 3:
-			img = "cards/03.png";
-			break;
-		case 4:
-			img = "cards/04.png";
-			break;
-		case 5:
-			img = "cards/05.png";
-			break;
-		case 6:
-			img = "cards/06.png";
-			break;
-		case 7:
-			img = "cards/07.png";
-			break;
-		default:
-			img = "loading-bar-bg.png";
-		}
+	case 0:
+		img = "cards/00.png";
+		break;
+	case 1:
+		img = "cards/01.png";
+		break;
+	case 2:
+		img = "cards/02.png";
+		break;
+	case 3:
+		img = "cards/03.png";
+		break;
+	case 4:
+		img = "cards/04.png";
+		break;
+	case 5:
+		img = "cards/05.png";
+		break;
+	case 6:
+		img = "cards/06.png";
+		break;
+	case 7:
+		img = "cards/07.png";
+		break;
+	default:
+		img = "loading-bar-bg.png";
+	}
 	return img;
 }
 
@@ -290,8 +290,14 @@ void AboutUsLayer::OnMenu(CCObject* pSender) {
 		getNextImage();
 		break;
 	case 15:
-		// toggle music
 		CCLog("music toggled.");
+		HelperFunctions::toggleMusic();
+		if (SoundEffectHelper::isSoundEnabled()) {
+			SoundEffectHelper::playMainMenuBackgroundMusic();
+			SoundEffectHelper::playClickSound();
+		} else {
+			SoundEffectHelper::stopAllMusic();
+		}
 		break;
 	}
 }

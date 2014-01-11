@@ -146,8 +146,8 @@ void SoundEffectHelper::resumeAllMusic(){
 
 CCMenuItemToggle *  SoundEffectHelper::getVolumeMenu(int tag, SEL_MenuHandler selector , CCObject * that, float scale, std::string color){
 
-	std::string mute= color.append("/mute.png");
-	std::string unmute = color.append("/unmute.png");
+	std::string mute= color + std::string("/mute.png");
+	std::string unmute = color + std::string("/unmute.png");
 	CCMenuItemImage * pMusicItemOn = CCMenuItemImage::create(
 			unmute.c_str(), unmute.c_str(), that,
 			selector);
@@ -163,5 +163,8 @@ CCMenuItemToggle *  SoundEffectHelper::getVolumeMenu(int tag, SEL_MenuHandler se
 	toggleMenu->setTag(tag);
     pMusicItemOn->setScale(scale);
     pMusicItemOff->setScale(scale);
+    toggleMenu->setSelectedIndex(isSoundEnabled() ? 1 : 0);
 	return toggleMenu;
 }
+
+

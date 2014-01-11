@@ -59,25 +59,9 @@ bool PauseLayer::init() {
 		 */
 
 		//music
-		CCMenuItemImage * pMusicItemOn = CCMenuItemImage::create(
-				"grey/mute.png", "grey/mute.png", this,
-				menu_selector(PauseLayer::OnMenu));
-
-		CCMenuItemImage* pMusicItemOff = CCMenuItemImage::create(
-				"grey/unmute.png", "grey/unmute.png", this,
-				menu_selector(PauseLayer::OnMenu));
-
-		CCMenuItemToggle * toggleMenu = CCMenuItemToggle::createWithTarget(this,
-				menu_selector(PauseLayer::OnMenu), pMusicItemOn, pMusicItemOff,
-				NULL);
-		toggleMenu->setTag(2);
-
-		// add current value
-		if (!cocos2d::CCUserDefault::sharedUserDefault()->getBoolForKey(
-				"music_enable", true)) {
-			toggleMenu->setSelectedIndex(1);
-		}
-		menuIcons->addObject(toggleMenu);
+		menuIcons->addObject(
+						SoundEffectHelper::getVolumeMenu(2,
+								menu_selector(PauseLayer::OnMenu), this, 1.0, "grey"));
 
 		// main menu
 		CCMenuItemImage *pMainMenu = CCMenuItemImage::create(
@@ -147,10 +131,11 @@ void PauseLayer::OnMenu(CCObject* pSender) {
 	case 2:
 		// toggle music
 		HelperFunctions::toggleMusic();
-		SoundEffectHelper::playLevelBackgroundMusic(level);
-		SoundEffectHelper::pauseBackgroundMusic();
 		if (SoundEffectHelper::isSoundEnabled()) {
+			SoundEffectHelper::playLevelBackgroundMusic(level);
 			SoundEffectHelper::playClickSound();
+		}else{
+			SoundEffectHelper::stopAllMusic();
 		}
 		break;
 	case 3:

@@ -400,10 +400,11 @@ void MainScreenLayer::changeScene(CCObject* pSender) {
 	case 15:
 		// toggle music
 		HelperFunctions::toggleMusic();
-		SoundEffectHelper::playLevelLoadingBackgroundMusic();
-		SoundEffectHelper::pauseBackgroundMusic();
-		if (SoundEffectHelper::isSoundEnabled()) {
+		if(SoundEffectHelper::isSoundEnabled()){
+			SoundEffectHelper::playMainMenuBackgroundMusic();
 			SoundEffectHelper::playClickSound();
+		}else{
+			SoundEffectHelper::stopAllMusic();
 		}
 		break;
 

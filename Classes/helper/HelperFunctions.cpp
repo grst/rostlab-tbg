@@ -105,9 +105,12 @@ std::vector<std::string> HelperFunctions::split(const std::string &s,
 }
 
 void HelperFunctions::toggleMusic(){
-	cocos2d::CCLog("toggle music");
+
 	bool music = cocos2d::CCUserDefault::sharedUserDefault()->getBoolForKey(
 						"music_enable", true);
+
+	cocos2d::CCLog("toggle music to %s ", music  ? "false" : "true");
+
 	if (music) {
 		cocos2d::CCUserDefault::sharedUserDefault()->setBoolForKey("music_enable", false);
 	}else{
