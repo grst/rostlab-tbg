@@ -155,8 +155,8 @@ void DeeWorld::makeMenu() {
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 	CCPoint origin = CCDirector::sharedDirector()->getVisibleOrigin();
 
-	CCMenuItemImage *pSettings = CCMenuItemImage::create("white/settings.png",
-			"white/settings.png", this,
+	CCMenuItemImage *pSettings = CCMenuItemImage::create("white/pause.png",
+			"white/pause.png", this,
 			menu_selector(DeeWorld::pauseLayerCallback));
 	pSettings->setScale(.7f);
 
@@ -167,7 +167,6 @@ void DeeWorld::makeMenu() {
 		return;
 	}
 
-	// Create a menu with the "close" menu item, it's an auto release object.
 	CCMenu* pMenu = CCMenu::create(pSettings, NULL);
 	pMenu->setPosition(CCPointZero);
 	if (!pMenu) {

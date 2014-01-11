@@ -197,8 +197,8 @@ bool MainScreenLayer::init() {
 	 */
 
 	// about us
-	CCMenuItemImage *pAboutUs = CCMenuItemImage::create("white/aboutus.png",
-			"white/aboutus.png", this,
+	CCMenuItemImage *pAboutUs = CCMenuItemImage::create("white/howto.png",
+			"white/howto.png", this,
 			menu_selector(MainScreenLayer::changeScene));
 	pAboutUs->setScale(MENU_ITEM_SCALE);
 	pAboutUs->setTag(11);
@@ -208,18 +208,20 @@ bool MainScreenLayer::init() {
 	menuIcons->addObject(
 			SoundEffectHelper::getVolumeMenu(15,
 					menu_selector(MainScreenLayer::changeScene), this));
+    pMusicItemOn->setScale(MENU_ITEM_SCALE);
+
 
 	// impressum
-	CCMenuItemImage *pImpressum = CCMenuItemImage::create("white/impressum.png",
-			"white/impressum.png", this,
+	CCMenuItemImage *pImpressum = CCMenuItemImage::create("white/aboutus.png",
+			"white/aboutus.png", this,
 			menu_selector(MainScreenLayer::changeScene));
 	pImpressum->setScale(MENU_ITEM_SCALE);
 	pImpressum->setTag(12);
 	menuIcons->addObject(pImpressum);
 
 	// close app
-	CCMenuItemImage *pCloseApp = CCMenuItemImage::create("white/closeapp.png",
-			"white/closeapp.png", this,
+	CCMenuItemImage *pCloseApp = CCMenuItemImage::create("white/exit.png",
+			"white/exit.png", this,
 			menu_selector(MainScreenLayer::changeScene));
 	pCloseApp->setScale(MENU_ITEM_SCALE);
 	pCloseApp->setTag(13);
@@ -227,7 +229,7 @@ bool MainScreenLayer::init() {
 
 	// Create a menu with our menu items
 	mainMenu = CCMenu::createWithArray(menuIcons);
-	mainMenu->setPosition(ccp(100, winSize.height - 25));
+	mainMenu->setPosition(ccp(115, winSize.height - 25));
 	mainMenu->alignItemsHorizontallyWithPadding(15);
 
 	/*

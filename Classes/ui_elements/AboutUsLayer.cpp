@@ -49,23 +49,23 @@ bool AboutUsLayer::init() {
 		this->addChild(pauseLabel, 11);
 
 		CCArray * menuIcons = CCArray::create();
-		/*
+		
 
-		 // close layer
-		 CCMenuItemImage *pCloseLayer = CCMenuItemImage::create(
-		 "grey/closeapp.png", "grey/closeapp.png", this,
-		 menu_selector(AboutUsLayer::OnMenu));
-		 pCloseLayer->setPosition(
-		 ccp(winSize.width * 2 / 5 + pCloseLayer->getContentSize().width,
-		 winSize.height - pCloseLayer->getContentSize().height));
-		 pCloseLayer->setTag(2);
-		 menuIcons->addObject(pCloseLayer);
-		 */
+//		 // close layer
+//		 CCMenuItemImage *pCloseLayer = CCMenuItemImage::create(
+//		 "grey/exit.png", "grey/exit.png", this,
+//		 menu_selector(AboutUsLayer::OnMenu));
+//		 pCloseLayer->setPosition(
+//		 ccp(winSize.width * 2 / 5 + pCloseLayer->getContentSize().width,
+//		 winSize.height - pCloseLayer->getContentSize().height));
+//		 pCloseLayer->setTag(2);
+//		 menuIcons->addObject(pCloseLayer);
+		 
 
 		/*
 		 // next Button
 		 CCMenuItemImage *pNextButton = CCMenuItemImage::create(
-		 "grey/impressum.png", "grey/impressum.png", this,
+				"grey/forward.png", "grey/forward.png", this,
 		 menu_selector(AboutUsLayer::OnMenu));
 		 pNextButton->setPosition(
 		 ccp(winSize.width * 3 / 5 + pNextButton->getContentSize().width,

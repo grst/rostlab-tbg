@@ -65,8 +65,8 @@ bool LevelLoadingLayer::init() {
 	// add the sprite as a child to this layer
 	this->addChild(pSpriteBackground, 0);
 
-	CCMenuItemImage *pCloseApp = CCMenuItemImage::create("white/closeapp.png",
-			"white/closeapp.png", this,
+	CCMenuItemImage *pCloseApp = CCMenuItemImage::create("white/exit.png",
+			"white/exit.png", this,
 			menu_selector(LevelLoadingLayer::changeScene));
 	pCloseApp->setPosition(0, 0);
 	pCloseApp->setTag(1);
@@ -76,6 +76,7 @@ bool LevelLoadingLayer::init() {
 			menu_selector(LevelLoadingLayer::changeScene));
 	pStartButton->setPosition(0, 0);
 	pStartButton->setTag(2);
+    pStartButton->setScale(.45);
 
 	// Create a menu with our menu items
 	cocos2d::CCMenu* backMenu = CCMenu::createWithItem(pCloseApp);
@@ -85,7 +86,7 @@ bool LevelLoadingLayer::init() {
 	cocos2d::CCMenu* startMenu = CCMenu::createWithItem(pStartButton);
 	// align in the middle
 	startMenu->setPosition(
-			(ccp(winSize.width / 2 - pStartButton->getContentSize().width / 4,
+			(ccp(winSize.width / 2 - pStartButton->getContentSize().width / 4 * .45,
 					winSize.height * 1 / 7)));
 	startMenu->alignItemsHorizontally();
 	this->addChild(startMenu, 10);
@@ -198,33 +199,6 @@ void LevelLoadingLayer::addLabels() {
 	scoreLabel->setPosition(ccp(winSize.width * 4 / 6, winSize.height * 1 / 8));
 	this->addChild(scoreLabel);
 
-	/* todo
-
-	 // add Loading bar BG
-	 CCSprite* pPercentageBG = CCSprite::create("loading-bar-bg.png");
-
-	 //scale it proportionally to 30% of the screen
-	 float scalePerBG = 0.4;
-	 CCSize logoPercentageBGSize = pPercentageBG->getContentSize();
-	 HelperFunctions::resizseSprite(pPercentageBG, winSize.width * scalePerBG, 0.0);
-	 pPercentageBG->setPosition(
-	 ccp(
-	 winSize.width  * 2 /3, winSize.height * 1 / 4));
-	 this->addChild(pPercentageBG, 0);
-
-	 // add Loading bar
-	 CCSprite* pPercentage = CCSprite::create("loading-bar.png");
-
-	 //scale it proportionally to 30% of the screen
-	 float scalePer = 0.38;
-	 CCSize logoPercentageSize = pPercentage->getContentSize();
-	 HelperFunctions::resizseSprite(pPercentage, winSize.width * scalePer, 0.0);
-	 pPercentage->setPosition(
-	 ccp(
-	 winSize.width  * 2 / 3, winSize.height * 1 / 4));
-	 this->addChild(pPercentage, 1);
-
-	 */
 
 	// name
 	this->ttfName = CCLabelTTF::create(

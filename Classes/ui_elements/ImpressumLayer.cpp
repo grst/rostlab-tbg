@@ -50,7 +50,7 @@ bool ImpressumLayer::init() {
 
 		// close layer
 		CCMenuItemImage *pCloseLayer = CCMenuItemImage::create(
-				"grey/closeapp.png", "grey/closeapp.png", this,
+				"grey/exit.png", "grey/exit.png", this,
 				menu_selector(ImpressumLayer::OnMenu));
 		pCloseLayer->setPosition(
 				ccp(winSize.width * 2 / 5 + pCloseLayer->getContentSize().width,
@@ -60,7 +60,7 @@ bool ImpressumLayer::init() {
 
 		// next Button
 		CCMenuItemImage *pNextButton = CCMenuItemImage::create(
-				"grey/impressum.png", "grey/impressum.png", this,
+				"grey/forward.png", "grey/forward.png", this,
 				menu_selector(ImpressumLayer::OnMenu));
 		pNextButton->setPosition(
 				ccp(winSize.width * 3 / 5 + pNextButton->getContentSize().width,

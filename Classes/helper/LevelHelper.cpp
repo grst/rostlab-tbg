@@ -21,23 +21,21 @@ std::string LevelHelper::getDescriptionForLevel(int level) {
 		break;
 	case 1:
 		description =
-				"p53 tumor suppressor is a transcription factor that mobilizes genes involved "
-						"in sensing and responding to cell damage. It is a large, flexible molecule composed of four chains. This structure includes the portion that links the four chains together.";
+				"Our cells face many dangers, including chemicals, viruses, and ionizing radiation. If cells are damaged in sensitive places by these attackers, the effects can be disastrous. For instance, if key regulatory elements are damaged, the normal controls on cell growth may be blocked and the cell will rapidly multiply and grow into a tumor. p53 tumor suppressor is one of our defenses against this type of damage.";
 		break;
 	case 2:
 		description =
-				"Carbon is essential to life. All of our molecular machines are built "
-						"around a central scaffolding of organic carbon. Unfortunately, carbon in the earth and atmosphere is locked in highly oxidized forms, such as carbonate minerals and carbon dioxide gas.";
+            "Inside plant cells, the enzyme ribulose bisphosphate carboxylase/oxygenase (rubisco) forms the bridge between life and the lifeless, creating organic carbon from the inorganic carbon dioxide in the air.";
 		break;
 	case 3:
 		description =
 				"Proteins are tough, so we use an arsenal of enzymes to digest them into "
-						"their component amino acids. Digestion of proteins begins in the stomach, where hydrochloric acid unfolds proteins and the enzyme pepsin begins a rough disassembly. The real work then starts in the intestines. The pancreas adds a collection of protein-cutting enzymes, with trypsin playing the central role, that chop the protein chains into pieces just a few amino acids long";
+				"their component amino acids. Digestion of proteins begins in the stomach, where hydrochloric acid unfolds proteins and the enzyme pepsin begins a rough disassembly. The real work then starts in the intestines. The pancreas adds a collection of protein-cutting enzymes, with trypsin playing the central role, that chop the protein chains into pieces just a few amino acids long";
 		break;
 	case 4:
 		description =
 				" If one strand in the DNA breaks, it is not a disaster, "
-						"but it can lead to problems when the DNA double helix is unwound during the processes of transcription and replication. Breakage of both strands, on the other hand, is far more serious. To protect us from these dangers, our cells use DNA ligases to glue together DNA strands that have been broken.";
+				"but it can lead to problems when the DNA double helix is unwound during the processes of transcription and replication. Breakage of both strands, on the other hand, is far more serious. To protect us from these dangers, our cells use DNA ligases to glue together DNA strands that have been broken.";
 		break;
 	case 5:
 		description =
@@ -47,8 +45,8 @@ std::string LevelHelper::getDescriptionForLevel(int level) {
 	case 6:
 		description =
 				"RNA is a versatile molecule. In its most familiar role,"
-						" RNA acts as an intermediary, carrying genetic information from the DNA to the machinery"
-						" of protein synthesis. RNA also plays more active roles, performing many of the catalytic and recognition functions normally reserved for proteins. The enzyme RNA polymerase carries the weighty responsibility of creating all of these different RNA molecule";
+				" RNA acts as an intermediary, carrying genetic information from the DNA to the machinery"
+				" of protein synthesis. RNA also plays more active roles, performing many of the catalytic and recognition functions normally reserved for proteins. The enzyme RNA polymerase carries the weighty responsibility of creating all of these different RNA molecule";
 		break;
 	case 7:
 		description =
@@ -154,29 +152,25 @@ std::string LevelHelper::getSequenceForLevel(int level) {
 }
 
 int LevelHelper::getHighscoreForLevel(int level) {
-	int score = 0;
-	std::string sequence = LevelHelper::getSequenceForLevel(level);
-	for (int i = 0; i < sequence.length(); i++) {
-		char aa = sequence.at(i);
-		score += MatrixHelper::getScoreForAminoAcid(aa, aa);
-	}
-	return score;
+    int score = 0;
+    std::string sequence = LevelHelper::getSequenceForLevel(level);
+    for(int i = 0; i < sequence.length(); i++) {
+        char aa = sequence.at(i);
+        score += MatrixHelper::getScoreForAminoAcid(aa, aa);
+    }
+    return score;
 }
 
 int LevelHelper::getStarsForLevel(int level, int score) {
-
-	CCLog("current score: %i", score);
-
-	int maxScore = getHighscoreForLevel(level);
-
-	if (score / maxScore > 0.6) {
-		return 3;
-	} else if (score / maxScore > 0.4) {
-		return 2;
-	} else if (score / maxScore > 0.2) {
-		return 1;
-	}
-	return 0;
+    int maxScore = getHighscoreForLevel(level);
+    if(score/maxScore > 0.7) {
+        return 3;
+    } else if(score /maxScore > 0.5){
+        return 2;
+    } else if(score /maxScore > 0.3) {
+        return 1;
+    }
+    return 0;
 }
 
 std::string LevelHelper::getCodeForLevel(int level) {
@@ -316,165 +310,165 @@ std::string LevelHelper::getNameForLevel(int level) {
 }
 
 int LevelHelper::getTimeToLive(int level) {
-	return 8000;
+    return 8000;
 	switch (level) {
-	case 0:
-		return 4;
-	case 1:
-		return 4;
-	case 2:
-		return 5;
-	case 3:
-		return 5;
-	case 4:
-		return 5;
-	case 5:
-		return 5;
-	case 6:
-		return 6;
-
-	case 7:
-		return 6;
-
-	case 8:
-		return 7;
-
-	case 9:
-		return 8;
-	case 10:
-		return 9;
-	default:
-		return 6;
+        case 0:
+            return 4;
+        case 1:
+            return 4;
+        case 2:
+            return 5;
+        case 3:
+            return 5;
+        case 4:
+            return 5;
+        case 5:
+            return 5;
+        case 6:
+            return 6;
+            
+        case 7:
+            return 6;
+            
+        case 8:
+            return 7;
+            
+        case 9:
+            return 8;
+        case 10:
+            return 9;
+        default:
+            return 6;
 	}
 }
 
 int LevelHelper::getMaxSpeed(int level) {
 	switch (level) {
-	case 0:
-		return 4;
-	case 1:
-		return 4;
-	case 2:
-		return 5;
-	case 3:
-		return 5;
-	case 4:
-		return 5;
-	case 5:
-		return 5;
-	case 6:
-		return 6;
-
-	case 7:
-		return 6;
-
-	case 8:
-		return 7;
-
-	case 9:
-		return 8;
-	case 10:
-		return 9;
-	default:
-		return 6;
+        case 0:
+            return 4;
+        case 1:
+            return 4;
+        case 2:
+            return 5;
+        case 3:
+            return 5;
+        case 4:
+            return 5;
+        case 5:
+            return 5;
+        case 6:
+            return 6;
+            
+        case 7:
+            return 6;
+            
+        case 8:
+            return 7;
+            
+        case 9:
+            return 8;
+        case 10:
+            return 9;
+        default:
+            return 6;
 	}
 
 }
 
 int LevelHelper::getMinSpeed(int level) {
 	switch (level) {
-	case 0:
-		return 2;
-	case 1:
-		return 2;
-	case 2:
-		return 3;
-	case 3:
-		return 3;
-	case 4:
-		return 4;
-	case 5:
-		return 4;
-	case 6:
-		return 5;
-
-	case 7:
-		return 5;
-
-	case 8:
-		return 5;
-
-	case 9:
-		return 6;
-	case 10:
-		return 7;
-	default:
-		return 4;
+        case 0:
+            return 2;
+        case 1:
+            return 2;
+        case 2:
+            return 3;
+        case 3:
+            return 3;
+        case 4:
+            return 4;
+        case 5:
+            return 4;
+        case 6:
+            return 5;
+            
+        case 7:
+            return 5;
+            
+        case 8:
+            return 5;
+            
+        case 9:
+            return 6;
+        case 10:
+            return 7;
+        default:
+            return 4;
 	}
 
 }
 
 int LevelHelper::getMaxAA(int level) {
 	switch (level) {
-	case 0:
-		return 6;
-	case 1:
-		return 6;
-	case 2:
-		return 7;
-	case 3:
-		return 8;
-	case 4:
-		return 8;
-	case 5:
-		return 8;
-	case 6:
-		return 9;
-
-	case 7:
-		return 9;
-
-	case 8:
-		return 9;
-
-	case 9:
-		return 10;
-	case 10:
-		return 10;
-	default:
-		return 9;
+        case 0:
+            return 6;
+        case 1:
+            return 6;
+        case 2:
+            return 7;
+        case 3:
+            return 8;
+        case 4:
+            return 8;
+        case 5:
+            return 8;
+        case 6:
+            return 9;
+            
+        case 7:
+            return 9;
+            
+        case 8:
+            return 9;
+            
+        case 9:
+            return 10;
+        case 10:
+            return 10;
+        default:
+            return 9;
 	}
 
 }
 
 int LevelHelper::getMinAA(int level) {
 	switch (level) {
-	case 0:
-		return 4;
-	case 1:
-		return 4;
-	case 2:
-		return 5;
-	case 3:
-		return 5;
-	case 4:
-		return 6;
-	case 5:
-		return 6;
-	case 6:
-		return 7;
-	case 7:
-		return 7;
-
-	case 8:
-		return 8;
-
-	case 9:
-		return 9;
-	case 10:
-		return 9;
-	default:
-		return 6;
+        case 0:
+            return 4;
+        case 1:
+            return 4;
+        case 2:
+            return 5;
+        case 3:
+            return 5;
+        case 4:
+            return 6;
+        case 5:
+            return 6;
+        case 6:
+            return 7;
+        case 7:
+            return 7;
+            
+        case 8:
+            return 8;
+            
+        case 9:
+            return 9;
+        case 10:
+            return 9;
+        default:
+            return 6;
 	}
 
 }
@@ -487,63 +481,63 @@ int LevelHelper::getAAAddProb(int level) {
 //every n calls of addTarget, the aminoacid that is currently needed is added. 
 int LevelHelper::getOtherAAProp(int level) {
 	switch (level) {
-	case 0:
-		return 2;
-	case 1:
-		return 2;
-	case 2:
-		return 3;
-	case 3:
-		return 3;
-	case 4:
-		return 3;
-	case 5:
-		return 4;
-	case 6:
-		return 4;
-	case 7:
-		return 4;
-
-	case 8:
-		return 4;
-
-	case 9:
-		return 6;
-	case 10:
-		return 8;
-	default:
-		return 10;
+        case 0:
+            return 2;
+        case 1:
+            return 2;
+        case 2:
+            return 3;
+        case 3:
+            return 3;
+        case 4:
+            return 3;
+        case 5:
+            return 4;
+        case 6:
+            return 4;
+        case 7:
+            return 4;
+            
+        case 8:
+            return 4;
+            
+        case 9:
+            return 6;
+        case 10:
+            return 8;
+        default:
+            return 10;
 	}
 }
 
 int LevelHelper::getSequenceLength(int level) {
 	switch (level) {
-	case 0:
-		return 20;
-	case 1:
-		return 20;
-	case 2:
-		return 30;
-	case 3:
-		return 30;
-	case 4:
-		return 30;
-	case 5:
-		return 40;
-	case 6:
-		return 50;
-	case 7:
-		return 50;
-
-	case 8:
-		return 80;
-
-	case 9:
-		return 80;
-	case 10:
-		return 80;
-	default:
-		return 10;
+        case 0:
+            return 20;
+        case 1:
+            return 20;
+        case 2:
+            return 30;
+        case 3:
+            return 30;
+        case 4:
+            return 30;
+        case 5:
+            return 40;
+        case 6:
+            return 50;
+        case 7:
+            return 50;
+            
+        case 8:
+            return 80;
+            
+        case 9:
+            return 80;
+        case 10:
+            return 80;
+        default:
+            return 10;
 	}
 }
 
