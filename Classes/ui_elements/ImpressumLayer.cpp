@@ -10,6 +10,7 @@
 #include "../screens/MainScreenScene.h"
 #include "../screens/SettingsScreenScene.h"
 #include "../Globals.h"
+#include "../ui_elements/cc-extensions/CCGestureRecognizer/CCSwipeGestureRecognizer.h"
 
 using namespace cocos2d;
 
@@ -19,7 +20,8 @@ ImpressumLayer::ImpressumLayer() {
 }
 
 ImpressumLayer::~ImpressumLayer() {
-	// TODO Auto-generated destructor stub
+	this->ttfDesc->removeFromParent();
+	this->ttfTitle->removeFromParent();
 }
 
 bool ImpressumLayer::init() {
@@ -34,9 +36,10 @@ bool ImpressumLayer::init() {
 				CCSize(winSize.width / 4, 50), kCCTextAlignmentRight);
 		CC_BREAK_IF(!pauseLabel);
 
-
 		pauseLabel->setPosition(
-				ccp(winSize.width  - pauseLabel->getContentSize().width / 2 - winSize.width * 1/ 16 ,
+				ccp(
+						winSize.width - pauseLabel->getContentSize().width / 2
+								- winSize.width * 1 / 16,
 						winSize.height
 								- pauseLabel->getContentSize().height / 2));
 
@@ -85,8 +88,17 @@ bool ImpressumLayer::init() {
 		blend.dst = GL_ONE_MINUS_SRC_ALPHA;
 		layer3->setBlendFunc(blend);
 		addChild(layer3, 10);
-		textCounter = 0;
+		textCounter = -1;
 		getNextText();
+
+		// add swipe
+		CCSwipeGestureRecognizer * swipe = CCSwipeGestureRecognizer::create();
+		swipe->setTarget(this, callfuncO_selector(ImpressumLayer::didSwipe));
+		swipe->setDirection(
+				kSwipeGestureRecognizerDirectionRight
+						| kSwipeGestureRecognizerDirectionLeft);
+		swipe->setCancelsTouchesInView(true);
+		this->addChild(swipe, 13);
 
 		bRet = true;
 	} while (0);
@@ -95,16 +107,52 @@ bool ImpressumLayer::init() {
 
 }
 
-void ImpressumLayer::getNextText() {
+void ImpressumLayer::getPreviousText() {
+	if (textCounter > 0) {
+		textCounter--;
+		updateImg(textCounter, false);
+	}
+}
 
+void ImpressumLayer::getNextText() {
+	CCLog("get next text");
+	textCounter++;
+	updateImg(textCounter, true);
+}
+
+void ImpressumLayer::updateImg(int count, bool direction) {
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
-	CCLOG("Starting remove");
-	if (this->ttfDesc != NULL && textCounter > 0) {
-		this->ttfDesc->removeFromParent();
-		this->ttfTitle->removeFromParent();
+	CCLOG("Starting sliding remove");
+
+	float slideTime = 0.4;
+	float bondary = winSize.width * 1 / 2;
+
+	// removing old image via swipe
+	if (this->ttfDesc != NULL && (textCounter > 0  || (textCounter == 0 && direction == false))) {
+		CCLOG("Doing a swipe");
+		CCFiniteTimeAction* actionMoveTitle;
+		CCFiniteTimeAction* actionMoveDesc;
+		if (direction) {
+			actionMoveDesc = CCMoveTo::create((float) slideTime,
+					ccp(-bondary, winSize.height * 3 / 5));
+			actionMoveTitle = CCMoveTo::create((float) slideTime,
+								ccp(-bondary, winSize.height * 11 / 12));
+		} else {
+			actionMoveDesc = CCMoveTo::create((float) slideTime,
+					ccp(- bondary, winSize.height * 3 / 5));
+			actionMoveTitle = CCMoveTo::create((float) slideTime,
+											ccp(-bondary, winSize.height * 11 / 12));
+		}
+		CCSequence* seqDesc = CCSequence::create(actionMoveDesc,
+				CCCallFunc::create(ttfDesc,
+						callfunc_selector(CCSprite::removeFromParent)), NULL);
+		CCSequence* seqTitle = CCSequence::create(actionMoveTitle,
+				CCCallFunc::create(ttfTitle,
+						callfunc_selector(CCSprite::removeFromParent)), NULL);
+		ttfDesc->runAction(seqDesc);
+		ttfTitle->runAction(seqTitle);
 	}
-	CCLOG("Remove survided");
 
 	std::string sDesc;
 	MainScreenLayer *layer;
@@ -134,14 +182,15 @@ void ImpressumLayer::getNextText() {
 		break;
 
 	case 2:
-			title = "Proteins";
-			sDesc = "Structure and Sequence of the Proteins is taken from http://pdb.org.\n\n"
-					"The descriptions texts are adapted from the PDB-101 \"Molecule of the Month\"-articles "
-					"(http://pdb.org/pdb/101/motm_archive.do)";
-			this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "carrois", 18,
-					CCSizeMake(winSize.width * 5 / 6, winSize.height * 2 / 3),
-					kCCTextAlignmentCenter, kCCVerticalTextAlignmentCenter);
-			break;
+		title = "Proteins";
+		sDesc =
+				"Structure and Sequence of the Proteins is taken from http://pdb.org.\n\n"
+						"The descriptions texts are adapted from the PDB-101 \"Molecule of the Month\"-articles "
+						"(http://pdb.org/pdb/101/motm_archive.do)";
+		this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "carrois", 18,
+				CCSizeMake(winSize.width * 5 / 6, winSize.height * 2 / 3),
+				kCCTextAlignmentCenter, kCCVerticalTextAlignmentCenter);
+		break;
 
 	case 3:
 		title = "Graphics";
@@ -161,7 +210,7 @@ void ImpressumLayer::getNextText() {
 
 	case 5:
 		title = "Libraries";
-		sDesc =				"[cocos2dx, box2d, ccblade, …?]";
+		sDesc = "[cocos2dx, box2d, ccblade, …?]";
 		this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "carrois", 18,
 				CCSizeMake(winSize.width * 4 / 6, winSize.height * 1 / 2),
 				kCCTextAlignmentCenter, kCCVerticalTextAlignmentCenter);
@@ -196,7 +245,57 @@ void ImpressumLayer::getNextText() {
 
 	}
 
-	textCounter++;
+	if (this->ttfDesc != NULL) {
+
+		// set starting point for swip
+		if (direction) {
+			//next
+			ttfTitle->setPosition(
+					ccp(winSize.width + bondary, winSize.height * 11 / 12));
+			ttfDesc->setPosition(
+					ccp(winSize.width + bondary, winSize.height * 3 / 5));
+		} else {
+			//previous
+			ttfTitle->setPosition(ccp(-bondary, winSize.height * 11 / 12));
+			ttfDesc->setPosition(ccp(-bondary, winSize.height  * 3 / 5));
+		}
+
+		// slide in
+		CCSequence * readySequenceTitle = CCSequence::create(
+				CCMoveTo::create((float) slideTime,
+						ccp(winSize.width * 3 / 6, winSize.height * 11 / 12)), NULL, NULL
+		);
+		ttfTitle->runAction(readySequenceTitle);
+
+		CCSequence * readySequenceDesc = CCSequence::create(
+				CCMoveTo::create((float) slideTime,
+						ccp(winSize.width * 3 / 6, winSize.height * 3 / 5)), NULL, NULL
+		);
+		ttfDesc->runAction(readySequenceDesc);
+
+	}
+
+}
+
+void ImpressumLayer::didSwipe(CCObject * pSender) {
+	CCSwipe * swipe = (CCSwipe *) pSender;
+	// recognize swipe to the left
+	CCLog("got swipe event");
+	if (swipe->direction == kSwipeGestureRecognizerDirectionLeft) {
+		if (textCounter == 5) {
+			// set a delay
+			this->runAction(
+					CCSequence::create(CCDelayTime::create(0.1),
+							CCCallFunc::create(this,
+									callfunc_selector(
+											ImpressumLayer::getNextText)),
+							NULL));
+		} else {
+			getNextText();
+		}
+	} else if (swipe->direction == kSwipeGestureRecognizerDirectionRight) {
+		getPreviousText();
+	}
 }
 
 void ImpressumLayer::OnMenu(CCObject* pSender) {
@@ -212,8 +311,14 @@ void ImpressumLayer::OnMenu(CCObject* pSender) {
 	switch (tag) {
 	case 2:
 		// simulate close Button clicked
-		layer = (MainScreenLayer*) this->getParent();
-		layer->keyBackClicked();
+		//layer = (MainScreenLayer*) this->getParent();
+	//	layer->keyBackClicked();
+		textCounter = 5;
+		this->runAction(
+							CCSequence::create(CCDelayTime::create(0.1),
+									CCCallFunc::create(this,
+											callfunc_selector(
+													ImpressumLayer::getNextText)),NULL));
 		break;
 	case 3:
 		getNextText();

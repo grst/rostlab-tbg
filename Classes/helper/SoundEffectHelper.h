@@ -36,6 +36,8 @@ public:
 	static void playMainMenuBackgroundMusic();
 	static void playLevelLoadingBackgroundMusic();
 	static bool isSoundEnabled();
+
+	static cocos2d::CCMenuItemToggle *  getVolumeMenu(int tag, cocos2d::SEL_MenuHandler selector, cocos2d::CCObject * that);
 };
 
 #endif /* SOUNDEFFECTHELPER_H_ */

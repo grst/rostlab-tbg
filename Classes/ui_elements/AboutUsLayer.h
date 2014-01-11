@@ -21,6 +21,7 @@ public:
 	void OnMenu(CCObject* pSender);
 	void didSwipe(CCObject* pSender);
 	void initButt();
+	void getPreviousImage();
 	void getNextImage();
 	CREATE_FUNC(AboutUsLayer);
 
@@ -31,7 +32,9 @@ private:
 	cocos2d::CCMenu* levelMenu;
 	int posImageCounter;
 	cocos2d::CCSprite* pImage;
-	cocos2d::CCLabelTTF*  pTitle;
+
+	void updateImg(int img, bool direction);
+	std::string getImg(int tag);
 };
 
 #endif /* AboutUsLayer_H_ */

@@ -18,14 +18,17 @@ public:
 	virtual ~ImpressumLayer();
 	virtual bool init();
 	void DrawHUD();
+	void didSwipe(CCObject* pSender);
 	void OnMenu(CCObject* pSender);
 	CREATE_FUNC(ImpressumLayer);
 	void getNextText();
+	void getPreviousText();
 private:
 	cocos2d::CCMenu* levelMenu;
 	int textCounter;
 	cocos2d::CCLabelTTF * ttfDesc;
 	cocos2d::CCLabelTTF * ttfTitle;
+	void updateImg(int tag, bool dir);
 };
 
 #endif /* ImpressumLayer_H_ */

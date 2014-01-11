@@ -116,6 +116,7 @@ bool PauseLayer::init() {
 		addChild(layer3, 10);
 
 
+
 		bRet = true;
 	} while (0);
 

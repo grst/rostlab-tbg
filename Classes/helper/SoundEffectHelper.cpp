@@ -143,3 +143,20 @@ void SoundEffectHelper::resumeAllMusic(){
 	CocosDenshion::SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
 	CocosDenshion::SimpleAudioEngine::sharedEngine()->resumeAllEffects();
 }
+
+CCMenuItemToggle *  SoundEffectHelper::getVolumeMenu(int tag, SEL_MenuHandler selector , CCObject * that){
+	CCMenuItemImage * pMusicItemOn = CCMenuItemImage::create(
+			"grey/volume_on.png", "grey/volume_on.png", that,
+			selector);
+
+	CCMenuItemImage* pMusicItemOff = CCMenuItemImage::create(
+			"grey/volume_muted.png", "grey/volume_muted.png", that,
+			selector);
+
+	CCMenuItemToggle * toggleMenu = CCMenuItemToggle::createWithTarget(that,
+			selector, pMusicItemOn,
+			pMusicItemOff,
+			NULL);
+	toggleMenu->setTag(tag);
+	return toggleMenu;
+}

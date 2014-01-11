@@ -73,7 +73,6 @@ bool MainScreenLayer::init() {
 
 	initBackground();
 
-
 //
 //	this->_label = CCLabelTTF::create("Select your level", "Arial", 24);
 //	_label->retain();
@@ -206,20 +205,9 @@ bool MainScreenLayer::init() {
 	menuIcons->addObject(pAboutUs);
 
 	//music
-	CCMenuItemImage * pMusicItemOn = CCMenuItemImage::create(
-			"grey/volume_on.png", "grey/volume_on.png", this,
-			menu_selector(MainScreenLayer::changeScene));
-
-	CCMenuItemImage* pMusicItemOff = CCMenuItemImage::create(
-			"grey/volume_muted.png", "grey/volume_muted.png", this,
-			menu_selector(MainScreenLayer::changeScene));
-
-	CCMenuItemToggle * toggleMenu = CCMenuItemToggle::createWithTarget(this,
-			menu_selector(MainScreenLayer::changeScene), pMusicItemOn,
-			pMusicItemOff,
-			NULL);
-	toggleMenu->setTag(15);
-	menuIcons->addObject(toggleMenu);
+	menuIcons->addObject(
+			SoundEffectHelper::getVolumeMenu(15,
+					menu_selector(MainScreenLayer::changeScene), this));
 
 	// impressum
 	CCMenuItemImage *pImpressum = CCMenuItemImage::create("white/impressum.png",
@@ -267,8 +255,8 @@ bool MainScreenLayer::init() {
 			windowSize.height / 2.0f - eHeight / 2.0f);
 
 	// create Menu for icons
-	sliderMenu = SlidingMenuGrid::menuWithArray(levelIcons,
-			col, row, menuPosition, p);
+	sliderMenu = SlidingMenuGrid::menuWithArray(levelIcons, col, row,
+			menuPosition, p);
 
 	sliderMenu->setAnchorPoint(ccp(0.5, 3 / 9));
 
@@ -305,7 +293,6 @@ bool MainScreenLayer::init() {
 
 	return true;
 }
-
 
 void MainScreenLayer::initBackground() {
 
@@ -377,11 +364,11 @@ void MainScreenLayer::changeScene(CCObject* pSender) {
 		break;
 	case 11:
 		/*
-		pScene1 = PauseLayerScene::create();
-		//transition to next scene for one sec
-		CCDirector::sharedDirector()->replaceScene(
-				CCTransitionFade::create(1.0f, pScene1));
-		*/
+		 pScene1 = PauseLayerScene::create();
+		 //transition to next scene for one sec
+		 CCDirector::sharedDirector()->replaceScene(
+		 CCTransitionFade::create(1.0f, pScene1));
+		 */
 
 		if (this->getChildByTag(TAG_ABOUTUS_LAYER) != NULL) {
 			this->removeChildByTag(TAG_ABOUTUS_LAYER, true);
@@ -459,10 +446,12 @@ void MainScreenLayer::menuStartGameCallback(CCObject* pSender) {
 void MainScreenLayer::keyBackClicked(void) {
 	if (this->getChildByTag(TAG_ABOUTUS_LAYER) != NULL) {
 		this->removeChildByTag(TAG_ABOUTUS_LAYER, true);
+		this->sliderMenu->unfreeze();
 		return;
 	}
 	if (this->getChildByTag(TAG_IMPRESSUM_LAYER) != NULL) {
 		this->removeChildByTag(TAG_IMPRESSUM_LAYER, true);
+		this->sliderMenu->unfreeze();
 		return;
 	}
 	CCScene *pScene = SplashScreenScene::create(false);

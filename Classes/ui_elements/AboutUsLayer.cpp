@@ -7,6 +7,7 @@
 
 #include "AboutUsLayer.h"
 #include "../helper/HelperFunctions.h"
+#include "../helper/SoundEffectHelper.h"
 #include "../screens/MainScreenScene.h"
 #include "../screens/SettingsScreenScene.h"
 #include "../Globals.h"
@@ -21,6 +22,7 @@ AboutUsLayer::AboutUsLayer() {
 
 AboutUsLayer::~AboutUsLayer() {
 	// TODO Auto-generated destructor stub
+	this->pImage->removeFromParent();
 }
 
 bool AboutUsLayer::init() {
@@ -60,15 +62,22 @@ bool AboutUsLayer::init() {
 		 menuIcons->addObject(pCloseLayer);
 		 */
 
-		// next Button
-		CCMenuItemImage *pNextButton = CCMenuItemImage::create(
-				"grey/impressum.png", "grey/impressum.png", this,
-				menu_selector(AboutUsLayer::OnMenu));
-		pNextButton->setPosition(
-				ccp(winSize.width * 3 / 5 + pNextButton->getContentSize().width,
-						winSize.height - pNextButton->getContentSize().height));
-		pNextButton->setTag(3);
-		menuIcons->addObject(pNextButton);
+		/*
+		 // next Button
+		 CCMenuItemImage *pNextButton = CCMenuItemImage::create(
+		 "grey/impressum.png", "grey/impressum.png", this,
+		 menu_selector(AboutUsLayer::OnMenu));
+		 pNextButton->setPosition(
+		 ccp(winSize.width * 3 / 5 + pNextButton->getContentSize().width,
+		 winSize.height - pNextButton->getContentSize().height));
+		 pNextButton->setTag(3);
+		 menuIcons->addObject(pNextButton);
+		 */
+
+		// music toggle
+		menuIcons->addObject(
+				SoundEffectHelper::getVolumeMenu(15,
+						menu_selector(AboutUsLayer::OnMenu), this));
 
 		// Create a menu with our menu items
 		levelMenu = CCMenu::createWithArray(menuIcons);
@@ -91,9 +100,9 @@ bool AboutUsLayer::init() {
 		layer3->setBlendFunc(blend);
 		addChild(layer3, 10);
 
-		posImageCounter = 0;
 		initButt();
 
+		// add swipe
 		CCSwipeGestureRecognizer * swipe = CCSwipeGestureRecognizer::create();
 		swipe->setTarget(this, callfuncO_selector(AboutUsLayer::didSwipe));
 		swipe->setDirection(
@@ -114,9 +123,10 @@ void AboutUsLayer::didSwipe(CCObject * pSender) {
 	// recognize swipe to the left
 	CCLog("got swipe event");
 	if (swipe->direction == kSwipeGestureRecognizerDirectionLeft) {
-		if (posImageCounter == 8) {
+		if (posImageCounter == 7) {
 			// set a delay
-			this->runAction(CCSequence::create(CCDelayTime::create(0.1),
+			this->runAction(
+					CCSequence::create(CCDelayTime::create(0.1),
 							CCCallFunc::create(this,
 									callfunc_selector(
 											AboutUsLayer::getNextImage)),
@@ -125,13 +135,13 @@ void AboutUsLayer::didSwipe(CCObject * pSender) {
 			getNextImage();
 		}
 	} else if (swipe->direction == kSwipeGestureRecognizerDirectionRight) {
-		// get previous image
+		getPreviousImage();
 	}
 }
 
 void AboutUsLayer::initButt() {
-
-// add Protein
+	posImageCounter = -1;
+	// add Protein
 	this->getNextImage();
 }
 
@@ -142,86 +152,114 @@ void AboutUsLayer::keyBackClicked(void) {
 	layer->keyBackClicked();
 }
 
+void AboutUsLayer::getPreviousImage() {
+	if (posImageCounter >= 1) {
+		posImageCounter = posImageCounter - 1;
+		updateImg(posImageCounter, false);
+	} else {
+		CCLog("not possible");
+	}
+}
+
 void AboutUsLayer::getNextImage() {
+	posImageCounter = posImageCounter + 1;
+	updateImg(posImageCounter, true);
+}
 
-	std::string img = "";
-
-	MainScreenLayer *layer;
+void AboutUsLayer::updateImg(int pos, bool direction) {
 
 	CCLOG("NextImage  %d", posImageCounter);
 
-	std::string title;
-
-	switch (posImageCounter) {
-	case 0:
-		title = "0";
-		img = "cards/00.png";
-		break;
-	case 1:
-		title = "1";
-		img = "cards/01.png";
-		break;
-	case 2:
-		title = "2";
-		img = "cards/02.png";
-		break;
-	case 3:
-		title = "3";
-		img = "cards/03.png";
-		break;
-	case 4:
-		title = "3";
-		img = "cards/04.png";
-		break;
-	case 5:
-		title = "3";
-		img = "cards/05.png";
-		break;
-	case 6:
-		title = "3";
-		img = "cards/06.png";
-		break;
-	case 7:
-		title = "3";
-		img = "cards/07.png";
-		break;
-	case 8:
+	if(posImageCounter >= 8){
 		// simulate close Button clicked
-		layer = (MainScreenLayer*) this->getParent();
+		MainScreenLayer * layer = (MainScreenLayer*) this->getParent();
 		layer->keyBackClicked();
 		return;
-	default:
-		img = "loading-bar-bg.png";
 	}
 
-	CCLOG("Starting remove");
-	if (pImage != NULL && posImageCounter > 0) {
-		pImage->removeFromParent();
-		// pTitle->removeFromParent();
-	}
-	CCLOG("Remove survided");
+	std::string img = this->getImg(posImageCounter);
+
 
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+
+	float slideTime = 0.4;
+	float bondary = winSize.width * 1 / 2;
+
+	// removing old image via swipe
+	if (pImage != NULL && (posImageCounter > 0 || posImageCounter == 0 && direction == false) ) {
+		CCLOG("Doing a swipe");
+		CCFiniteTimeAction* actionMove ;
+		if (direction) {
+			actionMove = CCMoveTo::create((float) slideTime,
+					ccp(-bondary, winSize.height / 2));
+		} else {
+			actionMove = CCMoveTo::create((float) slideTime,
+					ccp(winSize.width + bondary, winSize.height / 2));
+		}
+		CCSequence* seq = CCSequence::create(actionMove,
+				CCCallFunc::create(pImage,
+						callfunc_selector(CCSprite::removeFromParent)),
+				NULL);
+		pImage->runAction(seq);
+	}
+
 	this->pImage = CCSprite::create(img.c_str());
 
 	//scale it proportionally to  the screen
 	float scale = 0.95;
 	CCSize logoSize = pImage->getContentSize();
 	HelperFunctions::resizseSprite(pImage, 0.0, winSize.height * scale);
-	pImage->setPosition(ccp(winSize.width * 1 / 2, winSize.height / 2));
+
+	// set starting point for swip
+	if (direction) {
+		//next
+		pImage->setPosition(ccp(winSize.width + bondary, winSize.height / 2));
+	} else {
+		//previous
+		CCLog("previous call.");
+		pImage->setPosition(ccp(- bondary, winSize.height / 2));
+	}
 	this->addChild(pImage, 12);
 
-	/*
-	 this->pTitle = CCLabelTTF::create(title.c_str(), "carrois", 20,
-	 CCSizeMake(winSize.width * 4 / 6, 30), kCCTextAlignmentCenter,
-	 kCCVerticalTextAlignmentTop);
-	 this->pTitle->setColor(ccc3(0, 0, 0));
-	 this->pTitle->setPosition(
-	 ccp(winSize.width * 3 / 6, winSize.height * 11 / 12));
-	 this->addChild(pTitle, 12);
-	 */
+	// slide in
+	CCFiniteTimeAction* actionMove = CCMoveTo::create((float) slideTime,
+			ccp(winSize.width * 1 / 2, winSize.height / 2));
+	CCSequence *readySequence = CCSequence::create(actionMove, NULL, NULL);
+	pImage->runAction(readySequence);
 
-	posImageCounter = posImageCounter + 1;
+}
+
+std::string AboutUsLayer::getImg(int tag){
+	std::string img;
+	switch (tag) {
+		case 0:
+			img = "cards/00.png";
+			break;
+		case 1:
+			img = "cards/01.png";
+			break;
+		case 2:
+			img = "cards/02.png";
+			break;
+		case 3:
+			img = "cards/03.png";
+			break;
+		case 4:
+			img = "cards/04.png";
+			break;
+		case 5:
+			img = "cards/05.png";
+			break;
+		case 6:
+			img = "cards/06.png";
+			break;
+		case 7:
+			img = "cards/07.png";
+			break;
+		default:
+			img = "loading-bar-bg.png";
+		}
+	return img;
 }
 
 void AboutUsLayer::OnMenu(CCObject* pSender) {
@@ -249,9 +287,10 @@ void AboutUsLayer::OnMenu(CCObject* pSender) {
 		// get next image
 		getNextImage();
 		break;
+	case 15:
+		// toggle music
+		CCLog("music toggled.");
+		break;
 	}
-
-//	CCScene* nextScene = MainMenu::scene();
-	//CCDirector::sharedDirector()->replaceScene(nextScene);
 }
 
