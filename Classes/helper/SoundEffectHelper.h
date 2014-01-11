@@ -12,6 +12,7 @@
 #include "../Globals.h"
 
 #include "SimpleAudioEngine.h"
+#include <string.h>
 
 class SoundEffectHelper {
 public:
@@ -37,7 +38,7 @@ public:
 	static void playLevelLoadingBackgroundMusic();
 	static bool isSoundEnabled();
 
-	static cocos2d::CCMenuItemToggle *  getVolumeMenu(int tag, cocos2d::SEL_MenuHandler selector, cocos2d::CCObject * that);
+	static cocos2d::CCMenuItemToggle *  getVolumeMenu(int tag, cocos2d::SEL_MenuHandler selector, cocos2d::CCObject * that, float scale, std::string color);
 };
 
 #endif /* SOUNDEFFECTHELPER_H_ */

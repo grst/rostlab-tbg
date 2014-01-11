@@ -207,9 +207,7 @@ bool MainScreenLayer::init() {
 	//music
 	menuIcons->addObject(
 			SoundEffectHelper::getVolumeMenu(15,
-					menu_selector(MainScreenLayer::changeScene), this));
-    pMusicItemOn->setScale(MENU_ITEM_SCALE);
-
+					menu_selector(MainScreenLayer::changeScene), this, MENU_ITEM_SCALE, "white"));
 
 	// impressum
 	CCMenuItemImage *pImpressum = CCMenuItemImage::create("white/aboutus.png",

@@ -34,6 +34,7 @@ bool AboutUsLayer::init() {
 		CC_BREAK_IF(!CCLayer::init());
 		this->setTouchEnabled(true);
 		CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+		/*
 		CCLabelTTF* pauseLabel = CCLabelTTF::create("HOW-TO", "carrois", 24,
 				CCSize(winSize.width / 4, 50), kCCTextAlignmentRight);
 		CC_BREAK_IF(!pauseLabel);
@@ -47,6 +48,7 @@ bool AboutUsLayer::init() {
 
 		// add this to the layer
 		this->addChild(pauseLabel, 11);
+		*/
 
 		CCArray * menuIcons = CCArray::create();
 		
@@ -77,7 +79,7 @@ bool AboutUsLayer::init() {
 		// music toggle
 		menuIcons->addObject(
 				SoundEffectHelper::getVolumeMenu(15,
-						menu_selector(AboutUsLayer::OnMenu), this));
+						menu_selector(AboutUsLayer::OnMenu), this, 1.0, "grey"));
 
 		// Create a menu with our menu items
 		levelMenu = CCMenu::createWithArray(menuIcons);
@@ -206,7 +208,7 @@ void AboutUsLayer::updateImg(int pos, bool direction) {
 	this->pImage = CCSprite::create(img.c_str());
 
 	//scale it proportionally to  the screen
-	float scale = 0.95;
+	float scale = 1.05;
 	CCSize logoSize = pImage->getContentSize();
 	HelperFunctions::resizseSprite(pImage, 0.0, winSize.height * scale);
 

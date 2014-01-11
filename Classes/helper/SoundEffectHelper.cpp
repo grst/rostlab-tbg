@@ -144,13 +144,16 @@ void SoundEffectHelper::resumeAllMusic(){
 	CocosDenshion::SimpleAudioEngine::sharedEngine()->resumeAllEffects();
 }
 
-CCMenuItemToggle *  SoundEffectHelper::getVolumeMenu(int tag, SEL_MenuHandler selector , CCObject * that){
+CCMenuItemToggle *  SoundEffectHelper::getVolumeMenu(int tag, SEL_MenuHandler selector , CCObject * that, float scale, std::string color){
+
+	std::string mute= color.append("/mute.png");
+	std::string unmute = color.append("/unmute.png");
 	CCMenuItemImage * pMusicItemOn = CCMenuItemImage::create(
-			"grey/volume_on.png", "grey/volume_on.png", that,
+			unmute.c_str(), unmute.c_str(), that,
 			selector);
 
 	CCMenuItemImage* pMusicItemOff = CCMenuItemImage::create(
-			"grey/volume_muted.png", "grey/volume_muted.png", that,
+			mute.c_str(), mute.c_str(), that,
 			selector);
 
 	CCMenuItemToggle * toggleMenu = CCMenuItemToggle::createWithTarget(that,
@@ -158,5 +161,7 @@ CCMenuItemToggle *  SoundEffectHelper::getVolumeMenu(int tag, SEL_MenuHandler se
 			pMusicItemOff,
 			NULL);
 	toggleMenu->setTag(tag);
+    pMusicItemOn->setScale(scale);
+    pMusicItemOff->setScale(scale);
 	return toggleMenu;
 }
