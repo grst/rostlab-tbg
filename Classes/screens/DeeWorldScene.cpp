@@ -371,7 +371,7 @@ void DeeWorld::showCountdown(int time) {
 
 	// play a nice sound
 
-	if(INTRO_TIME_SECONDS == time){
+	if(startTimer){
 		// delay countdown a bit
 		this->runAction(
 		CCSequence::create(CCDelayTime::create(1),
@@ -402,19 +402,15 @@ void DeeWorld::countdown() {
 		this->timer = this->timer - 1;
 		if (!startTimer) {
 			this->runAction(
-					CCSequence::create(CCDelayTime::create(1),
-							CCCallFunc::create(this,
-									callfunc_selector(DeeWorld::countdown)),
-
-							NULL));
+			CCSequence::create(CCDelayTime::create(1),
+			CCCallFunc::create(this,
+			callfunc_selector(DeeWorld::countdown)),NULL));
 		} else {
 
 			this->runAction(
-					CCSequence::create(CCDelayTime::create(2),
-							CCCallFunc::create(this,
-									callfunc_selector(DeeWorld::countdown)),
-
-							NULL));
+			CCSequence::create(CCDelayTime::create(2),
+			CCCallFunc::create(this,
+			callfunc_selector(DeeWorld::countdown)),NULL));
 			startTimer = false;
 		}
 	} else {
@@ -1051,7 +1047,7 @@ void DeeWorld::pauseAction(int i) {
 			if (this->getChildByTag(TAG_PAUSE_LAYER) != NULL) {
 				this->removeChildByTag(TAG_PAUSE_LAYER, true);
 			}
-			showCountdown(INTRO_TIME_SECONDS);
+			showCountdown(3);
 		}
 	}
 }

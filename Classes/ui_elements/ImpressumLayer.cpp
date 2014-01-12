@@ -197,7 +197,7 @@ void ImpressumLayer::updateImg(int count, bool direction) {
 		title = "Realization";
 		sDesc =
 				"Proudly presented by Gregor Sturm & Sebastian Wilzbach.\n"
-						"For questions, suggestions or support please write to tbg@rostlab.org [TODO!]";
+				"For questions, suggestions or support please write to tbg@rostlab.org [TODO!]";
 		this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "carrois", 18,
 				CCSizeMake(winSize.width * 4 / 6, winSize.height * 1 / 2),
 				kCCTextAlignmentCenter, kCCVerticalTextAlignmentCenter);
@@ -216,8 +216,7 @@ void ImpressumLayer::updateImg(int count, bool direction) {
 
 	case 2:
 		title = "Proteins";
-		sDesc =
-				"Structure and Sequence of the Proteins is taken from http://pdb.org.\n\n"
+		sDesc = "Structure and Sequence of the Proteins is taken from http://pdb.org.\n\n"
 						"The descriptions texts are adapted from the PDB-101 \"Molecule of the Month\"-articles "
 						"(http://pdb.org/pdb/101/motm_archive.do)";
 		this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "carrois", 18,
@@ -227,7 +226,7 @@ void ImpressumLayer::updateImg(int count, bool direction) {
 
 	case 3:
 		title = "Graphics";
-		sDesc = "[CC-Icons, Google-Icons]";
+		sDesc = "[Google-Icons]";
 		this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "carrois", 18,
 				CCSizeMake(winSize.width * 4 / 6, winSize.height * 1 / 2),
 				kCCTextAlignmentCenter, kCCVerticalTextAlignmentCenter);
@@ -243,7 +242,7 @@ void ImpressumLayer::updateImg(int count, bool direction) {
 
 	case 5:
 		title = "Libraries";
-		sDesc = "[cocos2dx, box2d, ccblade, …?]";
+		sDesc = "{cocos2dx, box2d, ccblade, …?}";
 		this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "carrois", 18,
 				CCSizeMake(winSize.width * 4 / 6, winSize.height * 1 / 2),
 				kCCTextAlignmentCenter, kCCVerticalTextAlignmentCenter);
