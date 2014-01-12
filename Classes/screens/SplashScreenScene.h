@@ -41,6 +41,8 @@ public:
 
 
     bool start;
+private:
+    void precache();
 };
 
 class SplashScreenScene : public cocos2d::CCScene

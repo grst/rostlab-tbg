@@ -56,10 +56,12 @@ bool SplashScreenLayer::init() {
 	this->addChild(pSpriteBackground, 0);
 
 	if(start){
-		// let's build the cache
-		AboutUsLayer::buildCache();
-		CCTextureCache::sharedTextureCache()->addImage("wood.jpg");
-		CCTextureCache::sharedTextureCache()->addImage("wood-grunge.jpg");
+	// delay caching a bit
+		this->runAction(
+					CCSequence::create(CCDelayTime::create(0.1),
+							CCCallFunc::create(this,
+									callfunc_selector(SplashScreenLayer::precache)),
+							NULL));
 	}
 
 	// set a delay for two seconds
@@ -69,6 +71,14 @@ bool SplashScreenLayer::init() {
 							callfunc_selector(SplashScreenLayer::startGame)),
 					NULL));
 
+}
+
+void SplashScreenLayer::precache(){
+	// let's build the cache
+	CCLog("cache building started.");
+	AboutUsLayer::buildCache();
+	CCTextureCache::sharedTextureCache()->addImage("wood.jpg");
+	CCTextureCache::sharedTextureCache()->addImage("wood-grunge.jpg");
 }
 
 void SplashScreenLayer::startGame() {

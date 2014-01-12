@@ -102,7 +102,7 @@ bool LevelEndLayer::init() {
 
 	// set a delay for three seconds
 	this->runAction(
-			CCSequence::create(CCDelayTime::create(15),
+			CCSequence::create(CCDelayTime::create(10),
 					CCCallFunc::create(this,
 							callfunc_selector(LevelEndLayer::endScreen)),
 					NULL));

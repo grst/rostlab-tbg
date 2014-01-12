@@ -164,15 +164,17 @@ void SlidingMenuGrid::updatePaging(int counter){
 			}
 		}
 	}
+	CCPoint point = GetPositionOfCurrentPage();
+	CCLog("Map to x:%f, y:%f",point.x, point.y);
+
 	for(int i=0; i< PAGING_ELEMENTS; i++){
 		CCSprite * indie;
 		if(i == counter){
-			indie =CCSprite::create("paging-active.png");
-		}else{
 			indie =CCSprite::create("paging-inactive.png");
+		}else{
+			indie =CCSprite::create("paging-active.png");
 		}
-		CCPoint point = GetPositionOfCurrentPage();
-		CCLog("Map to x:%f, y:%f",point.x, point.y);
+
 		indie->setPosition(ccp((-point.x) + winSize.width / 2 -(PAGING_ELEMENTS / 2 * 15) + i * 15, (-point.y) +20));
 		addChild(indie, 10);
 		pagings.push_back(indie);

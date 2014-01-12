@@ -158,6 +158,7 @@ void AboutUsLayer::updatePaging(int counter){
 }
 // TODO: dirty hack, but works :P
 void AboutUsLayer::buildCache(){
+	CCLog("great cache for swiping started.");
 	if(!AboutUsLayer::cacheLoaded){
 		for(int i=0; i< 8; i++){
 			CCLog("add sprite %s ",getImg(i).c_str() );

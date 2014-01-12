@@ -163,11 +163,12 @@ int LevelHelper::getHighscoreForLevel(int level) {
 
 int LevelHelper::getStarsForLevel(int level, int score) {
     int maxScore = getHighscoreForLevel(level);
-    if(score/maxScore > 0.7) {
+    CCLog("Stars for level: %d with score: %d  || max: %d || scale %f", level, score, maxScore, (score /(1.0*maxScore)));
+    if(score/(maxScore*1.0) > 0.9) {
         return 3;
-    } else if(score /maxScore > 0.5){
+    } else if(score /(maxScore*1.0)  > 0.7){
         return 2;
-    } else if(score /maxScore > 0.3) {
+    } else if(score /(maxScore*1.0)  > 0.45) {
         return 1;
     }
     return 0;

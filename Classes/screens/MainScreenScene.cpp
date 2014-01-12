@@ -446,6 +446,7 @@ void MainScreenLayer::menuStartGameCallback(CCObject* pSender) {
 }
 
 void MainScreenLayer::keyBackClicked(void) {
+	CCLog("key back clicked.");
 	if (this->getChildByTag(TAG_ABOUTUS_LAYER) != NULL) {
 		this->removeChildByTag(TAG_ABOUTUS_LAYER, true);
 		this->sliderMenu->unfreeze();

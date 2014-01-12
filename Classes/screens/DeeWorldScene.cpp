@@ -1091,7 +1091,7 @@ void DeeWorld::gameEnd() {
 					("level_" + strLevel).c_str(), 0);
 
 	if (scoreOld < score || scoreOld == 0) {
-		CCLog("New Highscore");
+		CCLog("New Highscore: %d" ,score);
 		cocos2d::CCUserDefault::sharedUserDefault()->setIntegerForKey(
 				("level_" + strLevel).c_str(), score);
 	}
