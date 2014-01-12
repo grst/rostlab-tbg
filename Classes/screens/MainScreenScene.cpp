@@ -65,8 +65,9 @@ bool MainScreenLayer::init() {
 		return false;
 	}
 
-	// enable Android back button
-	//this->setKeypadEnabled(true);
+	// enable buttons
+	this->setKeypadEnabled(true);
+
 	//this->setTouchEnabled(true);
 
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
@@ -475,10 +476,13 @@ bool MainScreenLayer::isLayerOpen() {
 
 void MainScreenLayer::keyMenuClicked(void) {
 
+	keyBackClicked();
+	/*
 	CCScene *pScene = SettingsScreenScene::create();
 //transition to next scene for one sec
 	CCDirector::sharedDirector()->replaceScene(
 			CCTransitionCrossFade::create(1.0f, pScene));
+	*/
 }
 
 void MainScreenLayer::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent) {

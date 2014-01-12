@@ -368,6 +368,18 @@ void DeeWorld::showCountdown(int time) {
 	CCActionInterval * tintTo = CCTintTo::create(timer, 20, 25, 255);
 	this->_timerLabel->runAction(tintTo);
 	pauseGame();
+
+	// play a nice sound
+
+	if(INTRO_TIME_SECONDS == time){
+		// delay countdown a bit
+		this->runAction(
+		CCSequence::create(CCDelayTime::create(1),
+		CCCallFunc::create(this,
+				callfunc_selector(DeeWorld::countdownSoundCall)),NULL));
+	}else{
+		SoundEffectHelper::playCountdownSound();
+	}
 	this->countdown();
 }
 
@@ -381,7 +393,7 @@ void DeeWorld::countdown() {
 
 	}
 	if (this->timer >= 1) {
-		SoundEffectHelper::playTimerTickSound();
+		//SoundEffectHelper::playTimerTickSound();
 
 		//convert int to string
 		string timeStr = static_cast<ostringstream*>(&(ostringstream()
@@ -396,6 +408,7 @@ void DeeWorld::countdown() {
 
 							NULL));
 		} else {
+
 			this->runAction(
 					CCSequence::create(CCDelayTime::create(2),
 							CCCallFunc::create(this,
@@ -413,6 +426,10 @@ void DeeWorld::countdown() {
 		}
 		resumeGame();
 	}
+}
+
+void DeeWorld::countdownSoundCall() {
+	SoundEffectHelper::playCountdownSound();
 }
 
 /**
@@ -1034,7 +1051,7 @@ void DeeWorld::pauseAction(int i) {
 			if (this->getChildByTag(TAG_PAUSE_LAYER) != NULL) {
 				this->removeChildByTag(TAG_PAUSE_LAYER, true);
 			}
-			showCountdown(3);
+			showCountdown(INTRO_TIME_SECONDS);
 		}
 	}
 }

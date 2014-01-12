@@ -85,6 +85,7 @@ bool AboutUsLayer::init() {
 						"grey"));
 
 
+
 		// Create a menu with our menu items
 		levelMenu = CCMenu::createWithArray(menuIcons);
 		levelMenu->setPosition(ccp(30, winSize.height - 25));

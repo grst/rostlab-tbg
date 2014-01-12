@@ -115,6 +115,7 @@ private:
 	void manageCollision(b2Body* target);
     void scoreAminoAcid(AminoAcid* sTarget);
 	void countdown();
+	void countdownSoundCall();
 	void showCountdown(int time);
 
 	void updateInfoUI();

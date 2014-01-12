@@ -25,6 +25,7 @@ public:
 	static void playNegativeCollisionSound();
 	static void playNeutralCollisionSound();
 	static void playPositiveCollisionSound();
+	static void playCountdownSound();
 
 	static void stopBackgroundMusic();
 	static void pauseBackgroundMusic();

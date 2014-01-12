@@ -50,6 +50,9 @@ bool LevelEndLayer::init() {
 		return false;
 	}
 
+	// enable buttons
+	this->setKeypadEnabled(true);
+
 	SoundEffectHelper::playLevelEndSound();
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
@@ -238,6 +241,17 @@ void LevelEndLayer::addLabels() {
 					winSize.height * 2 / 3));
 	this->addChild(pProtein, 0);
 
+}
+
+void LevelEndLayer::keyMenuClicked(){
+	keyBackClicked();
+}
+
+void LevelEndLayer::keyBackClicked(){
+	CCLog("LevelEnd: keyback clicked.");
+	CCScene *pScene1 = MainScreenScene::create();
+	CCDirector::sharedDirector()->replaceScene(
+					CCTransitionFade::create(1.0f, pScene1));
 }
 
 void LevelEndLayer::endScreen() {

@@ -65,8 +65,14 @@ bool SplashScreenLayer::init() {
 	}
 
 	// set a delay for two seconds
+
+	float time = 2;
+	if(start){
+		time = 0.1;
+	}
+
 	this->runAction(
-			CCSequence::create(CCDelayTime::create(2),
+			CCSequence::create(CCDelayTime::create(time),
 					CCCallFunc::create(this,
 							callfunc_selector(SplashScreenLayer::startGame)),
 					NULL));
@@ -79,6 +85,7 @@ void SplashScreenLayer::precache(){
 	AboutUsLayer::buildCache();
 	CCTextureCache::sharedTextureCache()->addImage("wood.jpg");
 	CCTextureCache::sharedTextureCache()->addImage("wood-grunge.jpg");
+	CCLog("finished building started.");
 }
 
 void SplashScreenLayer::startGame() {

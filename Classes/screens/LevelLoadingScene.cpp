@@ -53,6 +53,9 @@ bool LevelLoadingLayer::init() {
 		return false;
 	}
 
+	// enable buttons
+	this->setKeypadEnabled(true);
+
 	SoundEffectHelper::playLevelLoadingBackgroundMusic();
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
@@ -142,6 +145,8 @@ bool LevelLoadingLayer::init() {
 	return true;
 
 }
+
+
 
 void LevelLoadingLayer::didSwipe(CCObject* pSender) {
 	CCSwipe * swipe =  (CCSwipe *) pSender;
@@ -245,6 +250,17 @@ void LevelLoadingLayer::addLabels() {
 					winSize.height * 2 / 3));
 	this->addChild(pProtein, 0);
 
+}
+
+void LevelLoadingLayer::keyMenuClicked(){
+	keyBackClicked();
+}
+
+void LevelLoadingLayer::keyBackClicked(){
+	CCLog("LevelLoading: keyback clicked.");
+	CCScene * pScene1 = MainScreenScene::create();
+	CCDirector::sharedDirector()->replaceScene(
+					CCTransitionFade::create(1.0f, pScene1));
 }
 
 void LevelLoadingLayer::endScreen() {

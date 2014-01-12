@@ -42,6 +42,9 @@ public:
     void changeScene(CCObject* pSender) ;
     void didSwipe(CCObject* pSender) ;
 
+    virtual void keyBackClicked();
+    virtual void keyMenuClicked();
+
     CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _label, Label);
 
 

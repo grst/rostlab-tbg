@@ -78,6 +78,13 @@ void SoundEffectHelper::playPositiveCollisionSound(){
 	}
 }
 
+void SoundEffectHelper::playCountdownSound(){
+	if(isSoundEnabled()){
+			CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("countdown.mp3");
+	}
+}
+
+
 void SoundEffectHelper::playLevelBackgroundMusic(int level){
 	stopBackgroundMusic();
     char * bgmusic;

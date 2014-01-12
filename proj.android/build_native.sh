@@ -39,6 +39,7 @@ fi
 DIR="$(  pwd )"
 # ... use paths relative to current directory
 COCOS2DX_ROOT="$DIR/../../.."
+#COCOS2DX_ROOT="/home/xsebi/programs/frameworks/cocos2d-x-2.2.2/"
 APP_ROOT="$DIR/.."
 APP_ANDROID_ROOT="$DIR"
 

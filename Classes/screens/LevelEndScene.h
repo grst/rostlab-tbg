@@ -45,6 +45,8 @@ public:
     void didSwipe(CCObject * sender);
     CC_SYNTHESIZE_READONLY(cocos2d::CCLabelTTF*, _label, Label);
 
+    virtual void keyBackClicked();
+    virtual void keyMenuClicked();
 
     int score;
     int level;
