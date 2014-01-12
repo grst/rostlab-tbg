@@ -70,13 +70,15 @@ bool LevelLoadingLayer::init() {
 			menu_selector(LevelLoadingLayer::changeScene));
 	pCloseApp->setPosition(0, 0);
 	pCloseApp->setTag(1);
+	pCloseApp->setScale(0.7);
 
 	CCMenuItemImage *pStartButton = CCMenuItemImage::create("start-button.png",
 			"start-button.png", this,
 			menu_selector(LevelLoadingLayer::changeScene));
 	pStartButton->setPosition(0, 0);
 	pStartButton->setTag(2);
-    pStartButton->setScale(.45);
+	float scale = 0.45;
+    pStartButton->setScale(scale);
 
 	// Create a menu with our menu items
 	cocos2d::CCMenu* backMenu = CCMenu::createWithItem(pCloseApp);
@@ -86,8 +88,8 @@ bool LevelLoadingLayer::init() {
 	cocos2d::CCMenu* startMenu = CCMenu::createWithItem(pStartButton);
 	// align in the middle
 	startMenu->setPosition(
-			(ccp(winSize.width / 2 - pStartButton->getContentSize().width / 4 * .45,
-					winSize.height * 1 / 7)));
+			(ccp(winSize.width / 2 - pStartButton->getContentSize().width / 4 * scale,
+					winSize.height * 1 / 8)));
 	startMenu->alignItemsHorizontally();
 	this->addChild(startMenu, 10);
 

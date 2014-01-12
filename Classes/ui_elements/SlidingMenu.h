@@ -57,6 +57,11 @@ protected:
 
 	int iMenuRows;
 	CCMenu * pMenu;
+
+	// paging
+	void updatePaging(int img);
+	std::vector<cocos2d::CCSprite *> pagings;
+
 public:
 	SlidingMenuGrid();
 	~SlidingMenuGrid();

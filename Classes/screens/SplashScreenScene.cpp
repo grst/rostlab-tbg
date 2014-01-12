@@ -2,6 +2,7 @@
 #include "../helper/WebOpNative.h"
 #include "MainScreenScene.h"
 #include "../helper/HelperFunctions.h"
+#include "../ui_elements/AboutUsLayer.h"
 
 using namespace cocos2d;
 
@@ -53,6 +54,13 @@ bool SplashScreenLayer::init() {
 
 	// add the sprite as a child to this layer
 	this->addChild(pSpriteBackground, 0);
+
+	if(start){
+		// let's build the cache
+		AboutUsLayer::buildCache();
+		CCTextureCache::sharedTextureCache()->addImage("wood.jpg");
+		CCTextureCache::sharedTextureCache()->addImage("wood-grunge.jpg");
+	}
 
 	// set a delay for two seconds
 	this->runAction(

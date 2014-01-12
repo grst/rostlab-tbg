@@ -109,6 +109,7 @@ void SlidingMenuGrid::buildGrid(int cols, int rows)
 	{
 		iPageCount++;
 	}
+	updatePaging(0);
 }
 
 
@@ -144,8 +145,39 @@ void SlidingMenuGrid::buildGridVertical(int cols, int rows)
 	{
 		iPageCount++;
 	}
+	updatePaging(0);
 }
 
+
+void SlidingMenuGrid::updatePaging(int counter){
+	int PAGING_ELEMENTS = iPageCount;
+	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+	// do clean up = removeAll
+	CCLog("updating pager to %d", counter);
+	CCLog("registered pages %d",iPageCount);
+	if(pagings.size() > 0){
+		for(int i=pagings.size()-1; i>= 0; i--){
+			CCSprite *a = pagings[i];
+			if(a != NULL){
+				pagings.erase(pagings.end()-1);
+				a->removeFromParent();
+			}
+		}
+	}
+	for(int i=0; i< PAGING_ELEMENTS; i++){
+		CCSprite * indie;
+		if(i == counter){
+			indie =CCSprite::create("paging-active.png");
+		}else{
+			indie =CCSprite::create("paging-inactive.png");
+		}
+		CCPoint point = GetPositionOfCurrentPage();
+		CCLog("Map to x:%f, y:%f",point.x, point.y);
+		indie->setPosition(ccp((-point.x) + winSize.width / 2 -(PAGING_ELEMENTS / 2 * 15) + i * 15, (-point.y) +20));
+		addChild(indie, 10);
+		pagings.push_back(indie);
+	}
+}
 
 CCMenuItemSprite* SlidingMenuGrid::GetItemWithinTouch(CCTouch* touch)
 {
@@ -280,6 +312,7 @@ void SlidingMenuGrid::ccTouchEnded(CCTouch* touch, CCEvent* event)
                     }
 				}
                 
+				updatePaging(iCurrentPage);
 				// Start sliding towards the current page.
 				moveToCurrentPage();
 			}

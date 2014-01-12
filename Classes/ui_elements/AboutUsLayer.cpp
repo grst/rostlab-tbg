@@ -15,6 +15,8 @@
 
 using namespace cocos2d;
 
+bool AboutUsLayer::cacheLoaded = false;
+
 AboutUsLayer::AboutUsLayer() {
 	// TODO Auto-generated constructor stub
 
@@ -62,6 +64,8 @@ bool AboutUsLayer::init() {
 //		 pCloseLayer->setTag(2);
 //		 menuIcons->addObject(pCloseLayer);
 
+
+
 		/*
 		 // next Button
 		 CCMenuItemImage *pNextButton = CCMenuItemImage::create(
@@ -77,8 +81,9 @@ bool AboutUsLayer::init() {
 // music toggle
 		menuIcons->addObject(
 				SoundEffectHelper::getVolumeMenu(15,
-						menu_selector(AboutUsLayer::OnMenu), this, 1.0,
+						menu_selector(AboutUsLayer::OnMenu), this, 0.7,
 						"grey"));
+
 
 		// Create a menu with our menu items
 		levelMenu = CCMenu::createWithArray(menuIcons);
@@ -99,7 +104,7 @@ bool AboutUsLayer::init() {
 		blend.src = GL_SRC_ALPHA;
 		blend.dst = GL_ONE_MINUS_SRC_ALPHA;
 		layer3->setBlendFunc(blend);
-		addChild(layer3, 10);
+		addChild(layer3, 8);
 
 		initButt();
 
@@ -112,12 +117,56 @@ bool AboutUsLayer::init() {
 		swipe->setCancelsTouchesInView(true);
 		this->addChild(swipe, 13);
 
+		// add paging
+		updatePaging(0);
+
+		// caching all other images
+		buildCache();
+
 		bRet = true;
 	} while (0);
 
 	return bRet;
 
 }
+
+void AboutUsLayer::updatePaging(int counter){
+	int PAGING_ELEMENTS = 8;
+	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+	// do clean up = removeAll
+	CCLog("updating pager to %d", counter);
+	if(pagings.size() > 0){
+		for(int i=pagings.size()-1; i>= 0; i--){
+			CCSprite *a = pagings[i];
+			if(a != NULL){
+				pagings.erase(pagings.end()-1);
+				a->removeFromParent();
+			}
+		}
+	}
+	for(int i=0; i< PAGING_ELEMENTS; i++){
+		CCSprite * indie;
+		if(i == counter){
+			indie =CCSprite::create("paging-active.png");
+		}else{
+			indie =CCSprite::create("paging-inactive.png");
+		}
+		indie->setPosition(ccp(winSize.width / 2 -(PAGING_ELEMENTS / 2 * 15) + i * 15,20));
+		addChild(indie, 10);
+		pagings.push_back(indie);
+	}
+}
+// TODO: dirty hack, but works :P
+void AboutUsLayer::buildCache(){
+	if(!AboutUsLayer::cacheLoaded){
+		for(int i=0; i< 8; i++){
+			CCLog("add sprite %s ",getImg(i).c_str() );
+			CCTextureCache::sharedTextureCache()->addImage(getImg(i).c_str());
+		}
+		AboutUsLayer::cacheLoaded = true;
+	}
+}
+
 
 void AboutUsLayer::didSwipe(CCObject * pSender) {
 	CCSwipe * swipe = (CCSwipe *) pSender;
@@ -171,6 +220,10 @@ void AboutUsLayer::updateImg(int pos, bool direction) {
 
 	CCLOG("NextImage  %d", posImageCounter);
 
+	CCSpriteFrameCache *  cache = CCSpriteFrameCache::sharedSpriteFrameCache();
+
+
+
 	if (posImageCounter >= 8) {
 		// simulate close Button clicked
 		MainScreenLayer * layer = (MainScreenLayer*) this->getParent();
@@ -182,7 +235,7 @@ void AboutUsLayer::updateImg(int pos, bool direction) {
 
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
-	float slideTime = 0.4;
+	float slideTime = 0.25;
 	float bondary = winSize.width * 1 / 2;
 
 	// removing old image via swipe
@@ -206,11 +259,15 @@ void AboutUsLayer::updateImg(int pos, bool direction) {
 	}
 
 	this->pImage = CCSprite::create(img.c_str());
+	// use cache
+	//this->pImage =  CCSprite::createWithTexture(CCTextureCache::sharedTextureCache()->textureForKey(img.c_str()));
+
+
 
 	//scale it proportionally to  the screen
-	float scale = 1.05;
+	float scale = 1.00;
 	CCSize logoSize = pImage->getContentSize();
-	HelperFunctions::resizseSprite(pImage, 0.0, winSize.height * scale);
+	HelperFunctions::resizseSprite(pImage, winSize.width, winSize.height * scale);
 
 	// set starting point for swip
 	if (direction) {
@@ -228,6 +285,9 @@ void AboutUsLayer::updateImg(int pos, bool direction) {
 			ccp(winSize.width * 1 / 2, winSize.height / 2));
 	CCSequence *readySequence = CCSequence::create(actionMove, NULL, NULL);
 	pImage->runAction(readySequence);
+
+	//update paging
+	updatePaging(pos);
 
 }
 

@@ -161,7 +161,7 @@ void DeeWorld::makeMenu() {
 	pSettings->setScale(.7f);
 
 	// Place the menu item top-left corner.
-	pSettings->setPosition(ccp(20, winSize.height - 20));
+	pSettings->setPosition(ccp(30, winSize.height - 20));
 
 	if (!pSettings) {
 		return;

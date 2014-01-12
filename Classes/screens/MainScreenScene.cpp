@@ -125,7 +125,7 @@ bool MainScreenLayer::init() {
 		spriteAA->setScale(scale);
 
 		spriteAA->setPosition(
-				ccp(levelItem->getContentSize().height / 2,
+				ccp(levelItem->getContentSize().height / 2 ,
 						levelItem->getContentSize().width / 2));
 
 		//levelItem->setContentSize(spriteAA->getContentSize());
@@ -139,7 +139,7 @@ bool MainScreenLayer::init() {
 				kCCTextAlignmentCenter);
 
 		strLevelPID->setPosition(
-				ccp(levelItem->getContentSize().width / 2, -50));
+				ccp(levelItem->getContentSize().width / 2, -65));
 		levelItem->addChild(strLevelPID);
 
 		// ask for stars
@@ -180,7 +180,7 @@ bool MainScreenLayer::init() {
 		// stars created
 
 		spriteStar->setPosition(
-				ccp(levelItem->getContentSize().width / 2, -25));
+				ccp(levelItem->getContentSize().width / 2, -40));
 		levelItem->addChild(spriteStar);
 
 		levelIcons->addObject(levelItem);
@@ -271,6 +271,7 @@ bool MainScreenLayer::init() {
 	// is first start  -> display help screen
 	if (HelperFunctions::isFirstStart()) {
 		CCLayer* layer2 = AboutUsLayer::create();
+		this->sliderMenu->freeze();
 		this->addChild(layer2, 10, TAG_ABOUTUS_LAYER);
 	}
 
@@ -440,7 +441,7 @@ void MainScreenLayer::menuStartGameCallback(CCObject* pSender) {
 
 //transition to next scene for one sec
 	CCDirector::sharedDirector()->replaceScene(
-			CCTransitionFadeDown::create(0.8f, pScene));
+			CCTransitionFade::create(0.7f, pScene));
 
 }
 

@@ -29,6 +29,9 @@ private:
 	cocos2d::CCLabelTTF * ttfDesc;
 	cocos2d::CCLabelTTF * ttfTitle;
 	void updateImg(int tag, bool dir);
+
+	void updatePaging(int img);
+	std::vector<cocos2d::CCSprite *> pagings;
 };
 
 #endif /* ImpressumLayer_H_ */

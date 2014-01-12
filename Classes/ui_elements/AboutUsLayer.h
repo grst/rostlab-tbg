@@ -28,13 +28,20 @@ public:
 	// The back key clicked
 	 virtual void keyBackClicked();
 
+	 static void buildCache();
+
 private:
 	cocos2d::CCMenu* levelMenu;
 	int posImageCounter;
 	cocos2d::CCSprite* pImage;
 
 	void updateImg(int img, bool direction);
-	std::string getImg(int tag);
+	static std::string getImg(int tag);
+
+	void updatePaging(int img);
+	std::vector<cocos2d::CCSprite *> pagings;
+
+	static bool cacheLoaded;
 };
 
 #endif /* AboutUsLayer_H_ */

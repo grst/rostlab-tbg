@@ -548,7 +548,7 @@ char MatrixHelper::getIntAcid(int i) {
 }
 
 int MatrixHelper::getScoreForAminoAcid(char c, char d) {
-    CCLog("getScore %c, %c", c, d);
+    //CCLog("getScore %c, %c", c, d);
 	int i = MatrixHelper::getAcidInt(c);
 	int j = MatrixHelper::getAcidInt(d);
 	if (j >= 0 && j <= 19 && i >= 0 && i <= 19) {

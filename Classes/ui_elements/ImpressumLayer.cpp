@@ -53,11 +53,13 @@ bool ImpressumLayer::init() {
 				"grey/exit.png", "grey/exit.png", this,
 				menu_selector(ImpressumLayer::OnMenu));
 		pCloseLayer->setPosition(
-				ccp(winSize.width * 2 / 5 + pCloseLayer->getContentSize().width,
+				ccp(winSize.width * 1 / 5 + pCloseLayer->getContentSize().width,
 						winSize.height - pCloseLayer->getContentSize().height));
 		pCloseLayer->setTag(2);
+		pCloseLayer->setScale(0.7);
 		menuIcons->addObject(pCloseLayer);
 
+		/*
 		// next Button
 		CCMenuItemImage *pNextButton = CCMenuItemImage::create(
 				"grey/forward.png", "grey/forward.png", this,
@@ -67,10 +69,11 @@ bool ImpressumLayer::init() {
 						winSize.height - pNextButton->getContentSize().height));
 		pNextButton->setTag(3);
 		menuIcons->addObject(pNextButton);
+		*/
 
 		// Create a menu with our menu items
 		levelMenu = CCMenu::createWithArray(menuIcons);
-		levelMenu->setPosition(ccp(100, winSize.height - 25));
+		levelMenu->setPosition(ccp(25, winSize.height - 25));
 		levelMenu->alignItemsHorizontallyWithPadding(15);
 
 		// Add the menu to TestWorld layer as a child layer.
@@ -100,6 +103,9 @@ bool ImpressumLayer::init() {
 		swipe->setCancelsTouchesInView(true);
 		this->addChild(swipe, 13);
 
+		//paging
+		updatePaging(0);
+
 		bRet = true;
 	} while (0);
 
@@ -120,12 +126,39 @@ void ImpressumLayer::getNextText() {
 	updateImg(textCounter, true);
 }
 
+void ImpressumLayer::updatePaging(int counter){
+	int PAGING_ELEMENTS = 6;
+	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+	// do clean up = removeAll
+	CCLog("updating pager to %d", counter);
+	if(pagings.size() > 0){
+		for(int i=pagings.size()-1; i>= 0; i--){
+			CCSprite *a = pagings[i];
+			if(a != NULL){
+				pagings.erase(pagings.end()-1);
+				a->removeFromParent();
+			}
+		}
+	}
+	for(int i=0; i< PAGING_ELEMENTS; i++){
+		CCSprite * indie;
+		if(i == counter){
+			indie =CCSprite::create("paging-active.png");
+		}else{
+			indie =CCSprite::create("paging-inactive.png");
+		}
+		indie->setPosition(ccp(winSize.width / 2 -(PAGING_ELEMENTS / 2 * 15) + i * 15,20));
+		addChild(indie, 10);
+		pagings.push_back(indie);
+	}
+}
+
 void ImpressumLayer::updateImg(int count, bool direction) {
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
 	CCLOG("Starting sliding remove");
 
-	float slideTime = 0.4;
+	float slideTime = 0.25;
 	float bondary = winSize.width * 1 / 2;
 
 	// removing old image via swipe
@@ -140,9 +173,9 @@ void ImpressumLayer::updateImg(int count, bool direction) {
 								ccp(-bondary, winSize.height * 11 / 12));
 		} else {
 			actionMoveDesc = CCMoveTo::create((float) slideTime,
-					ccp(- bondary, winSize.height * 3 / 5));
+					ccp(winSize.width+  bondary, winSize.height * 3 / 5));
 			actionMoveTitle = CCMoveTo::create((float) slideTime,
-											ccp(-bondary, winSize.height * 11 / 12));
+											ccp(winSize.width+bondary, winSize.height * 11 / 12));
 		}
 		CCSequence* seqDesc = CCSequence::create(actionMoveDesc,
 				CCCallFunc::create(ttfDesc,
@@ -272,6 +305,9 @@ void ImpressumLayer::updateImg(int count, bool direction) {
 						ccp(winSize.width * 3 / 6, winSize.height * 3 / 5)), NULL, NULL
 		);
 		ttfDesc->runAction(readySequenceDesc);
+
+		// update paging
+		updatePaging(textCounter);
 
 	}
 
