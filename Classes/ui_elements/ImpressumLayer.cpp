@@ -32,19 +32,19 @@ bool ImpressumLayer::init() {
 		this->setTouchEnabled(true);
 
 		CCSize winSize = CCDirector::sharedDirector()->getWinSize();
-		CCLabelTTF* pauseLabel = CCLabelTTF::create("Imprint", "carrois", 24,
-				CCSize(winSize.width / 4, 50), kCCTextAlignmentRight);
-		CC_BREAK_IF(!pauseLabel);
-
-		pauseLabel->setPosition(
-				ccp(
-						winSize.width - pauseLabel->getContentSize().width / 2
-								- winSize.width * 1 / 16,
-						winSize.height
-								- pauseLabel->getContentSize().height / 2));
+//		CCLabelTTF* pauseLabel = CCLabelTTF::create("Imprint", "carrois", 24,
+//				CCSize(winSize.width / 4, 50), kCCTextAlignmentRight);
+//		CC_BREAK_IF(!pauseLabel);
+//
+//		pauseLabel->setPosition(
+//				ccp(
+//						winSize.width - pauseLabel->getContentSize().width / 2
+//								- winSize.width * 1 / 16,
+//						winSize.height
+//								- pauseLabel->getContentSize().height / 2));
 
 		// add this to the layer
-		this->addChild(pauseLabel, 11);
+//		this->addChild(pauseLabel, 11);
 
 		CCArray * menuIcons = CCArray::create();
 
@@ -197,9 +197,9 @@ void ImpressumLayer::updateImg(int count, bool direction) {
 		title = "Realization";
 		sDesc =
 				"Proudly presented by Gregor Sturm & Sebastian Wilzbach.\n"
-				"For questions, suggestions or support please write to tbg@rostlab.org [TODO!]";
+				"For questions, suggestions or support please write to tbg@rostlab.org";
 		this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "carrois", 18,
-				CCSizeMake(winSize.width * 4 / 6, winSize.height * 1 / 2),
+				CCSizeMake(winSize.width * 4 / 6, winSize.height * 2 / 3),
 				kCCTextAlignmentCenter, kCCVerticalTextAlignmentCenter);
 		break;
 
@@ -210,7 +210,7 @@ void ImpressumLayer::updateImg(int count, bool direction) {
 				"Boltzmannstraße 3\n"
 				"85748 Garching";
 		this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "carrois", 18,
-				CCSizeMake(winSize.width * 4 / 6, winSize.height * 1 / 2),
+				CCSizeMake(winSize.width * 4 / 6, winSize.height * 2/3),
 				kCCTextAlignmentLeft, kCCVerticalTextAlignmentCenter);
 		break;
 
@@ -221,31 +221,33 @@ void ImpressumLayer::updateImg(int count, bool direction) {
 						"(http://pdb.org/pdb/101/motm_archive.do)";
 		this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "carrois", 18,
 				CCSizeMake(winSize.width * 5 / 6, winSize.height * 2 / 3),
-				kCCTextAlignmentCenter, kCCVerticalTextAlignmentCenter);
+				kCCTextAlignmentLeft, kCCVerticalTextAlignmentCenter);
 		break;
 
 	case 3:
 		title = "Graphics";
-		sDesc = "[Google-Icons]";
+		sDesc = "backgrounds:\ntilable web textures from http://webtreats.mysitemyway.com\n\n"
+                    "black cat:\nhttp://en.wikipedia.org/wiki/File:Blackcat-Lilith.jpg";
 		this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "carrois", 18,
-				CCSizeMake(winSize.width * 4 / 6, winSize.height * 1 / 2),
-				kCCTextAlignmentCenter, kCCVerticalTextAlignmentCenter);
+				CCSizeMake(winSize.width * 4 / 6, winSize.height * 2/3),
+				kCCTextAlignmentLeft, kCCVerticalTextAlignmentCenter);
 		break;
 
 	case 4:
 		title = "Music";
-		sDesc = "Freesound.org";
+		sDesc = "Freesound.org\n\n"
+            "Thanks go to Lemoncreme, bebeto, luckylittleraven and juskiddink for their great sounds and music!";
 		this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "carrois", 18,
-				CCSizeMake(winSize.width * 4 / 6, winSize.height * 1 / 2),
-				kCCTextAlignmentCenter, kCCVerticalTextAlignmentCenter);
+				CCSizeMake(winSize.width * 4 / 6, winSize.height * 2/3),
+				kCCTextAlignmentLeft, kCCVerticalTextAlignmentCenter);
 		break;
 
 	case 5:
 		title = "Libraries";
-		sDesc = "{cocos2dx, box2d, ccblade, …?}";
+		sDesc = "This game is based on cocos2dx, a cross-platform framework for mobile game development, and several plugins including box2d, CCBlade, CCGestureRecognizer";
 		this->ttfDesc = CCLabelTTF::create(sDesc.c_str(), "carrois", 18,
-				CCSizeMake(winSize.width * 4 / 6, winSize.height * 1 / 2),
-				kCCTextAlignmentCenter, kCCVerticalTextAlignmentCenter);
+				CCSizeMake(winSize.width * 4 / 6, winSize.height * 2/3),
+				kCCTextAlignmentLeft, kCCVerticalTextAlignmentCenter);
 		break;
 
 	case 6:
