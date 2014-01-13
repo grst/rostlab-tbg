@@ -14,7 +14,7 @@ std::string LevelHelper::getDescriptionForLevel(int level) {
 	switch (level) {
 	case 0:
 		description =
-				"While recovering from the excesses of New Year's Eve, we might"
+				"While recovering from the excesses of New Year's Eve, we might "
 						"ponder the enzyme that ceaselessly battles the champagne that we consume. "
 						"Alcohol dehydrogenase is our primary defense against alcohol, "
 						"a toxic molecule that compromises the function of our nervous system.";
@@ -34,7 +34,7 @@ std::string LevelHelper::getDescriptionForLevel(int level) {
 		break;
 	case 4:
 		description =
-				" If one strand in the DNA breaks, it is not a disaster, "
+				"If one strand in the DNA breaks, it is not a disaster, "
 				"but it can lead to problems when the DNA double helix is unwound during the processes of transcription and replication. Breakage of both strands, on the other hand, is far more serious. To protect us from these dangers, our cells use DNA ligases to glue together DNA strands that have been broken.";
 		break;
 	case 5:
@@ -274,7 +274,7 @@ std::string LevelHelper::getNameForLevel(int level) {
 		sequence = "p53 Tumor Suppressor";
 		break;
 	case 2:
-		sequence = "Rubisco (from Tabacco) (s. u.)";
+		sequence = "Rubisco (from Tabacco)";
 		break;
 	case 3:
 		sequence = "Trypsin";

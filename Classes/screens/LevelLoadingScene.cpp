@@ -80,7 +80,7 @@ bool LevelLoadingLayer::init() {
 			menu_selector(LevelLoadingLayer::changeScene));
 	pStartButton->setPosition(0, 0);
 	pStartButton->setTag(2);
-	float scale = 0.45;
+	float scale = 0.5;
     pStartButton->setScale(scale);
 
 	// Create a menu with our menu items
@@ -198,9 +198,9 @@ void LevelLoadingLayer::addLabels() {
 	std::string seqLevel = "Highscore: " + strScore + "/"
 			+ static_cast<std::ostringstream*>(&(std::ostringstream()
 					<< LevelHelper::getHighscoreForLevel(this->level)))->str();
-	this->scoreLabel = CCLabelTTF::create(seqLevel.c_str(), "Artial", 18,
+	this->scoreLabel = CCLabelTTF::create(seqLevel.c_str(), "carrois", 20,
 			CCSizeMake(winSize.width * 3 / 6, 30), kCCTextAlignmentRight,
-			kCCVerticalTextAlignmentTop);
+			kCCVerticalTextAlignmentCenter);
 	scoreLabel->retain();
 	scoreLabel->setColor(ccc3(255, 255, 255));
 	scoreLabel->setPosition(ccp(winSize.width * 4 / 6, winSize.height * 1 / 8));

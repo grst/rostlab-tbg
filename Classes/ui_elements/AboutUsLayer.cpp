@@ -267,10 +267,8 @@ void AboutUsLayer::updateImg(int pos, bool direction) {
 
 
 	//scale it proportionally to  the screen
-	float scale = 1.00;
 	CCSize logoSize = pImage->getContentSize();
-	HelperFunctions::resizseSprite(pImage, winSize.width, winSize.height * scale);
-
+	HelperFunctions::fitImage(pImage);
 	// set starting point for swip
 	if (direction) {
 		//next

@@ -67,12 +67,19 @@ void HelperFunctions::fitBackground(cocos2d::CCSprite *sprite) {
 
 /**
  * sets the position and size of an image to fit into the screen (fitting)
+ * @see http://stackoverflow.com/questions/6565703
  */
 void HelperFunctions::fitImage(cocos2d::CCSprite *sprite) {
     CCSize winSize = CCDirector::sharedDirector()->getWinSize();
     CCSize spriteSize = sprite->getContentSize();
+    CCLog("WinSize: w=%f, h=%f", winSize.width, winSize.height);
+    CCLog("SpriteSize: w=%f, h=%f", spriteSize.width, spriteSize.height);
     sprite->setPosition(ccp(winSize.width / 2, winSize.height / 2));
-    HelperFunctions::resizseSprite(sprite, fmin(winSize.width, winSize.height*(spriteSize.width/spriteSize.height)), 0);
+    if(winSize.width/winSize.height > spriteSize.width/spriteSize.height) {
+        HelperFunctions::resizseSprite(sprite, spriteSize.width * winSize.height/spriteSize.height, winSize.height);
+    } else {
+        HelperFunctions::resizseSprite(sprite, winSize.width, spriteSize.height * winSize.width/spriteSize.width);
+    }
 }
 
 
